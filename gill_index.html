@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gill's Daily Quest & Reward Tracker</title>
+    <title>Gill's Daily Quest & Guild Tracker</title>
     <!-- Tailwind CSS for modern responsive styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght=500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Quicksand', sans-serif;
@@ -23,37 +23,103 @@
         }
         @keyframes pulse-neon {
             0%, 100% {
-                box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), 0 0 30px rgba(168, 85, 247, 0.4);
+                box-shadow: 0 0 15px rgba(245, 158, 11, 0.6), 0 0 30px rgba(245, 158, 11, 0.4);
                 transform: scale(1);
             }
             50% {
-                box-shadow: 0 0 25px rgba(168, 85, 247, 0.9), 0 0 50px rgba(168, 85, 247, 0.6);
+                box-shadow: 0 0 25px rgba(245, 158, 11, 0.9), 0 0 50px rgba(245, 158, 11, 0.6);
                 transform: scale(1.03);
             }
         }
         .unlocked-glow {
             animation: pulse-neon 2s infinite ease-in-out;
         }
+        /* Palico Weapon Swing Animation */
+        @keyframes weapon-swing {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(-25deg); }
+        }
+        .palico-weapon {
+            transform-origin: bottom center;
+            animation: weapon-swing 2s infinite ease-in-out;
+        }
+        /* Campfire Smoke Animation */
+        @keyframes drift-smoke {
+            0% { opacity: 0; transform: translateY(0) scale(0.8) translateX(0); }
+            50% { opacity: 0.5; transform: translateY(-10px) scale(1.1) translateX(3px); }
+            100% { opacity: 0; transform: translateY(-20px) scale(1.3) translateX(-3px); }
+        }
+        .smoke-1 { animation: drift-smoke 4s infinite 0s linear; }
+        .smoke-2 { animation: drift-smoke 4s infinite 2s linear; }
     </style>
 </head>
 <body class="min-h-screen py-6 px-4 sm:px-6 lg:px-8 text-slate-800 flex flex-col justify-between">
 
-    <div class="max-w-md mx-auto w-full bg-white rounded-3xl shadow-xl overflow-hidden border-4 border-slate-100 flex-grow flex flex-col">
+    <div class="max-w-md mx-auto w-full bg-white rounded-3xl shadow-xl overflow-hidden border-4 border-slate-100 flex-grow flex flex-col relative">
         
-        <!-- Header Banner -->
-        <div id="header-banner" class="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white text-center relative overflow-hidden shrink-0 transition-all duration-500">
-            <div class="absolute -top-10 -left-10 w-32 h-32 bg-white/10 rounded-full"></div>
-            <div class="absolute -bottom-10 -right-10 w-36 h-36 bg-white/10 rounded-full"></div>
+        <!-- Header Banner with Dragon Motif Background -->
+        <div id="header-banner" class="bg-gradient-to-r from-amber-600 to-red-700 p-6 text-white text-center relative overflow-hidden shrink-0 transition-all duration-500">
+            <!-- Decorative background elements -->
+            <div class="absolute -top-10 -left-10 w-32 h-32 bg-black/10 rounded-full"></div>
+            <div class="absolute -bottom-10 -right-10 w-36 h-36 bg-black/10 rounded-full"></div>
             
+            <!-- Monster Crest silhouette watermark -->
+            <div class="absolute right-4 bottom-0 w-24 h-24 pointer-events-none z-0 opacity-20">
+                <svg viewBox="0 0 100 100" class="w-full h-full fill-white">
+                    <path d="M10,50 Q30,20 50,45 Q70,20 90,50 Q70,80 50,55 Q30,80 10,50 Z M50,15 L50,35 M25,30 L40,42 M75,30 L60,42 M50,75 L50,58" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                </svg>
+            </div>
+
             <div class="relative z-10">
-                <span id="header-tag" class="bg-purple-700/50 text-purple-100 px-3 py-1 rounded-full text-xs uppercase tracking-wider font-bold">The Daily Quest</span>
+                <span id="header-tag" class="bg-amber-900/40 text-amber-100 px-3 py-1 rounded-full text-xs uppercase tracking-wider font-bold">The Live Hunt</span>
                 <h1 id="current-date" class="text-2xl mt-1 tracking-wide">Daily Adventures</h1>
                 
                 <!-- Streak Tracker -->
                 <div class="flex items-center justify-center mt-3 space-x-1">
-                    <span id="streak-emoji" class="text-xl font-display">🔥</span>
-                    <span class="text-sm font-bold">Current Streak: <span id="streak-count" class="text-yellow-300 font-display text-lg">0</span> Days</span>
+                    <span id="streak-emoji" class="text-xl font-display">⚔️</span>
+                    <span class="text-sm font-bold">Hunt Streak: <span id="streak-count" class="text-yellow-300 font-display text-lg">0</span> Hunts</span>
                 </div>
+            </div>
+        </div>
+
+        <!-- Palico Expedition Board -->
+        <div class="bg-slate-900 text-slate-100 p-4 flex items-center space-x-4 border-b border-slate-950 shrink-0">
+            <!-- Animated SVG Palico Scout -->
+            <div class="relative w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center shrink-0 border-2 border-slate-700 overflow-hidden">
+                <svg viewBox="0 0 100 100" class="w-14 h-14">
+                    <!-- Base Palico Body -->
+                    <ellipse cx="50" cy="70" rx="22" ry="16" fill="#d97706" id="palico-armor-body" />
+                    <!-- Head -->
+                    <ellipse cx="50" cy="45" rx="18" ry="15" fill="#f59e0b" />
+                    <!-- Ears -->
+                    <polygon points="35,35 28,15 45,30" fill="#d97706" />
+                    <polygon points="65,35 72,15 55,30" fill="#d97706" />
+                    <polygon points="37,32 32,20 43,28" fill="#fecdd3" />
+                    <polygon points="63,32 68,20 57,28" fill="#fecdd3" />
+                    
+                    <!-- Dynamic Face / Mask Layer -->
+                    <g id="palico-eyes">
+                        <circle cx="43" cy="43" r="3" fill="#1e293b" />
+                        <circle cx="57" cy="43" r="3" fill="#1e293b" />
+                    </g>
+                    <polygon points="50,48 48,46 52,46" fill="#fecdd3" />
+                    
+                    <!-- Dynamic Held Item / Weapon Graphic -->
+                    <g id="palico-gear">
+                        <!-- Default: Barroth Bone Club -->
+                        <path class="palico-weapon" d="M 68 70 L 85 45" stroke="#78350f" stroke-width="5" stroke-linecap="round" fill="none" />
+                    </g>
+
+                    <!-- Campfire Smoke Effects for resting state -->
+                    <g id="palico-smoke" class="hidden">
+                        <circle cx="25" cy="30" r="3" class="smoke-1 fill-slate-400" />
+                        <circle cx="30" cy="20" r="2" class="smoke-2 fill-slate-500" />
+                    </g>
+                </svg>
+            </div>
+            <div class="flex-grow">
+                <span class="text-xs font-bold text-amber-500 uppercase tracking-wider block">Palico Scout Status</span>
+                <p id="palico-mood-text" class="text-xs text-slate-300 leading-tight">The Palico is resting at camp. Gear up and complete targets to begin the hunt.</p>
             </div>
         </div>
 
@@ -86,10 +152,10 @@
         <div class="p-6 bg-slate-50 border-b border-slate-100 shrink-0">
             <div class="flex justify-between items-center mb-2">
                 <span id="progress-label" class="text-sm font-bold text-slate-500 uppercase tracking-wider">Quest Progress</span>
-                <span id="progress-percentage" class="text-lg font-display text-indigo-600">0%</span>
+                <span id="progress-percentage" class="text-lg font-display text-amber-600">0%</span>
             </div>
             <div class="w-full bg-slate-200 rounded-full h-4 overflow-hidden p-0.5">
-                <div id="progress-bar" class="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-500 ease-out w-0"></div>
+                <div id="progress-bar" class="bg-gradient-to-r from-amber-500 to-red-500 h-3 rounded-full transition-all duration-500 ease-out w-0"></div>
             </div>
         </div>
 
@@ -122,7 +188,7 @@
 
                 <!-- Claim Button -->
                 <button id="claim-button" class="mt-4 px-6 py-2.5 bg-gradient-to-r from-yellow-400 to-amber-500 text-white font-display rounded-xl shadow-md hover:from-yellow-500 hover:to-amber-600 transform active:scale-95 transition-all hidden">
-                    Complete Day & Save Streak!
+                    Complete Day & Earn +45 Min!
                 </button>
             </div>
 
@@ -159,7 +225,7 @@
     </div>
 
     <script>
-        // Default task list. States: "none", "checked", "failed"
+        // Default task list tailored for Gill. States: "none", "checked", "failed"
         const defaultTasks = [
             {
                 id: "meta-effort",
@@ -195,6 +261,12 @@
                 id: "mindfulness",
                 title: "Listen to Guided Meditation",
                 desc: "Sit still and follow the breathing. Thinking about video games is permitted, but you must keep your eyes closed.",
+            {
+                id: "chromebook-boundary",
+                title: "Use Chromebook Only in Non-Bed Areas",
+                desc: "You must operate your hardware only in designated public rooms or desks. Your mattress is a device-free sanctuary.",
+                state: "none"
+            },
                 state: "none"
             },
             {
@@ -217,13 +289,13 @@
             },
             {
                 id: "social-kindness",
-                title: "Be Kind to Your sister",
+                title: "Be Kind to Your Sister",
                 desc: "Speak with encouraging words. Sarcasm is an advanced art form that is best saved for your adult years.",
                 state: "none"
             },
             {
                 id: "social-play",
-                title: "Play with Your sister",
+                title: "Play with Your Sister",
                 desc: "Spend a reasonable amount of continuous time playing together. Resolving disputes without physical leverage is highly encouraged.",
                 state: "none"
             },
@@ -250,16 +322,16 @@
             const options = { weekday: 'long', month: 'short', day: 'numeric' };
             document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', options);
 
-            // Load Streak
-            const savedStreak = localStorage.getItem('homeschool_quest_streak_girl');
+            // Load Streak (Isolated key for boy)
+            const savedStreak = localStorage.getItem('homeschool_quest_streak_boy');
             currentStreak = savedStreak ? parseInt(savedStreak, 10) : 0;
 
-            // Load Banked Minutes
-            const savedBank = localStorage.getItem('homeschool_quest_banked_minutes_girl');
+            // Load Banked Minutes (Isolated key for boy)
+            const savedBank = localStorage.getItem('homeschool_quest_banked_minutes_boy');
             bankedMinutes = savedBank ? parseInt(savedBank, 10) : 0;
             updateBankDisplay();
 
-            const lastClaimDate = localStorage.getItem('homeschool_quest_last_claim_date_girl');
+            const lastClaimDate = localStorage.getItem('homeschool_quest_last_claim_date_boy');
             const todayStr = new Date().toDateString();
 
             if (lastClaimDate) {
@@ -273,13 +345,13 @@
                 
                 if (dayDiff > 1) {
                     currentStreak = 0;
-                    localStorage.setItem('homeschool_quest_streak_girl', 0);
+                    localStorage.setItem('homeschool_quest_streak_boy', 0);
                 }
             }
             updateStreakDisplay();
 
-            const savedTasks = localStorage.getItem('homeschool_quest_tasks_girl');
-            const lastSavedDate = localStorage.getItem('homeschool_quest_date_girl');
+            const savedTasks = localStorage.getItem('homeschool_quest_tasks_boy');
+            const lastSavedDate = localStorage.getItem('homeschool_quest_date_boy');
 
             if (savedTasks && lastSavedDate === todayStr) {
                 tasks = JSON.parse(savedTasks);
@@ -291,7 +363,7 @@
                 });
             } else {
                 tasks = JSON.parse(JSON.stringify(defaultTasks));
-                localStorage.setItem('homeschool_quest_date_girl', todayStr);
+                localStorage.setItem('homeschool_quest_date_boy', todayStr);
                 saveTasksToStorage();
             }
 
@@ -303,7 +375,7 @@
             const container = document.getElementById('checklist-container');
             container.innerHTML = '';
 
-            const lastClaimDate = localStorage.getItem('homeschool_quest_last_claim_date_girl');
+            const lastClaimDate = localStorage.getItem('homeschool_quest_last_claim_date_boy');
             const todayStr = new Date().toDateString();
             const alreadyClaimedToday = (lastClaimDate === todayStr);
 
@@ -342,7 +414,7 @@
                 } else {
                     cardClass += "bg-white border-slate-100";
                     if (!alreadyClaimedToday) {
-                        cardClass += " hover:border-indigo-100 hover:shadow-md";
+                        cardClass += " hover:border-amber-100 hover:shadow-md";
                     }
                     iconClass += "border-slate-300 bg-white";
                     textClass += "text-slate-800";
@@ -392,7 +464,102 @@
         }
 
         function saveTasksToStorage() {
-            localStorage.setItem('homeschool_quest_tasks_girl', JSON.stringify(tasks));
+            localStorage.setItem('homeschool_quest_tasks_boy', JSON.stringify(tasks));
+        }
+
+        // Monitors Palico Gear, Weapons, and Status messages in real time
+        function updatePalicoStatus(percentage, hasFailure, alreadyClaimedToday) {
+            const palicoEyes = document.getElementById('palico-eyes');
+            const palicoGear = document.getElementById('palico-gear');
+            const palicoSmoke = document.getElementById('palico-smoke');
+            const palicoArmorBody = document.getElementById('palico-armor-body');
+            const moodText = document.getElementById('palico-mood-text');
+
+            if (alreadyClaimedToday) {
+                // Elite Hunter Palico setup
+                palicoArmorBody.setAttribute('fill', '#475569'); // Steel Rathalos Armor
+                palicoEyes.innerHTML = `
+                    <path d="M 36 42 Q 43 36 48 42" stroke="#fbbf24" stroke-width="3" fill="none" />
+                    <path d="M 52 42 Q 57 36 64 42" stroke="#fbbf24" stroke-width="3" fill="none" />
+                `;
+                palicoGear.innerHTML = `
+                    <!-- Charging Greatsword -->
+                    <path class="palico-weapon" d="M 65 65 L 90 25" stroke="#f59e0b" stroke-width="7" stroke-linecap="square" fill="none" />
+                    <path d="M 65 65 L 70 70" stroke="#78350f" stroke-width="3" />
+                `;
+                palicoSmoke.classList.add('hidden');
+                moodText.innerHTML = "Hunt Complete! Your Palico is equipped with high-tier Rathalos gear and celebrates your victory.";
+            } else if (hasFailure) {
+                // Failed Quest / Fainted state
+                palicoArmorBody.setAttribute('fill', '#94a3b8');
+                palicoEyes.innerHTML = `
+                    <text x="35" y="46" fill="#ef4444" font-family="Arial" font-size="12" font-weight="bold">X</text>
+                    <text x="53" y="46" fill="#ef4444" font-family="Arial" font-size="12" font-weight="bold">X</text>
+                `;
+                palicoGear.innerHTML = `
+                    <!-- Broken weapon shaft -->
+                    <line x1="65" y1="70" x2="75" y2="55" stroke="#475569" stroke-width="3" stroke-linecap="round" />
+                `;
+                palicoSmoke.classList.add('hidden');
+                moodText.innerHTML = "Quest Failed. The target monster fled, and the Palico carted back to headquarters.";
+            } else if (percentage === 0) {
+                // Resting at campfire
+                palicoArmorBody.setAttribute('fill', '#d97706'); // Leather vest
+                palicoEyes.innerHTML = `
+                    <line x1="36" y1="44" x2="46" y2="44" stroke="#475569" stroke-width="2.5" />
+                    <line x1="54" y1="44" x2="64" y2="44" stroke="#475569" stroke-width="2.5" />
+                `;
+                palicoGear.innerHTML = `
+                    <!-- Roasting Meat Stick -->
+                    <line x1="62" y1="65" x2="85" y2="50" stroke="#78350f" stroke-width="3" />
+                    <ellipse cx="78" cy="54" rx="6" ry="4" fill="#b45309" />
+                `;
+                palicoSmoke.classList.remove('hidden');
+                moodText.innerHTML = "The Palico is cooking rations at the camp fire. Begin tracking objectives to deploy.";
+            } else if (percentage < 50) {
+                // Scoutfly active tracking state
+                palicoEyes.innerHTML = `
+                    <circle cx="43" cy="43" r="3" fill="#1e293b" />
+                    <circle cx="57" cy="43" r="3" fill="#1e293b" />
+                    <!-- Green Scoutfly spark particles -->
+                    <circle cx="25" cy="45" r="2" fill="#10b981" />
+                    <circle cx="75" cy="35" r="1.5" fill="#10b981" />
+                `;
+                palicoGear.innerHTML = `
+                    <path class="palico-weapon" d="M 66 68 L 82 48" stroke="#78350f" stroke-width="4" stroke-linecap="round" fill="none" />
+                `;
+                palicoSmoke.classList.add('hidden');
+                moodText.innerHTML = "Scoutflies are illuminating tracks. Your Palico is scanning for target footprints.";
+            } else if (percentage < 90) {
+                // Combat engagement stance
+                palicoEyes.innerHTML = `
+                    <circle cx="43" cy="41" r="3" fill="#0f172a" />
+                    <circle cx="57" cy="41" r="3" fill="#0f172a" />
+                    <line x1="36" y1="35" x2="46" y2="38" stroke="#0f172a" stroke-width="2.5" />
+                    <line x1="64" y1="35" x2="54" y2="38" stroke="#0f172a" stroke-width="2.5" />
+                `;
+                palicoGear.innerHTML = `
+                    <!-- Iron Sword out -->
+                    <path class="palico-weapon" d="M 64 64 L 88 35" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" fill="none" />
+                `;
+                palicoSmoke.classList.add('hidden');
+                moodText.innerHTML = "Monster engaged in the Wilds! Weapons are drawn. Maintain focus to finish the capture.";
+            } else {
+                // Target cornered ready for capture
+                palicoEyes.innerHTML = `
+                    <ellipse cx="43" cy="41" rx="3.5" ry="5" fill="#0f172a" />
+                    <ellipse cx="57" cy="41" rx="3.5" ry="5" fill="#0f172a" />
+                    <circle cx="41" cy="39" r="1" fill="#ffffff" />
+                    <circle cx="55" cy="39" r="1" fill="#ffffff" />
+                `;
+                palicoGear.innerHTML = `
+                    <!-- Shock Trap container item -->
+                    <circle cx="72" cy="58" r="5" fill="#eab308" />
+                    <line x1="64" y1="64" x2="70" y2="60" stroke="#475569" stroke-width="3" />
+                `;
+                palicoSmoke.classList.add('hidden');
+                moodText.innerHTML = "The Large Monster is trapped and weak. Deploy your final confirmations to complete the hunt.";
+            }
         }
 
         function updateProgress() {
@@ -400,7 +567,7 @@
             const completedCount = tasks.filter(t => t.state === "checked").length;
             const totalCount = tasks.length;
             
-            const lastClaimDate = localStorage.getItem('homeschool_quest_last_claim_date_girl');
+            const lastClaimDate = localStorage.getItem('homeschool_quest_last_claim_date_boy');
             const todayStr = new Date().toDateString();
             const alreadyClaimedToday = (lastClaimDate === todayStr);
 
@@ -423,24 +590,27 @@
                 progressBar.className = "bg-rose-500 h-3 rounded-full transition-all duration-500 ease-out";
                 
                 headerBanner.className = "bg-gradient-to-r from-slate-700 to-rose-950 p-6 text-white text-center relative overflow-hidden shrink-0 transition-all duration-500";
-                headerTag.textContent = "Quest Voided";
+                headerTag.textContent = "Hunt Voided";
                 headerTag.className = "bg-rose-900/60 text-rose-100 px-3 py-1 rounded-full text-xs uppercase tracking-wider font-bold";
                 streakEmoji.textContent = "📉";
 
                 if (currentStreak > 0) {
                     currentStreak = 0;
-                    localStorage.setItem('homeschool_quest_streak_girl', 0);
+                    localStorage.setItem('homeschool_quest_streak_boy', 0);
                     updateStreakDisplay();
                 }
             } else {
                 progressBar.style.width = alreadyClaimedToday ? "100%" : `${percentage}%`;
-                progressBar.className = "bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-500 ease-out";
+                progressBar.className = "bg-gradient-to-r from-amber-500 to-red-500 h-3 rounded-full transition-all duration-500 ease-out";
                 
-                headerBanner.className = "bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white text-center relative overflow-hidden shrink-0 transition-all duration-500";
-                headerTag.textContent = "The Daily Quest";
-                headerTag.className = "bg-purple-700/50 text-purple-100 px-3 py-1 rounded-full text-xs uppercase tracking-wider font-bold";
-                streakEmoji.textContent = "🔥";
+                headerBanner.className = "bg-gradient-to-r from-amber-600 to-red-700 p-6 text-white text-center relative overflow-hidden shrink-0 transition-all duration-500";
+                headerTag.textContent = "The Live Hunt";
+                headerTag.className = "bg-amber-900/40 text-amber-100 px-3 py-1 rounded-full text-xs uppercase tracking-wider font-bold";
+                streakEmoji.textContent = "⚔️";
             }
+
+            // Update Dynamic Palico State graphics
+            updatePalicoStatus(percentage, hasFailure, alreadyClaimedToday);
 
             const rewardPanel = document.getElementById('reward-panel');
             const rewardIcon = document.getElementById('reward-icon-container');
@@ -450,22 +620,22 @@
 
             if (alreadyClaimedToday) {
                 stopConfetti();
-                rewardPanel.className = "bg-gradient-to-br from-purple-600 via-indigo-600 to-indigo-700 text-white rounded-2xl p-5 text-center transition-all duration-500 flex flex-col items-center justify-center relative overflow-hidden unlocked-glow";
+                rewardPanel.className = "bg-gradient-to-br from-amber-600 via-orange-600 to-red-700 text-white rounded-2xl p-5 text-center transition-all duration-500 flex flex-col items-center justify-center relative overflow-hidden unlocked-glow";
                 rewardIcon.className = "w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-3 text-4xl scale-110 transition-transform duration-500";
-                rewardIcon.innerHTML = "🎮";
-                rewardTitle.textContent = "Quest Completed For Today!";
-                rewardDesc.textContent = "The video game reward has been unlocked and recorded. Gia earned 45 minutes of screen time.";
+                rewardIcon.innerHTML = "🍖";
+                rewardTitle.textContent = "Quest Logged!";
+                rewardDesc.textContent = "The baseline targets have been logged. Gill earned 45 minutes of screen metrics.";
                 claimButton.className = "mt-4 px-6 py-2.5 bg-slate-400 text-slate-200 font-display rounded-xl shadow-md cursor-not-allowed w-full";
-                claimButton.textContent = "Reward Already Claimed!";
+                claimButton.textContent = "Rewards Dispatched!";
                 claimButton.disabled = true;
                 claimButton.classList.remove('hidden');
             } else if (hasFailure) {
                 stopConfetti();
                 rewardPanel.className = "bg-rose-100 text-rose-900 rounded-2xl p-5 text-center transition-all duration-500 flex flex-col items-center justify-center relative overflow-hidden border border-rose-300";
                 rewardIcon.className = "w-16 h-16 bg-rose-200 rounded-full flex items-center justify-center mb-3 text-3xl transition-transform duration-500";
-                rewardIcon.innerHTML = "🚫";
-                rewardTitle.textContent = "Access Denied";
-                rewardDesc.textContent = "An item was marked with a failure. Video game access is unavailable for this evening.";
+                rewardIcon.innerHTML = "💀";
+                rewardTitle.textContent = "Hunt Restricted";
+                rewardDesc.textContent = "An entry was checked as a failure. Screen operations are unverified for tonight.";
                 claimButton.classList.add('hidden');
                 claimButton.disabled = false;
             } else if (percentage === 100) {
@@ -473,13 +643,13 @@
                     playAudioTone('unlock');
                     startConfetti();
                 }
-                rewardPanel.className = "bg-gradient-to-br from-purple-600 via-indigo-600 to-indigo-700 text-white rounded-2xl p-5 text-center transition-all duration-500 flex flex-col items-center justify-center relative overflow-hidden unlocked-glow";
+                rewardPanel.className = "bg-gradient-to-br from-amber-600 via-orange-600 to-red-700 text-white rounded-2xl p-5 text-center transition-all duration-500 flex flex-col items-center justify-center relative overflow-hidden unlocked-glow";
                 rewardIcon.className = "w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-3 text-4xl scale-110 transition-transform duration-500";
                 rewardIcon.innerHTML = "🎮";
-                rewardTitle.textContent = "Video Game Session Unlocked!";
-                rewardDesc.textContent = "You have completed all objectives perfectly. You will earn 45 minutes of game time upon saving!";
+                rewardTitle.textContent = "Screen Session Unlocked!";
+                rewardDesc.textContent = "All components match perfect protocols. You will credit 45 minutes to the reserve bank upon secure saving.";
                 claimButton.className = "mt-4 px-6 py-2.5 bg-gradient-to-r from-yellow-400 to-amber-500 text-white font-display rounded-xl shadow-md hover:from-yellow-500 hover:to-amber-600 transform active:scale-95 transition-all w-full";
-                claimButton.textContent = "Complete Day & Earn +45 Min!";
+                claimButton.textContent = "Save Hunt & Bank +45 Min!";
                 claimButton.disabled = false;
                 claimButton.classList.remove('hidden');
             } else {
@@ -488,7 +658,7 @@
                 rewardIcon.className = "w-16 h-16 bg-slate-300 rounded-full flex items-center justify-center mb-3 text-3xl transition-transform duration-500";
                 rewardIcon.innerHTML = "🔒";
                 rewardTitle.textContent = "Video Game Session";
-                rewardDesc.textContent = "Complete all daily tasks to unlock your screen time credentials and bank 45 minutes.";
+                rewardDesc.textContent = "Complete all operational lines to verify hardware credentials and credit 45 minutes.";
                 claimButton.classList.add('hidden');
                 claimButton.disabled = false;
             }
@@ -572,7 +742,6 @@
             document.getElementById('streak-count').textContent = currentStreak;
         }
 
-        // Updates screen displays for the Time Bank balance
         function updateBankDisplay() {
             const display = document.getElementById('bank-balance-display');
             if (bankedMinutes === 0) {
@@ -603,7 +772,7 @@
                 }
             });
 
-            const colors = ['#f43f5e', '#3b82f6', '#10b981', '#eab308', '#a855f7', '#ff7849'];
+            const colors = ['#f59e0b', '#3b82f6', '#10b981', '#ef4444', '#a855f7', '#ff7849'];
             const particles = [];
 
             for (let i = 0; i < 50; i++) {
@@ -672,7 +841,7 @@
             
             if (hasFailure) {
                 currentStreak = 0;
-                localStorage.setItem('homeschool_quest_streak_girl', 0);
+                localStorage.setItem('homeschool_quest_streak_boy', 0);
                 updateStreakDisplay();
             }
 
@@ -710,7 +879,7 @@
             }
 
             bankedMinutes -= amount;
-            localStorage.setItem('homeschool_quest_banked_minutes_girl', bankedMinutes);
+            localStorage.setItem('homeschool_quest_banked_minutes_boy', bankedMinutes);
             updateBankDisplay();
             playAudioTone('uncheck');
 
@@ -732,7 +901,7 @@
         // Complete Day Claim Button logic
         document.getElementById('claim-button').addEventListener('click', () => {
             const todayStr = new Date().toDateString();
-            const lastClaimDate = localStorage.getItem('homeschool_quest_last_claim_date_girl');
+            const lastClaimDate = localStorage.getItem('homeschool_quest_last_claim_date_boy');
 
             if (lastClaimDate === todayStr) {
                 return;
@@ -740,13 +909,13 @@
 
             // Record Streak
             currentStreak += 1;
-            localStorage.setItem('homeschool_quest_streak_girl', currentStreak);
-            localStorage.setItem('homeschool_quest_last_claim_date_girl', todayStr);
+            localStorage.setItem('homeschool_quest_streak_boy', currentStreak);
+            localStorage.setItem('homeschool_quest_last_claim_date_boy', todayStr);
             updateStreakDisplay();
             
             // Add 45 minutes to the Time Bank!
             bankedMinutes += 45;
-            localStorage.setItem('homeschool_quest_banked_minutes_girl', bankedMinutes);
+            localStorage.setItem('homeschool_quest_banked_minutes_boy', bankedMinutes);
             updateBankDisplay();
 
             playAudioTone('unlock');
@@ -756,7 +925,7 @@
 
             const banner = document.createElement('div');
             banner.className = "fixed top-6 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full text-sm font-bold shadow-2xl z-50 transition-all duration-300 ease-out";
-            banner.textContent = "🔥 Streak Extended! Banked +45 Minutes Game Time.";
+            banner.textContent = "⚔️ Hunt Saved! Banked +45 Minutes Game Time.";
             document.body.appendChild(banner);
             
             setTimeout(() => {
