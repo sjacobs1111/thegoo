@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cat Chess: Sunny Slackers vs. Midnight Zoomies</title>
+  <style>
+    :root {
+      --bg-color: #fdfbf7;
+      --board-border: #4a3728;
+      --tile-light: #fefae0;
+      --tile-dark: #dda15e;
+      --tile-selected: #ffe6a7;
+      --tile-highlight: rgba(96, 108, 56, 0.45);
+      --tile-capture: rgba(230, 57, 70, 0.55);
+      --text-main: #283618;
+      --accent-orange: #d4a373;
+      --card-bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Comic Sans MS", "Chalkboard SE", sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 12px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #bc6c25;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: #606c38;
+      font-weight: 600;
+    }
+
+    /* Main Container */
+    .game-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    /* Player / Turn Bar */
+    .turn-bar {
+      width: 100%;
+      background: #fff;
+      border: 2px solid var(--board-border);
+      border-radius: 12px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .player-indicator {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .player-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #222;
+      background: #fca311;
+      overflow: hidden;
+    }
+
+    .player-avatar.black-team {
+      background: #212529;
+    }
+
+    .check-badge {
+      background: #e63946;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      animation: pulse 1s infinite alternate;
+      display: none;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.1); }
+    }
+
+    /* Commentary Banner */
+    .commentary-banner {
+      width: 100%;
+      background: #fefae0;
+      border: 2px dashed #dda15e;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #606c38;
+      text-align: center;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    /* Captured Trays */
+    .captured-tray {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      min-height: 28px;
+      gap: 4px;
+      padding: 2px 8px;
+      overflow-x: auto;
+    }
+
+    .captured-icon {
+      width: 24px;
+      height: 24px;
+      opacity: 0.85;
+      flex-shrink: 0;
+    }
+
+    /* The Board Frame */
+    .board-container {
+      position: relative;
+      width: min(92vw, 480px);
+      height: min(92vw, 480px);
+      background: var(--board-border);
+      padding: 8px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .board-container.flipped {
+      transform: rotate(180deg);
+    }
+
+    /* The Chess Grid */
+    .chess-board {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #6b4c35;
+    }
+
+    .square {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .square.light {
+      background-color: var(--tile-light);
+    }
+
+    .square.dark {
+      background-color: var(--tile-dark);
+    }
+
+    .square.selected {
+      background-color: var(--tile-selected) !important;
+      outline: 3px solid #bc6c25;
+      outline-offset: -3px;
+      z-index: 2;
+    }
+
+    .square.in-check {
+      background-color: rgba(230, 57, 70, 0.4) !important;
+    }
+
+    /* Coordinates */
+    .coord {
+      position: absolute;
+      font-size: 9px;
+      font-weight: 700;
+      color: #8c705f;
+      pointer-events: none;
+    }
+    .coord-rank { top: 2px; left: 3px; }
+    .coord-file { bottom: 2px; right: 3px; }
+
+    /* Move Hint Dots */
+    .move-hint {
+      position: absolute;
+      width: 32%;
+      height: 32%;
+      background: rgba(96, 108, 56, 0.6);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .capture-hint {
+      position: absolute;
+      width: 88%;
+      height: 88%;
+      border: 4px dashed rgba(230, 57, 70, 0.8);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 5;
+      animation: rotateDash 10s linear infinite;
+    }
+
+    @keyframes rotateDash {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Cat Piece SVG */
+    .cat-piece-wrapper {
+      width: 90%;
+      height: 90%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      transition: transform 0.15s ease-out;
+    }
+
+    .board-container.flipped .cat-piece-wrapper {
+      transform: rotate(180deg);
+    }
+
+    .cat-piece {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+    }
+
+    /* Controls */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+      width: 100%;
+    }
+
+    .btn {
+      background: #fff;
+      border: 2px solid var(--board-border);
+      color: var(--board-border);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 3px 0 var(--board-border);
+      transition: all 0.1s;
+    }
+
+    .btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 0 0 var(--board-border);
+    }
+
+    .toggle-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .toggle-wrapper input {
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      accent-color: #bc6c25;
+    }
+
+    /* Promotion Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-box {
+      background: #fff;
+      border: 3px solid var(--board-border);
+      border-radius: 16px;
+      padding: 20px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      animation: popIn 0.25s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #bc6c25;
+      margin-bottom: 4px;
+    }
+
+    .modal-subtitle {
+      font-size: 0.9rem;
+      color: #606c38;
+      margin-bottom: 16px;
+    }
+
+    .promo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .promo-option {
+      background: #fdfbf7;
+      border: 2px solid #dda15e;
+      border-radius: 12px;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .promo-option:hover, .promo-option:active {
+      background: #ffe6a7;
+      border-color: #bc6c25;
+      transform: scale(1.04);
+    }
+
+    .promo-svg {
+      width: 60px;
+      height: 60px;
+    }
+
+    .promo-label {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #4a3728;
+    }
+
+    /* Game Over Modal */
+    .gameover-box {
+      background: #fff;
+      border: 4px solid #bc6c25;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🐾 Cat Chess 🐾</h1>
+    <div class="subtitle">Sunny Slackers vs. Midnight Zoomies</div>
+  </header>
+
+  <div class="game-wrapper">
+    <!-- Top Bar: Turn info -->
+    <div class="turn-bar">
+      <div class="player-indicator" id="turnIndicator">
+        <div class="player-avatar" id="turnAvatar"></div>
+        <span id="turnText">Sunny Slackers' Turn</span>
+      </div>
+      <div class="check-badge" id="checkBadge">Check!</div>
+    </div>
+
+    <!-- Black Captured Tray -->
+    <div class="captured-tray" id="blackCapturedTray"></div>
+
+    <!-- Board -->
+    <div class="board-container" id="boardContainer">
+      <div class="chess-board" id="chessBoard"></div>
+    </div>
+
+    <!-- White Captured Tray -->
+    <div class="captured-tray" id="whiteCapturedTray"></div>
+
+    <!-- Slapstick Commentary Banner -->
+    <div class="commentary-banner" id="commentaryBanner">
+      🐾 Game started! Sunny Slackers (White) make the first move.
+    </div>
+
+    <!-- Control Buttons -->
+    <div class="controls-bar">
+      <button class="btn" id="btnFlip">🔄 Flip Board</button>
+      <button class="btn" id="btnUndo">↩️ Undo</button>
+      <button class="btn" id="btnNewGame">🆕 New Game</button>
+      <button class="btn" id="btnSound">🔊 Sound</button>
+      <label class="toggle-wrapper">
+        <input type="checkbox" id="chkAutoRotate">
+        <span>Auto-Rotate</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Promotion Modal -->
+  <div class="modal-overlay" id="promoModal">
+    <div class="modal-box">
+      <div class="modal-title">🎉 Your Kitten Grew Up!</div>
+      <div class="modal-subtitle">Choose an adult cat to promote to:</div>
+      <div class="promo-grid" id="promoGrid"></div>
+    </div>
+  </div>
+
+  <!-- Game Over Modal -->
+  <div class="modal-overlay" id="gameOverModal">
+    <div class="gameover-box">
+      <div class="modal-title" id="gameOverTitle">🏆 Victory!</div>
+      <div class="modal-subtitle" id="gameOverMsg" style="margin-bottom: 20px;">The game has concluded.</div>
+      <button class="btn" id="btnPlayAgain" style="margin: 0 auto;">🐾 Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    // Embedded SVG Piece Assets
+    const PIECE_SVGS = {"P": "<svg viewBox=\"0 0 100 100\" class=\"cat-piece\">\n      <!-- Kitten Pawn (White/Orange) -->\n      <ellipse cx=\"50\" cy=\"72\" rx=\"22\" ry=\"18\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"3\"/>\n      <!-- Kitten tail -->\n      <path d=\"M 68 76 Q 82 72 80 56\" fill=\"none\" stroke=\"#e85d04\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n      <!-- Tiny paws -->\n      <ellipse cx=\"40\" cy=\"86\" rx=\"7\" ry=\"5\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2\"/>\n      <ellipse cx=\"60\" cy=\"86\" rx=\"7\" ry=\"5\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2\"/>\n      <!-- Head -->\n      <circle cx=\"50\" cy=\"45\" r=\"22\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"3\"/>\n      <!-- Ears -->\n      <polygon points=\"32,32 40,15 48,27\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"2.5\"/>\n      <polygon points=\"35,30 40,19 46,27\" fill=\"#ffb7b2\"/>\n      <polygon points=\"68,32 60,15 52,27\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"2.5\"/>\n      <polygon points=\"65,30 60,19 54,27\" fill=\"#ffb7b2\"/>\n      <!-- Stripes -->\n      <path d=\"M 45 28 L 50 34 L 55 28\" fill=\"none\" stroke=\"#d9480f\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n      <!-- Big Curious Kitten Eyes -->\n      <ellipse cx=\"41\" cy=\"45\" rx=\"6\" ry=\"7\" fill=\"#222\"/>\n      <circle cx=\"43\" cy=\"43\" r=\"2.5\" fill=\"#fff\"/>\n      <ellipse cx=\"59\" cy=\"45\" rx=\"6\" ry=\"7\" fill=\"#222\"/>\n      <circle cx=\"61\" cy=\"43\" r=\"2.5\" fill=\"#fff\"/>\n      <!-- Nose & Mouth -->\n      <polygon points=\"48,53 52,53 50,56\" fill=\"#ff758f\"/>\n      <path d=\"M 47 56 Q 50 59 50 57 Q 50 59 53 56\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/>\n      <!-- Whiskers -->\n      <path d=\"M 33 52 L 20 50 M 33 55 L 21 56 M 67 52 L 80 50 M 67 55 L 79 56\" stroke=\"#222\" stroke-width=\"1.5\"/>\n    </svg>", "R": "<svg viewBox=\"0 0 100 100\" class=\"cat-piece\">\n      <!-- Box Chonk Rook (White/Orange) -->\n      <!-- Cardboard Box (Rook battlements) -->\n      <rect x=\"20\" y=\"52\" width=\"60\" height=\"38\" rx=\"4\" fill=\"#cb997e\" stroke=\"#222\" stroke-width=\"3\"/>\n      <!-- Box flaps / crenellations -->\n      <polygon points=\"20,52 14,44 32,44 32,52\" fill=\"#ddbea9\" stroke=\"#222\" stroke-width=\"2.5\"/>\n      <polygon points=\"68,52 68,44 86,44 80,52\" fill=\"#ddbea9\" stroke=\"#222\" stroke-width=\"2.5\"/>\n      <!-- Box text -->\n      <text x=\"50\" y=\"76\" font-size=\"9\" font-family=\"'Impact', sans-serif\" font-weight=\"bold\" fill=\"#6b4c35\" text-anchor=\"middle\">SITS</text>\n      <!-- Big Chonky Cat Body & Head spilling out -->\n      <ellipse cx=\"50\" cy=\"46\" rx=\"26\" ry=\"22\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"3\"/>\n      <!-- Ears -->\n      <polygon points=\"28,34 33,16 43,28\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"2.5\"/>\n      <polygon points=\"31,31 34,20 40,28\" fill=\"#ffcad4\"/>\n      <polygon points=\"72,34 67,16 57,28\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"2.5\"/>\n      <polygon points=\"69,31 66,20 60,28\" fill=\"#ffcad4\"/>\n      <!-- Chubby Cheeks & Paws draped over box -->\n      <ellipse cx=\"32\" cy=\"56\" rx=\"9\" ry=\"6\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2\"/>\n      <ellipse cx=\"68\" cy=\"56\" rx=\"9\" ry=\"6\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2\"/>\n      <!-- Smug Chonk Face -->\n      <ellipse cx=\"40\" cy=\"42\" rx=\"4\" ry=\"5\" fill=\"#222\"/>\n      <circle cx=\"41\" cy=\"40\" r=\"1.5\" fill=\"#fff\"/>\n      <ellipse cx=\"60\" cy=\"42\" rx=\"4\" ry=\"5\" fill=\"#222\"/>\n      <circle cx=\"61\" cy=\"40\" r=\"1.5\" fill=\"#fff\"/>\n      <polygon points=\"48,48 52,48 50,51\" fill=\"#ff758f\"/>\n      <path d=\"M 45 52 Q 50 56 55 52\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/>\n      <path d=\"M 28 46 L 15 44 M 28 49 L 16 51 M 72 46 L 85 44 M 72 49 L 84 51\" stroke=\"#222\" stroke-width=\"1.5\"/>\n    </svg>", "N": "<svg viewBox=\"0 0 100 100\" class=\"cat-piece\">\n      <!-- Leaping Zoomie Knight (White/Orange) -->\n      <!-- Motion lines behind -->\n      <path d=\"M 16 78 Q 24 70 30 75 M 12 65 Q 22 58 26 62\" stroke=\"#e85d04\" stroke-width=\"3\" stroke-linecap=\"round\" fill=\"none\"/>\n      <!-- Leaping Body (curved like a knight horse head) -->\n      <path d=\"M 25 75 Q 35 40 60 32 Q 78 28 78 45 Q 75 62 55 68 Q 40 70 32 82 Z\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"3\"/>\n      <!-- White chest/belly -->\n      <path d=\"M 42 66 Q 55 64 68 52 Q 55 56 46 64 Z\" fill=\"#fff\"/>\n      <!-- Pouncing Front Paws -->\n      <ellipse cx=\"76\" cy=\"58\" rx=\"7\" ry=\"5\" transform=\"rotate(20 76 58)\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2\"/>\n      <ellipse cx=\"84\" cy=\"50\" rx=\"7\" ry=\"5\" transform=\"rotate(-15 84 50)\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2\"/>\n      <!-- Head & Airplane Ears -->\n      <circle cx=\"66\" cy=\"32\" r=\"16\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"2.5\"/>\n      <polygon points=\"56,22 50,8 62,17\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"2\"/>\n      <polygon points=\"74,20 86,10 78,24\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"2\"/>\n      <!-- Wild Zoomie Eyes (Full pupil dilation) -->\n      <circle cx=\"62\" cy=\"30\" r=\"5.5\" fill=\"#222\"/>\n      <circle cx=\"63\" cy=\"28\" r=\"2\" fill=\"#fff\"/>\n      <circle cx=\"73\" cy=\"32\" r=\"5.5\" fill=\"#222\"/>\n      <circle cx=\"74\" cy=\"30\" r=\"2\" fill=\"#fff\"/>\n      <polygon points=\"68,38 71,38 69.5,41\" fill=\"#ff758f\"/>\n      <path d=\"M 66 41 Q 70 45 74 41\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/>\n      <!-- Wild back legs -->\n      <ellipse cx=\"30\" cy=\"80\" rx=\"9\" ry=\"6\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2\"/>\n      <!-- Fluffed tail -->\n      <path d=\"M 24 72 Q 10 50 18 36\" fill=\"none\" stroke=\"#d9480f\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n    </svg>", "B": "<svg viewBox=\"0 0 100 100\" class=\"cat-piece\">\n      <!-- Counter Slinker Bishop (White/Cream Siamese) -->\n      <!-- Sleek diagonal body -->\n      <path d=\"M 30 84 Q 40 45 52 35 Q 60 48 65 84 Z\" fill=\"#faedcd\" stroke=\"#222\" stroke-width=\"3\"/>\n      <!-- Low swishing tail -->\n      <path d=\"M 32 80 Q 15 75 16 60\" fill=\"none\" stroke=\"#99582a\" stroke-width=\"4.5\" stroke-linecap=\"round\"/>\n      <!-- Dark points on paws -->\n      <ellipse cx=\"44\" cy=\"86\" rx=\"6\" ry=\"4\" fill=\"#6f4e37\" stroke=\"#222\" stroke-width=\"2\"/>\n      <ellipse cx=\"58\" cy=\"86\" rx=\"6\" ry=\"4\" fill=\"#6f4e37\" stroke=\"#222\" stroke-width=\"2\"/>\n      <!-- Tall Sleek Head -->\n      <ellipse cx=\"52\" cy=\"32\" rx=\"15\" ry=\"17\" fill=\"#faedcd\" stroke=\"#222\" stroke-width=\"2.5\"/>\n      <!-- Siamese mask -->\n      <ellipse cx=\"52\" cy=\"34\" rx=\"10\" ry=\"9\" fill=\"#8d5b4c\"/>\n      <!-- Tall Mitre-like Ears -->\n      <polygon points=\"40,24 38,4 47,18\" fill=\"#6f4e37\" stroke=\"#222\" stroke-width=\"2\"/>\n      <polygon points=\"57,18 66,4 64,24\" fill=\"#6f4e37\" stroke=\"#222\" stroke-width=\"2\"/>\n      <!-- Sleek Slanted Blue Eyes -->\n      <ellipse cx=\"46\" cy=\"32\" rx=\"4\" ry=\"3\" transform=\"rotate(-15 46 32)\" fill=\"#00b4d8\" stroke=\"#222\" stroke-width=\"1.5\"/>\n      <ellipse cx=\"58\" cy=\"32\" rx=\"4\" ry=\"3\" transform=\"rotate(15 58 32)\" fill=\"#00b4d8\" stroke=\"#222\" stroke-width=\"1.5\"/>\n      <circle cx=\"46\" cy=\"32\" r=\"1.5\" fill=\"#222\"/>\n      <circle cx=\"58\" cy=\"32\" r=\"1.5\" fill=\"#222\"/>\n      <!-- Smug sneaky smile -->\n      <polygon points=\"50,38 54,38 52,40\" fill=\"#ff758f\"/>\n      <path d=\"M 48 41 Q 52 44 56 41\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n      <!-- Slanted collar -->\n      <path d=\"M 42 46 Q 52 50 62 46\" stroke=\"#e63946\" stroke-width=\"3\" fill=\"none\"/>\n    </svg>", "Q": "<svg viewBox=\"0 0 100 100\" class=\"cat-piece\">\n      <!-- Boss Diva Queen (White/Fluffy Royal Persian) -->\n      <!-- Luxurious Fluffy Base & Mane -->\n      <ellipse cx=\"50\" cy=\"74\" rx=\"30\" ry=\"18\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"3\"/>\n      <!-- Huge Plumed Tail -->\n      <path d=\"M 72 75 Q 92 65 88 40 Q 82 45 78 55\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2.5\"/>\n      <!-- Fluffy Chest & Jewels -->\n      <ellipse cx=\"50\" cy=\"55\" rx=\"20\" ry=\"16\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2.5\"/>\n      <!-- Ruby Necklace -->\n      <path d=\"M 38 56 Q 50 64 62 56\" fill=\"none\" stroke=\"#d90429\" stroke-width=\"3\"/>\n      <circle cx=\"50\" cy=\"62\" r=\"3.5\" fill=\"#ffd166\" stroke=\"#222\" stroke-width=\"1.5\"/>\n      <!-- Fluffy Head -->\n      <circle cx=\"50\" cy=\"36\" r=\"18\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"3\"/>\n      <!-- Ears with fluffy tufts -->\n      <polygon points=\"34,26 36,12 46,22\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2\"/>\n      <polygon points=\"37,24 38,15 43,21\" fill=\"#ffcad4\"/>\n      <polygon points=\"66,26 64,12 54,22\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2\"/>\n      <polygon points=\"63,24 62,15 57,21\" fill=\"#ffcad4\"/>\n      <!-- Tilted Golden Crown -->\n      <polygon points=\"40,16 42,4 47,11 52,2 57,11 62,4 64,16\" fill=\"#ffd166\" stroke=\"#222\" stroke-width=\"2\"/>\n      <circle cx=\"52\" cy=\"2\" r=\"1.5\" fill=\"#d90429\"/>\n      <!-- Diva Eyes & Long Eyelashes -->\n      <ellipse cx=\"43\" cy=\"35\" rx=\"4\" ry=\"4.5\" fill=\"#06d6a0\" stroke=\"#222\" stroke-width=\"1.5\"/>\n      <circle cx=\"44\" cy=\"34\" r=\"1.5\" fill=\"#fff\"/>\n      <path d=\"M 39 31 L 36 28 M 43 30 L 43 27\" stroke=\"#222\" stroke-width=\"1.5\"/>\n      <ellipse cx=\"57\" cy=\"35\" rx=\"4\" ry=\"4.5\" fill=\"#06d6a0\" stroke=\"#222\" stroke-width=\"1.5\"/>\n      <circle cx=\"58\" cy=\"34\" r=\"1.5\" fill=\"#fff\"/>\n      <path d=\"M 61 31 L 64 28 M 57 30 L 57 27\" stroke=\"#222\" stroke-width=\"1.5\"/>\n      <!-- Tiny nose, upturned snooty expression -->\n      <polygon points=\"48,41 52,41 50,43\" fill=\"#ff758f\"/>\n      <path d=\"M 46 45 Q 50 43 54 45\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/>\n    </svg>", "K": "<svg viewBox=\"0 0 100 100\" class=\"cat-piece\">\n      <!-- Nap Champion King (White/Orange Tom) -->\n      <!-- Velvet Cushion Base -->\n      <ellipse cx=\"50\" cy=\"80\" rx=\"34\" ry=\"12\" fill=\"#9d4edd\" stroke=\"#222\" stroke-width=\"3\"/>\n      <!-- Gold tassels on cushion -->\n      <circle cx=\"16\" cy=\"80\" r=\"2.5\" fill=\"#ffd166\"/>\n      <circle cx=\"84\" cy=\"80\" r=\"2.5\" fill=\"#ffd166\"/>\n      <!-- Sleeping Plump Body (curled on back) -->\n      <ellipse cx=\"50\" cy=\"62\" rx=\"26\" ry=\"18\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"3\"/>\n      <ellipse cx=\"50\" cy=\"62\" rx=\"16\" ry=\"11\" fill=\"#fff\"/>\n      <!-- Sleeping Paws in the air -->\n      <ellipse cx=\"38\" cy=\"52\" rx=\"5\" ry=\"7\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2\"/>\n      <ellipse cx=\"62\" cy=\"52\" rx=\"5\" ry=\"7\" fill=\"#fff\" stroke=\"#222\" stroke-width=\"2\"/>\n      <!-- Head resting sideways -->\n      <circle cx=\"34\" cy=\"40\" r=\"15\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"2.5\"/>\n      <!-- Ears -->\n      <polygon points=\"22,34 18,20 28,26\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"2\"/>\n      <polygon points=\"34,26 40,16 42,28\" fill=\"#fca311\" stroke=\"#222\" stroke-width=\"2\"/>\n      <!-- Crooked King Crown on head -->\n      <polygon points=\"26,18 24,8 30,12 36,6 40,14\" fill=\"#ffd166\" stroke=\"#222\" stroke-width=\"2\" transform=\"rotate(15 32 12)\"/>\n      <!-- Blissfully Closed Sleeping Eyes (^ ^) -->\n      <path d=\"M 27 40 Q 30 36 33 40\" fill=\"none\" stroke=\"#222\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n      <path d=\"M 37 40 Q 40 36 43 40\" fill=\"none\" stroke=\"#222\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n      <polygon points=\"34,44 37,44 35.5,46\" fill=\"#ff758f\"/>\n      <!-- Cute Snoring \"Zzz\" bubble -->\n      <text x=\"70\" y=\"32\" font-family=\"'Comic Sans MS', sans-serif\" font-weight=\"bold\" font-size=\"16\" fill=\"#7209b7\">Z</text>\n      <text x=\"80\" y=\"22\" font-family=\"'Comic Sans MS', sans-serif\" font-weight=\"bold\" font-size=\"12\" fill=\"#9d4edd\">z</text>\n      <text x=\"88\" y=\"14\" font-family=\"'Comic Sans MS', sans-serif\" font-weight=\"bold\" font-size=\"9\" fill=\"#c77dff\">z</text>\n    </svg>", "p": "<svg viewBox=\"0 0 100 100\" class=\"cat-piece\">\n      <!-- Kitten Pawn (Black Void Kitten) -->\n      <ellipse cx=\"50\" cy=\"72\" rx=\"22\" ry=\"18\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"3\"/>\n      <!-- White tuxedo bib -->\n      <path d=\"M 45 62 L 55 62 L 50 78 Z\" fill=\"#f8f9fa\"/>\n      <!-- Kitten tail -->\n      <path d=\"M 68 76 Q 82 72 80 56\" fill=\"none\" stroke=\"#212529\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n      <!-- Tiny paws -->\n      <ellipse cx=\"40\" cy=\"86\" rx=\"7\" ry=\"5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\"/>\n      <ellipse cx=\"60\" cy=\"86\" rx=\"7\" ry=\"5\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\"/>\n      <!-- Head -->\n      <circle cx=\"50\" cy=\"45\" r=\"22\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"3\"/>\n      <!-- Ears -->\n      <polygon points=\"32,32 40,15 48,27\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2.5\"/>\n      <polygon points=\"35,30 40,19 46,27\" fill=\"#495057\"/>\n      <polygon points=\"68,32 60,15 52,27\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2.5\"/>\n      <polygon points=\"65,30 60,19 54,27\" fill=\"#495057\"/>\n      <!-- Big Luminous Yellow Eyes -->\n      <ellipse cx=\"41\" cy=\"45\" rx=\"6\" ry=\"7\" fill=\"#ffea00\" stroke=\"#000\" stroke-width=\"1.5\"/>\n      <ellipse cx=\"41\" cy=\"45\" rx=\"2.5\" ry=\"6\" fill=\"#000\"/>\n      <circle cx=\"43\" cy=\"42\" r=\"1.5\" fill=\"#fff\"/>\n      <ellipse cx=\"59\" cy=\"45\" rx=\"6\" ry=\"7\" fill=\"#ffea00\" stroke=\"#000\" stroke-width=\"1.5\"/>\n      <ellipse cx=\"59\" cy=\"45\" rx=\"2.5\" ry=\"6\" fill=\"#000\"/>\n      <circle cx=\"61\" cy=\"42\" r=\"1.5\" fill=\"#fff\"/>\n      <!-- Nose & Mouth -->\n      <polygon points=\"48,54 52,54 50,56\" fill=\"#ff758f\"/>\n      <path d=\"M 47 57 Q 50 60 53 57\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.5\"/>\n      <!-- White Whiskers -->\n      <path d=\"M 33 52 L 18 50 M 33 55 L 19 56 M 67 52 L 82 50 M 67 55 L 81 56\" stroke=\"#fff\" stroke-width=\"1.5\"/>\n    </svg>", "r": "<svg viewBox=\"0 0 100 100\" class=\"cat-piece\">\n      <!-- Box Chonk Rook (Black Tuxedo Chonk) -->\n      <rect x=\"20\" y=\"52\" width=\"60\" height=\"38\" rx=\"4\" fill=\"#6c584c\" stroke=\"#000\" stroke-width=\"3\"/>\n      <polygon points=\"20,52 14,44 32,44 32,52\" fill=\"#8c705f\" stroke=\"#000\" stroke-width=\"2.5\"/>\n      <polygon points=\"68,52 68,44 86,44 80,52\" fill=\"#8c705f\" stroke=\"#000\" stroke-width=\"2.5\"/>\n      <text x=\"50\" y=\"76\" font-size=\"9\" font-family=\"'Impact', sans-serif\" font-weight=\"bold\" fill=\"#dda15e\" text-anchor=\"middle\">DO NOT OPEN</text>\n      <!-- Chonky Black Cat Body & Head -->\n      <ellipse cx=\"50\" cy=\"46\" rx=\"26\" ry=\"22\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"3\"/>\n      <!-- White muzzle -->\n      <ellipse cx=\"50\" cy=\"50\" rx=\"10\" ry=\"7\" fill=\"#fff\"/>\n      <!-- Ears -->\n      <polygon points=\"28,34 33,16 43,28\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2.5\"/>\n      <polygon points=\"31,31 34,20 40,28\" fill=\"#495057\"/>\n      <polygon points=\"72,34 67,16 57,28\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2.5\"/>\n      <polygon points=\"69,31 66,20 60,28\" fill=\"#495057\"/>\n      <!-- Paws draped over box -->\n      <ellipse cx=\"32\" cy=\"56\" rx=\"9\" ry=\"6\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\"/>\n      <ellipse cx=\"68\" cy=\"56\" rx=\"9\" ry=\"6\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\"/>\n      <!-- Unamused yellow eyes -->\n      <ellipse cx=\"40\" cy=\"40\" rx=\"5\" ry=\"4\" fill=\"#aacc00\" stroke=\"#000\" stroke-width=\"1.5\"/>\n      <circle cx=\"40\" cy=\"40\" r=\"2\" fill=\"#000\"/>\n      <ellipse cx=\"60\" cy=\"40\" rx=\"5\" ry=\"4\" fill=\"#aacc00\" stroke=\"#000\" stroke-width=\"1.5\"/>\n      <circle cx=\"60\" cy=\"40\" r=\"2\" fill=\"#000\"/>\n      <polygon points=\"48,48 52,48 50,51\" fill=\"#ff758f\"/>\n      <path d=\"M 46 52 Q 50 50 54 52\" fill=\"none\" stroke=\"#000\" stroke-width=\"2\"/>\n      <path d=\"M 28 46 L 15 44 M 28 49 L 16 51 M 72 46 L 85 44 M 72 49 L 84 51\" stroke=\"#fff\" stroke-width=\"1.5\"/>\n    </svg>", "n": "<svg viewBox=\"0 0 100 100\" class=\"cat-piece\">\n      <!-- Leaping Zoomie Knight (Black 3AM Zoomie Gremlin) -->\n      <!-- Crazy motion speed lines -->\n      <path d=\"M 14 78 Q 24 68 30 74 M 10 64 Q 22 56 26 60\" stroke=\"#ff0054\" stroke-width=\"3\" stroke-linecap=\"round\" fill=\"none\"/>\n      <!-- Leaping Body -->\n      <path d=\"M 25 75 Q 35 40 60 32 Q 78 28 78 45 Q 75 62 55 68 Q 40 70 32 82 Z\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"3\"/>\n      <!-- White chest patch -->\n      <path d=\"M 44 64 Q 55 62 66 52 Q 55 55 46 62 Z\" fill=\"#fff\"/>\n      <!-- Pouncing Front Paws -->\n      <ellipse cx=\"76\" cy=\"58\" rx=\"7\" ry=\"5\" transform=\"rotate(20 76 58)\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\"/>\n      <ellipse cx=\"84\" cy=\"50\" rx=\"7\" ry=\"5\" transform=\"rotate(-15 84 50)\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\"/>\n      <!-- Claws out -->\n      <path d=\"M 88 47 L 93 45 M 89 51 L 94 52 M 80 57 L 84 62\" stroke=\"#fff\" stroke-width=\"2\"/>\n      <!-- Head & Flattened Airplane Ears -->\n      <circle cx=\"66\" cy=\"32\" r=\"16\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2.5\"/>\n      <polygon points=\"56,22 48,8 62,17\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2\"/>\n      <polygon points=\"74,20 88,10 78,24\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2\"/>\n      <!-- Pure Gremlin Wild Hypnotic Eyes -->\n      <circle cx=\"62\" cy=\"30\" r=\"6\" fill=\"#39ff14\" stroke=\"#000\" stroke-width=\"1.5\"/>\n      <circle cx=\"62\" cy=\"30\" r=\"3\" fill=\"#000\"/>\n      <circle cx=\"73\" cy=\"32\" r=\"6\" fill=\"#39ff14\" stroke=\"#000\" stroke-width=\"1.5\"/>\n      <circle cx=\"73\" cy=\"32\" r=\"3\" fill=\"#000\"/>\n      <polygon points=\"68,38 71,38 69.5,41\" fill=\"#ff758f\"/>\n      <path d=\"M 66 41 Q 70 45 74 41\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\"/>\n      <!-- Fluffed gremlin tail -->\n      <path d=\"M 24 72 Q 8 48 18 34\" fill=\"none\" stroke=\"#343a40\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n    </svg>", "b": "<svg viewBox=\"0 0 100 100\" class=\"cat-piece\">\n      <!-- Counter Slinker Bishop (Black Sleek Bombay Stalker) -->\n      <path d=\"M 30 84 Q 40 45 52 35 Q 60 48 65 84 Z\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"3\"/>\n      <!-- Low swishing tail -->\n      <path d=\"M 32 80 Q 15 75 16 60\" fill=\"none\" stroke=\"#212529\" stroke-width=\"4.5\" stroke-linecap=\"round\"/>\n      <!-- White socks on paws -->\n      <ellipse cx=\"44\" cy=\"86\" rx=\"6\" ry=\"4\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\"/>\n      <ellipse cx=\"58\" cy=\"86\" rx=\"6\" ry=\"4\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\"/>\n      <!-- Tall Sleek Head -->\n      <ellipse cx=\"52\" cy=\"32\" rx=\"15\" ry=\"17\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2.5\"/>\n      <!-- Tall Mitre-like Pointed Ears -->\n      <polygon points=\"40,24 38,4 47,18\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2\"/>\n      <polygon points=\"41,21 39,8 45,17\" fill=\"#495057\"/>\n      <polygon points=\"57,18 66,4 64,24\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2\"/>\n      <polygon points=\"59,17 65,8 63,21\" fill=\"#495057\"/>\n      <!-- Piercing Slanted Amber Eyes -->\n      <ellipse cx=\"46\" cy=\"32\" rx=\"4.5\" ry=\"3\" transform=\"rotate(-15 46 32)\" fill=\"#ffb703\" stroke=\"#000\" stroke-width=\"1.5\"/>\n      <ellipse cx=\"58\" cy=\"32\" rx=\"4.5\" ry=\"3\" transform=\"rotate(15 58 32)\" fill=\"#ffb703\" stroke=\"#000\" stroke-width=\"1.5\"/>\n      <ellipse cx=\"46\" cy=\"32\" rx=\"1.5\" ry=\"3\" fill=\"#000\"/>\n      <ellipse cx=\"58\" cy=\"32\" rx=\"1.5\" ry=\"3\" fill=\"#000\"/>\n      <!-- Scheming smirk -->\n      <polygon points=\"50,38 54,38 52,40\" fill=\"#ff758f\"/>\n      <path d=\"M 48 42 Q 53 46 57 41\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.5\"/>\n      <!-- Purple collar with bell -->\n      <path d=\"M 42 46 Q 52 50 62 46\" stroke=\"#7209b7\" stroke-width=\"3\" fill=\"none\"/>\n      <circle cx=\"52\" cy=\"50\" r=\"2.5\" fill=\"#ffd166\"/>\n    </svg>", "q": "<svg viewBox=\"0 0 100 100\" class=\"cat-piece\">\n      <!-- Boss Diva Queen (Black Fluffy Empress) -->\n      <ellipse cx=\"50\" cy=\"74\" rx=\"30\" ry=\"18\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"3\"/>\n      <!-- Plumed Tail -->\n      <path d=\"M 72 75 Q 92 65 88 40 Q 82 45 78 55\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2.5\"/>\n      <!-- Fluffy Chest & Jewels -->\n      <ellipse cx=\"50\" cy=\"55\" rx=\"20\" ry=\"16\" fill=\"#343a40\" stroke=\"#000\" stroke-width=\"2.5\"/>\n      <!-- Emerald Necklace -->\n      <path d=\"M 38 56 Q 50 64 62 56\" fill=\"none\" stroke=\"#ffd166\" stroke-width=\"3\"/>\n      <circle cx=\"50\" cy=\"62\" r=\"3.5\" fill=\"#06d6a0\" stroke=\"#000\" stroke-width=\"1.5\"/>\n      <!-- Fluffy Head -->\n      <circle cx=\"50\" cy=\"36\" r=\"18\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"3\"/>\n      <!-- Ears -->\n      <polygon points=\"34,26 36,12 46,22\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2\"/>\n      <polygon points=\"37,24 38,15 43,21\" fill=\"#495057\"/>\n      <polygon points=\"66,26 64,12 54,22\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2\"/>\n      <polygon points=\"63,24 62,15 57,21\" fill=\"#495057\"/>\n      <!-- Tilted Silver / Amethyst Crown -->\n      <polygon points=\"40,16 42,4 47,11 52,2 57,11 62,4 64,16\" fill=\"#e0aaff\" stroke=\"#000\" stroke-width=\"2\"/>\n      <circle cx=\"52\" cy=\"2\" r=\"1.5\" fill=\"#7209b7\"/>\n      <!-- Unimpressed Cat Eyes -->\n      <ellipse cx=\"43\" cy=\"35\" rx=\"4\" ry=\"4\" fill=\"#aacc00\" stroke=\"#000\" stroke-width=\"1.5\"/>\n      <ellipse cx=\"43\" cy=\"35\" rx=\"1.5\" ry=\"3.5\" fill=\"#000\"/>\n      <path d=\"M 39 31 L 36 28\" stroke=\"#fff\" stroke-width=\"1.5\"/>\n      <ellipse cx=\"57\" cy=\"35\" rx=\"4\" ry=\"4\" fill=\"#aacc00\" stroke=\"#000\" stroke-width=\"1.5\"/>\n      <ellipse cx=\"57\" cy=\"35\" rx=\"1.5\" ry=\"3.5\" fill=\"#000\"/>\n      <path d=\"M 61 31 L 64 28\" stroke=\"#fff\" stroke-width=\"1.5\"/>\n      <!-- Snooty upturned nose -->\n      <polygon points=\"48,41 52,41 50,43\" fill=\"#ff758f\"/>\n      <path d=\"M 46 45 Q 50 43 54 45\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2\"/>\n    </svg>", "k": "<svg viewBox=\"0 0 100 100\" class=\"cat-piece\">\n      <!-- Nap Champion King (Black Tuxedo King) -->\n      <!-- Velvet Cushion Base (Deep Emerald/Gold) -->\n      <ellipse cx=\"50\" cy=\"80\" rx=\"34\" ry=\"12\" fill=\"#1b4332\" stroke=\"#000\" stroke-width=\"3\"/>\n      <circle cx=\"16\" cy=\"80\" r=\"2.5\" fill=\"#ffd166\"/>\n      <circle cx=\"84\" cy=\"80\" r=\"2.5\" fill=\"#ffd166\"/>\n      <!-- Sleeping Plump Body -->\n      <ellipse cx=\"50\" cy=\"62\" rx=\"26\" ry=\"18\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"3\"/>\n      <ellipse cx=\"50\" cy=\"62\" rx=\"16\" ry=\"11\" fill=\"#fff\"/>\n      <!-- Sleeping Paws -->\n      <ellipse cx=\"38\" cy=\"52\" rx=\"5\" ry=\"7\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\"/>\n      <ellipse cx=\"62\" cy=\"52\" rx=\"5\" ry=\"7\" fill=\"#fff\" stroke=\"#000\" stroke-width=\"2\"/>\n      <!-- Head resting sideways -->\n      <circle cx=\"34\" cy=\"40\" r=\"15\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2.5\"/>\n      <!-- Ears -->\n      <polygon points=\"22,34 18,20 28,26\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2\"/>\n      <polygon points=\"34,26 40,16 42,28\" fill=\"#212529\" stroke=\"#000\" stroke-width=\"2\"/>\n      <!-- Crooked King Crown -->\n      <polygon points=\"26,18 24,8 30,12 36,6 40,14\" fill=\"#ffd166\" stroke=\"#000\" stroke-width=\"2\" transform=\"rotate(15 32 12)\"/>\n      <!-- Blissfully Closed Eyes -->\n      <path d=\"M 27 40 Q 30 36 33 40\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n      <path d=\"M 37 40 Q 40 36 43 40\" fill=\"none\" stroke=\"#fff\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n      <polygon points=\"34,44 37,44 35.5,46\" fill=\"#ff758f\"/>\n      <!-- Snoring Zzz -->\n      <text x=\"70\" y=\"32\" font-family=\"'Comic Sans MS', sans-serif\" font-weight=\"bold\" font-size=\"16\" fill=\"#52b788\">Z</text>\n      <text x=\"80\" y=\"22\" font-family=\"'Comic Sans MS', sans-serif\" font-weight=\"bold\" font-size=\"12\" fill=\"#74c69d\">z</text>\n      <text x=\"88\" y=\"14\" font-family=\"'Comic Sans MS', sans-serif\" font-weight=\"bold\" font-size=\"9\" fill=\"#95d5b2\">z</text>\n    </svg>"};
+
+    // Synthesized Sound Effects via Web Audio API
+    class CatAudio {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playMeow() {
+        if (!this.enabled) return;
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        const now = this.ctx.currentTime;
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(750, now + 0.12);
+        osc.frequency.exponentialRampToValueAtTime(520, now + 0.32);
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.2, now + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      }
+      playCapture() {
+        if (!this.enabled) return;
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        const now = this.ctx.currentTime;
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.exponentialRampToValueAtTime(60, now + 0.2);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.22);
+      }
+      playCheck() {
+        if (!this.enabled) return;
+        this.init();
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        const now = this.ctx.currentTime;
+        osc.frequency.setValueAtTime(880, now);
+        osc.frequency.setValueAtTime(1100, now + 0.1);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      }
+      playFanfare() {
+        if (!this.enabled) return;
+        this.init();
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          const now = this.ctx.currentTime + idx * 0.12;
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        });
+      }
+    }
+
+    // Slapstick Commentary Messages
+    const COMMENTARY = {
+      P: ["Sunny Kitten waddles forward cautiously.", "A curious kitten stalks an invisible dust speck.", "Kitten creeps into the sunbeam."],
+      R: ["Box Chonk slides heavily across the floor. 'If it fits, I sits!'", "Cardboard Box Rook grinds across the kitchen tiles."],
+      N: ["Zoomie leaps clean over everything!", "3:00 AM acrobatics in full effect!", "Airplane ears activated! Springy pounce!"],
+      B: ["Counter Slinker creeps sideways along the tile line.", "Slinker slinks with intent to knock over a water glass."],
+      Q: ["Boss Diva swishes her royal tail and commands the room.", "Diva Queen surveys her royal kingdom."],
+      K: ["Nap Champion rolls over belly-up to find a sunnier spot.", "Tomcat snoozes one square closer to dinner."],
+      capture: [
+        "POW! Casual paw swipe knocks the rival off the table!",
+        "BAT! Sent tumbling like a ball of yarn!",
+        "SWIPE! Pushed clean off the ledge!",
+        "POUNCE! Gremlin cat claims the square!"
+      ],
+      check: [
+        "⚠️ Alert! The Nap Champion was startled awake!",
+        "⚠️ Hisssss! King cat scrambles onto high alert!",
+        "⚠️ Check! Ears back, pupils wide!"
+      ]
+    };
+
+    // Game Engine Implementation
+    class CatChess {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.board = [
+          ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+          ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+          ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ];
+        this.turn = 'w';
+        this.castling = { K: true, Q: true, k: true, q: true };
+        this.enPassant = null;
+        this.history = [];
+        this.capturedWhite = [];
+        this.capturedBlack = [];
+      }
+      cloneBoard(b) {
+        return b.map(r => [...r]);
+      }
+      isWhite(p) { return p && p === p.toUpperCase(); }
+      isBlack(p) { return p && p === p.toLowerCase(); }
+      getColor(p) { if (!p) return null; return this.isWhite(p) ? 'w' : 'b'; }
+      inBounds(r, c) { return r >= 0 && r < 8 && c >= 0 && c < 8; }
+      findKing(board, color) {
+        const target = color === 'w' ? 'K' : 'k';
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            if (board[r][c] === target) return { r, c };
+          }
+        }
+        return null;
+      }
+      isSquareAttacked(r, c, color, board = this.board) {
+        const oppColor = color === 'w' ? 'b' : 'w';
+        const pawnP = oppColor === 'w' ? 'P' : 'p';
+        const pawnStep = color === 'w' ? -1 : 1;
+        for (let dc of [-1, 1]) {
+          const pr = r + pawnStep, pc = c + dc;
+          if (this.inBounds(pr, pc) && board[pr][pc] === pawnP) return true;
+        }
+        const knightP = oppColor === 'w' ? 'N' : 'n';
+        const knightOffsets = [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]];
+        for (let [dr, dc] of knightOffsets) {
+          const nr = r + dr, nc = c + dc;
+          if (this.inBounds(nr, nc) && board[nr][nc] === knightP) return true;
+        }
+        const kingP = oppColor === 'w' ? 'K' : 'k';
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            if (dr === 0 && dc === 0) continue;
+            const kr = r + dr, kc = c + dc;
+            if (this.inBounds(kr, kc) && board[kr][kc] === kingP) return true;
+          }
+        }
+        const rookP = oppColor === 'w' ? 'R' : 'r';
+        const queenP = oppColor === 'w' ? 'Q' : 'q';
+        for (let [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
+          let cr = r + dr, cc = c + dc;
+          while (this.inBounds(cr, cc)) {
+            const p = board[cr][cc];
+            if (p) {
+              if (p === rookP || p === queenP) return true;
+              break;
+            }
+            cr += dr; cc += dc;
+          }
+        }
+        const bishopP = oppColor === 'w' ? 'B' : 'b';
+        for (let [dr, dc] of [[-1, -1], [-1, 1], [1, -1], [1, 1]]) {
+          let cr = r + dr, cc = c + dc;
+          while (this.inBounds(cr, cc)) {
+            const p = board[cr][cc];
+            if (p) {
+              if (p === bishopP || p === queenP) return true;
+              break;
+            }
+            cr += dr; cc += dc;
+          }
+        }
+        return false;
+      }
+      isCheck(color = this.turn, board = this.board) {
+        const kPos = this.findKing(board, color);
+        if (!kPos) return false;
+        return this.isSquareAttacked(kPos.r, kPos.c, color, board);
+      }
+      getPseudoLegalMoves(r, c) {
+        const p = this.board[r][c];
+        if (!p) return [];
+        const color = this.getColor(p);
+        if (color !== this.turn) return [];
+        const moves = [];
+        const pType = p.toUpperCase();
+
+        if (pType === 'P') {
+          const dir = color === 'w' ? -1 : 1;
+          const startRank = color === 'w' ? 6 : 1;
+          const promoRank = color === 'w' ? 0 : 7;
+          if (this.inBounds(r + dir, c) && !this.board[r + dir][c]) {
+            moves.push({ from: { r, c }, to: { r: r + dir, c }, isPromo: (r + dir) === promoRank });
+            if (r === startRank && !this.board[r + 2 * dir][c]) {
+              moves.push({ from: { r, c }, to: { r: r + 2 * dir, c }, isDoublePawn: true });
+            }
+          }
+          for (let dc of [-1, 1]) {
+            const tr = r + dir, tc = c + dc;
+            if (this.inBounds(tr, tc)) {
+              const target = this.board[tr][tc];
+              if (target && this.getColor(target) !== color) {
+                moves.push({ from: { r, c }, to: { r: tr, c: tc }, isPromo: tr === promoRank, isCapture: true });
+              } else if (this.enPassant && this.enPassant.r === tr && this.enPassant.c === tc) {
+                moves.push({ from: { r, c }, to: { r: tr, c: tc }, isEnPassant: true, isCapture: true });
+              }
+            }
+          }
+        } else if (pType === 'N') {
+          const knightOffsets = [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]];
+          for (let [dr, dc] of knightOffsets) {
+            const tr = r + dr, tc = c + dc;
+            if (this.inBounds(tr, tc)) {
+              const target = this.board[tr][tc];
+              if (!target || this.getColor(target) !== color) {
+                moves.push({ from: { r, c }, to: { r: tr, c: tc }, isCapture: !!target });
+              }
+            }
+          }
+        } else if (pType === 'B' || pType === 'R' || pType === 'Q') {
+          const dirs = [];
+          if (pType === 'B' || pType === 'Q') dirs.push([-1, -1], [-1, 1], [1, -1], [1, 1]);
+          if (pType === 'R' || pType === 'Q') dirs.push([-1, 0], [1, 0], [0, -1], [0, 1]);
+          for (let [dr, dc] of dirs) {
+            let tr = r + dr, tc = c + dc;
+            while (this.inBounds(tr, tc)) {
+              const target = this.board[tr][tc];
+              if (!target) {
+                moves.push({ from: { r, c }, to: { r: tr, c: tc } });
+              } else {
+                if (this.getColor(target) !== color) {
+                  moves.push({ from: { r, c }, to: { r: tr, c: tc }, isCapture: true });
+                }
+                break;
+              }
+              tr += dr; tc += dc;
+            }
+          }
+        } else if (pType === 'K') {
+          for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+              if (dr === 0 && dc === 0) continue;
+              const tr = r + dr, tc = c + dc;
+              if (this.inBounds(tr, tc)) {
+                const target = this.board[tr][tc];
+                if (!target || this.getColor(target) !== color) {
+                  moves.push({ from: { r, c }, to: { r: tr, c: tc }, isCapture: !!target });
+                }
+              }
+            }
+          }
+          if (!this.isCheck(color)) {
+            if (color === 'w' && r === 7 && c === 4) {
+              if (this.castling.K && !this.board[7][5] && !this.board[7][6] && this.board[7][7] === 'R') {
+                if (!this.isSquareAttacked(7, 5, 'w') && !this.isSquareAttacked(7, 6, 'w')) {
+                  moves.push({ from: { r, c }, to: { r: 7, c: 6 }, isCastle: 'K' });
+                }
+              }
+              if (this.castling.Q && !this.board[7][3] && !this.board[7][2] && !this.board[7][1] && this.board[7][0] === 'R') {
+                if (!this.isSquareAttacked(7, 3, 'w') && !this.isSquareAttacked(7, 2, 'w')) {
+                  moves.push({ from: { r, c }, to: { r: 7, c: 2 }, isCastle: 'Q' });
+                }
+              }
+            } else if (color === 'b' && r === 0 && c === 4) {
+              if (this.castling.k && !this.board[0][5] && !this.board[0][6] && this.board[0][7] === 'r') {
+                if (!this.isSquareAttacked(0, 5, 'b') && !this.isSquareAttacked(0, 6, 'b')) {
+                  moves.push({ from: { r, c }, to: { r: 0, c: 6 }, isCastle: 'k' });
+                }
+              }
+              if (this.castling.q && !this.board[0][3] && !this.board[0][2] && !this.board[0][1] && this.board[0][0] === 'r') {
+                if (!this.isSquareAttacked(0, 3, 'b') && !this.isSquareAttacked(0, 2, 'b')) {
+                  moves.push({ from: { r, c }, to: { r: 0, c: 2 }, isCastle: 'q' });
+                }
+              }
+            }
+          }
+        }
+        return moves;
+      }
+      getLegalMoves(r, c) {
+        const pseudo = this.getPseudoLegalMoves(r, c);
+        return pseudo.filter(m => {
+          const nextBoard = this.cloneBoard(this.board);
+          const piece = nextBoard[m.from.r][m.from.c];
+          nextBoard[m.to.r][m.to.c] = piece;
+          nextBoard[m.from.r][m.from.c] = null;
+          if (m.isEnPassant) {
+            const epRow = piece === 'P' ? m.to.r + 1 : m.to.r - 1;
+            nextBoard[epRow][m.to.c] = null;
+          }
+          const color = this.getColor(piece);
+          return !this.isCheck(color, nextBoard);
+        });
+      }
+      getAllLegalMoves() {
+        const all = [];
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            if (this.board[r][c] && this.getColor(this.board[r][c]) === this.turn) {
+              all.push(...this.getLegalMoves(r, c));
+            }
+          }
+        }
+        return all;
+      }
+      makeMove(move, promotionChoice = 'Q') {
+        const { from, to, isCastle, isEnPassant, isDoublePawn, isPromo } = move;
+        const piece = this.board[from.r][from.c];
+        const color = this.getColor(piece);
+        let captured = this.board[to.r][to.c];
+
+        this.history.push({
+          board: this.cloneBoard(this.board),
+          turn: this.turn,
+          castling: { ...this.castling },
+          enPassant: this.enPassant ? { ...this.enPassant } : null,
+          capturedWhite: [...this.capturedWhite],
+          capturedBlack: [...this.capturedBlack],
+          move: { ...move, piece, captured, promotionChoice }
+        });
+
+        this.board[to.r][to.c] = piece;
+        this.board[from.r][from.c] = null;
+
+        if (isEnPassant) {
+          const epRow = color === 'w' ? to.r + 1 : to.r - 1;
+          captured = this.board[epRow][to.c];
+          this.board[epRow][to.c] = null;
+        }
+
+        if (captured) {
+          if (this.isWhite(captured)) this.capturedWhite.push(captured);
+          else this.capturedBlack.push(captured);
+        }
+
+        if (isCastle) {
+          if (isCastle === 'K') { this.board[7][5] = 'R'; this.board[7][7] = null; }
+          else if (isCastle === 'Q') { this.board[7][3] = 'R'; this.board[7][0] = null; }
+          else if (isCastle === 'k') { this.board[0][5] = 'r'; this.board[0][7] = null; }
+          else if (isCastle === 'q') { this.board[0][3] = 'r'; this.board[0][0] = null; }
+        }
+
+        if (isPromo) {
+          const promoPiece = color === 'w' ? promotionChoice.toUpperCase() : promotionChoice.toLowerCase();
+          this.board[to.r][to.c] = promoPiece;
+        }
+
+        if (piece === 'K') { this.castling.K = false; this.castling.Q = false; }
+        if (piece === 'k') { this.castling.k = false; this.castling.q = false; }
+        if (from.r === 7 && from.c === 7) this.castling.K = false;
+        if (from.r === 7 && from.c === 0) this.castling.Q = false;
+        if (from.r === 0 && from.c === 7) this.castling.k = false;
+        if (from.r === 0 && from.c === 0) this.castling.q = false;
+        if (to.r === 7 && to.c === 7) this.castling.K = false;
+        if (to.r === 7 && to.c === 0) this.castling.Q = false;
+        if (to.r === 0 && to.c === 7) this.castling.k = false;
+        if (to.r === 0 && to.c === 0) this.castling.q = false;
+
+        if (isDoublePawn) {
+          const epRow = color === 'w' ? from.r - 1 : from.r + 1;
+          this.enPassant = { r: epRow, c: from.c };
+        } else {
+          this.enPassant = null;
+        }
+
+        this.turn = this.turn === 'w' ? 'b' : 'w';
+
+        const oppMoves = this.getAllLegalMoves();
+        const inCheck = this.isCheck(this.turn);
+        let status = 'active';
+        if (oppMoves.length === 0) {
+          status = inCheck ? 'checkmate' : 'stalemate';
+        }
+
+        return { status, inCheck, captured, piece };
+      }
+      undo() {
+        if (this.history.length === 0) return null;
+        const last = this.history.pop();
+        this.board = last.board;
+        this.turn = last.turn;
+        this.castling = last.castling;
+        this.enPassant = last.enPassant;
+        this.capturedWhite = last.capturedWhite;
+        this.capturedBlack = last.capturedBlack;
+        return last;
+      }
+    }
+
+    // Controller & UI Binding
+    const game = new CatChess();
+    const audio = new CatAudio();
+    let selectedSquare = null;
+    let validMoves = [];
+    let isFlipped = false;
+    let pendingPromoMove = null;
+
+    const boardEl = document.getElementById('chessBoard');
+    const boardContainer = document.getElementById('boardContainer');
+    const turnIndicator = document.getElementById('turnIndicator');
+    const turnAvatar = document.getElementById('turnAvatar');
+    const turnText = document.getElementById('turnText');
+    const checkBadge = document.getElementById('checkBadge');
+    const commentaryBanner = document.getElementById('commentaryBanner');
+    const whiteCapturedTray = document.getElementById('whiteCapturedTray');
+    const blackCapturedTray = document.getElementById('blackCapturedTray');
+    const chkAutoRotate = document.getElementById('chkAutoRotate');
+    const promoModal = document.getElementById('promoModal');
+    const promoGrid = document.getElementById('promoGrid');
+    const gameOverModal = document.getElementById('gameOverModal');
+    const gameOverTitle = document.getElementById('gameOverTitle');
+    const gameOverMsg = document.getElementById('gameOverMsg');
+
+    function renderBoard() {
+      boardEl.innerHTML = '';
+      const inCheck = game.isCheck(game.turn);
+      const kPos = inCheck ? game.findKing(game.board, game.turn) : null;
+
+      for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+          const sq = document.createElement('div');
+          const isLight = (r + c) % 2 === 0;
+          sq.className = `square ${isLight ? 'light' : 'dark'}`;
+          sq.dataset.r = r;
+          sq.dataset.c = c;
+
+          // Check coordinate labels
+          if (c === 0) {
+            const rankLabel = document.createElement('span');
+            rankLabel.className = 'coord coord-rank';
+            rankLabel.innerText = 8 - r;
+            sq.appendChild(rankLabel);
+          }
+          if (r === 7) {
+            const fileLabel = document.createElement('span');
+            fileLabel.className = 'coord coord-file';
+            fileLabel.innerText = String.fromCharCode(97 + c);
+            sq.appendChild(fileLabel);
+          }
+
+          // Selected highlight
+          if (selectedSquare && selectedSquare.r === r && selectedSquare.c === c) {
+            sq.classList.add('selected');
+          }
+
+          // King in check red highlight
+          if (kPos && kPos.r === r && kPos.c === c) {
+            sq.classList.add('in-check');
+          }
+
+          // Piece
+          const p = game.board[r][c];
+          if (p && PIECE_SVGS[p]) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'cat-piece-wrapper';
+            wrapper.innerHTML = PIECE_SVGS[p];
+            sq.appendChild(wrapper);
+          }
+
+          // Move hint
+          const moveMatch = validMoves.find(m => m.to.r === r && m.to.c === c);
+          if (moveMatch) {
+            const hint = document.createElement('div');
+            hint.className = moveMatch.isCapture ? 'capture-hint' : 'move-hint';
+            sq.appendChild(hint);
+          }
+
+          sq.addEventListener('click', () => onSquareClick(r, c));
+          boardEl.appendChild(sq);
+        }
+      }
+
+      updateStatusUI();
+    }
+
+    function onSquareClick(r, c) {
+      const p = game.board[r][c];
+      const pColor = game.getColor(p);
+
+      // If clicked on own piece: select it
+      if (p && pColor === game.turn) {
+        selectedSquare = { r, c };
+        validMoves = game.getLegalMoves(r, c);
+        renderBoard();
+        return;
+      }
+
+      // If a piece is already selected, check if clicked square is a valid target
+      if (selectedSquare) {
+        const targetMove = validMoves.find(m => m.to.r === r && m.to.c === c);
+        if (targetMove) {
+          if (targetMove.isPromo) {
+            pendingPromoMove = targetMove;
+            openPromoModal();
+          } else {
+            executeMove(targetMove);
+          }
+          return;
+        }
+      }
+
+      // Otherwise deselect
+      selectedSquare = null;
+      validMoves = [];
+      renderBoard();
+    }
+
+    function executeMove(move, promoChoice = 'Q') {
+      const res = game.makeMove(move, promoChoice);
+      selectedSquare = null;
+      validMoves = [];
+
+      // Audio feedback
+      if (res.status === 'checkmate') {
+        audio.playFanfare();
+      } else if (res.inCheck) {
+        audio.playCheck();
+      } else if (res.captured) {
+        audio.playCapture();
+      } else {
+        audio.playMeow();
+      }
+
+      // Commentary flavor
+      const pType = (move.isPromo ? promoChoice : res.piece).toUpperCase();
+      let comment = '';
+      if (res.status === 'checkmate') {
+        comment = `🏆 Checkmate! The ${game.turn === 'w' ? 'Midnight Zoomies' : 'Sunny Slackers'} conquer the sunbeam!`;
+      } else if (res.inCheck) {
+        comment = COMMENTARY.check[Math.floor(Math.random() * COMMENTARY.check.length)];
+      } else if (res.captured) {
+        comment = COMMENTARY.capture[Math.floor(Math.random() * COMMENTARY.capture.length)];
+      } else if (COMMENTARY[pType]) {
+        const arr = COMMENTARY[pType];
+        comment = arr[Math.floor(Math.random() * arr.length)];
+      }
+      commentaryBanner.innerText = comment;
+
+      // Auto-rotate if enabled
+      if (chkAutoRotate.checked) {
+        isFlipped = (game.turn === 'b');
+        boardContainer.classList.toggle('flipped', isFlipped);
+      }
+
+      renderBoard();
+
+      if (res.status === 'checkmate') {
+        const winner = game.turn === 'w' ? 'Midnight Zoomies (Black)' : 'Sunny Slackers (White)';
+        gameOverTitle.innerText = '🏆 Checkmate!';
+        gameOverMsg.innerText = `${winner} win the highest spot on the cat tree!`;
+        gameOverModal.style.display = 'flex';
+      } else if (res.status === 'stalemate') {
+        gameOverTitle.innerText = '😴 Stalemate!';
+        gameOverMsg.innerText = 'Neither cat has a legal move. Both curled up for a nap.';
+        gameOverModal.style.display = 'flex';
+      }
+    }
+
+    function openPromoModal() {
+      promoGrid.innerHTML = '';
+      const color = game.turn;
+      const options = [
+        { key: 'Q', title: 'Boss Diva (Queen)' },
+        { key: 'R', title: 'Box Chonk (Rook)' },
+        { key: 'N', title: 'Leaping Zoomie (Knight)' },
+        { key: 'B', title: 'Counter Slinker (Bishop)' }
+      ];
+
+      options.forEach(opt => {
+        const optKey = color === 'w' ? opt.key.toUpperCase() : opt.key.toLowerCase();
+        const card = document.createElement('div');
+        card.className = 'promo-option';
+        card.innerHTML = `
+          <div class="promo-svg">${PIECE_SVGS[optKey]}</div>
+          <div class="promo-label">${opt.title}</div>
+        `;
+        card.addEventListener('click', () => {
+          promoModal.style.display = 'none';
+          if (pendingPromoMove) {
+            const move = pendingPromoMove;
+            pendingPromoMove = null;
+            executeMove(move, opt.key);
+          }
+        });
+        promoGrid.appendChild(card);
+      });
+
+      promoModal.style.display = 'flex';
+    }
+
+    function updateStatusUI() {
+      const isWhiteTurn = game.turn === 'w';
+      turnText.innerText = isWhiteTurn ? "Sunny Slackers' Turn 🐾" : "Midnight Zoomies' Turn 🐾";
+      turnAvatar.className = `player-avatar ${isWhiteTurn ? '' : 'black-team'}`;
+      turnAvatar.innerHTML = isWhiteTurn ? PIECE_SVGS['K'] : PIECE_SVGS['k'];
+
+      const inCheck = game.isCheck(game.turn);
+      checkBadge.style.display = inCheck ? 'inline-block' : 'none';
+
+      // Update captured trays
+      whiteCapturedTray.innerHTML = game.capturedWhite.map(p => `<div class="captured-icon">${PIECE_SVGS[p]}</div>`).join('');
+      blackCapturedTray.innerHTML = game.capturedBlack.map(p => `<div class="captured-icon">${PIECE_SVGS[p]}</div>`).join('');
+    }
+
+    // Event Listeners
+    document.getElementById('btnFlip').addEventListener('click', () => {
+      isFlipped = !isFlipped;
+      boardContainer.classList.toggle('flipped', isFlipped);
+    });
+
+    document.getElementById('btnUndo').addEventListener('click', () => {
+      const undone = game.undo();
+      if (undone) {
+        selectedSquare = null;
+        validMoves = [];
+        commentaryBanner.innerText = '↩️ Move undone! The cat hopped backwards in time.';
+        if (chkAutoRotate.checked) {
+          isFlipped = (game.turn === 'b');
+          boardContainer.classList.toggle('flipped', isFlipped);
+        }
+        renderBoard();
+      }
+    });
+
+    document.getElementById('btnNewGame').addEventListener('click', () => {
+      if (confirm('Start a fresh cat chess match?')) {
+        game.reset();
+        selectedSquare = null;
+        validMoves = [];
+        isFlipped = false;
+        boardContainer.classList.remove('flipped');
+        commentaryBanner.innerText = '🐾 Fresh match started! Sunny Slackers (White) to move.';
+        gameOverModal.style.display = 'none';
+        renderBoard();
+      }
+    });
+
+    document.getElementById('btnPlayAgain').addEventListener('click', () => {
+      game.reset();
+      selectedSquare = null;
+      validMoves = [];
+      isFlipped = false;
+      boardContainer.classList.remove('flipped');
+      commentaryBanner.innerText = '🐾 Fresh match started! Sunny Slackers (White) to move.';
+      gameOverModal.style.display = 'none';
+      renderBoard();
+    });
+
+    const btnSound = document.getElementById('btnSound');
+    btnSound.addEventListener('click', () => {
+      audio.enabled = !audio.enabled;
+      btnSound.innerText = audio.enabled ? '🔊 Sound' : '🔇 Muted';
+    });
+
+    // Initial render
+    renderBoard();
+  </script>
+</body>
+</html>
