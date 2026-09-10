@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Maggie's Music Maker</title>
+<!-- Client-side MP3 encoder -->
+<script src="https://cdn.jsdelivr.net/npm/lamejs@1.2.1/lame.min.js"></script>
+<style>
+  :root {
+    --bg-primary: #12141a;
+    --bg-secondary: #1a1d26;
+    --bg-card: #232734;
+    --bg-card-hover: #2b3142;
+    --accent: #ff5e62;
+    --accent-gradient: linear-gradient(135deg, #ff9966, #ff5e62);
+    --secondary-accent: #00d2ff;
+    --text-primary: #f0f3f8;
+    --text-muted: #8c96a8;
+    --border: #2e3447;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .logo { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+  .logo span {
+    background: var(--accent-gradient);
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(255, 94, 98, 0.4);
+  }
+  .tip {
+    font-size: 0.8rem;
+    color: #ffc400;
+    background: rgba(255, 196, 0, 0.1);
+    border: 1px solid rgba(255, 196, 0, 0.3);
+    padding: 5px 12px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  main {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1;
+  }
+  .panel {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .btn {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.92rem;
+    transition: all 0.15s ease;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--accent-gradient); color: white; }
+  .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
+  .btn-secondary:hover { background: var(--bg-card-hover); }
+  .btn-danger { background: rgba(255, 80, 80, 0.15); color: #ff6b6b; border: 1px solid rgba(255, 80, 80, 0.3); }
+  .badge {
+    background: var(--bg-card);
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+  }
+  .badge label {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .badge input, .badge select {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 0.88rem;
+    outline: none;
+    cursor: pointer;
+  }
+  .badge select option { background: var(--bg-card); color: var(--text-primary); }
+  .progress-wrap {
+    height: 12px;
+    background: var(--bg-card);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border);
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent-gradient);
+    transition: width 0.05s linear;
+  }
+  .status {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tracks-head { display: flex; justify-content: space-between; align-items: center; }
+  .track-list { display: flex; flex-direction: column; gap: 8px; }
+  .track-row {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: grid;
+    grid-template-columns: 150px 1fr auto auto;
+    align-items: center;
+    gap: 12px;
+  }
+  @media (max-width: 660px) {
+    .track-row { grid-template-columns: 1fr auto; }
+    .track-mix { grid-column: 1 / -1; }
+  }
+  .track-row.recording { border-color: #ff3344; background: rgba(255, 51, 68, 0.08); }
+  .track-row.armed { border-color: #ffaa00; background: rgba(255, 170, 0, 0.08); }
+  .track-input {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 0.9rem;
+    outline: none;
+    width: 100%;
+  }
+  .track-mix { display: flex; align-items: center; gap: 12px; }
+  .slider-grp { display: flex; align-items: center; gap: 6px; flex: 1; }
+  .slider-grp label { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; }
+  .slider-grp input {
+    flex: 1;
+    -webkit-appearance: none;
+    background: var(--bg-card);
+    height: 5px;
+    border-radius: 3px;
+    outline: none;
+  }
+  .slider-grp input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--secondary-accent);
+    cursor: pointer;
+  }
+  .track-btns { display: flex; gap: 4px; }
+  .tgl-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .tgl-btn.mute-on { background: #ff4444; color: white; border-color: #ff4444; }
+  .tgl-btn.solo-on { background: #ffaa00; color: #12141a; border-color: #ffaa00; }
+  .del-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; padding: 4px; }
+  .del-btn:hover { color: #ff6b6b; }
+  .empty { text-align: center; padding: 36px 16px; border: 2px dashed var(--border); border-radius: 8px; color: var(--text-muted); }
+  details {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    font-size: 0.85rem;
+  }
+  details summary { cursor: pointer; font-weight: 600; color: var(--text-muted); outline: none; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><span>♪</span> Maggie's Music Maker</div>
+  <div class="tip">🎧 Use wired headphones to eliminate latency & mic bleed</div>
+</header>
+<main>
+  <div class="panel">
+    <div class="row">
+      <div style="display:flex; gap:8px;">
+        <button id="btnPlay" class="btn btn-secondary"><span id="playIcon">▶</span> <span id="playText">Play Rhythm</span></button>
+        <button id="btnRec" class="btn btn-primary">● <span id="recText">Record Base Loop (Track 1)</span></button>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div class="badge">
+          <label>BPM</label>
+          <input type="number" id="bpm" value="95" min="40" max="220" style="width:46px;">
+        </div>
+        <div class="badge">
+          <label>Bars</label>
+          <select id="bars">
+            <option value="2">2 Bars (8 beats)</option>
+            <option value="4" selected>4 Bars (16 beats)</option>
+            <option value="8">8 Bars (32 beats)</option>
+            <option value="free">Freeform Tap</option>
+          </select>
+        </div>
+        <div class="badge">
+          <label>Tone</label>
+          <select id="clickTone">
+            <option value="wood" selected>🪵 Woodblock</option>
+            <option value="snap">🫰 Finger Snap</option>
+            <option value="thump">👞 Foot Thump</option>
+            <option value="kalimba">✨ Kalimba / Chime</option>
+            <option value="shaker">🌾 Shaker</option>
+            <option value="studio">🎛️ Studio Rim</option>
+          </select>
+        </div>
+        <div class="badge">
+          <label>Rhythm</label>
+          <select id="clickRhythm">
+            <option value="standard" selected>4/4 Standard</option>
+            <option value="backbeat">Backbeat (2 & 4)</option>
+            <option value="eighths">8th Notes</option>
+            <option value="waltz">3/4 Waltz Feel</option>
+            <option value="heartbeat">Heartbeat</option>
+          </select>
+        </div>
+        <div class="badge">
+          <label>Click</label>
+          <input type="checkbox" id="chkClick" checked style="width: 16px; height: 16px;">
+        </div>
+      </div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="prog"></div></div>
+    <div class="status"><span id="stat">Ready. Tap 'Play Rhythm' to practice, or tap record.</span><span id="time">0.0s / 0.0s</span></div>
+  </div>
+
+  <div class="tracks-head">
+    <h3 style="font-size: 1rem;">Vocal Layers (<span id="tCount">0</span>/10)</h3>
+    <div style="display:flex; gap:6px;">
+      <button id="btnExportWav" class="btn btn-secondary" style="padding:6px 12px; font-size:0.8rem;" disabled>💾 Export WAV</button>
+      <button id="btnExportMp3" class="btn btn-secondary" style="padding:6px 12px; font-size:0.8rem;" disabled>🎵 Export MP3</button>
+      <button id="btnClear" class="btn btn-danger" style="padding:6px 12px; font-size:0.8rem;">Reset All</button>
+    </div>
+  </div>
+
+  <div class="track-list" id="tracksContainer">
+    <div class="empty" id="emptyMsg">No vocal layers yet. You can tap 'Play Rhythm' to rehearse, then record Track 1!</div>
+  </div>
+
+  <details>
+    <summary>⚙️ Vocal Timing Offset (Latency Calibration)</summary>
+    <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+      <label style="font-size:0.8rem; color:var(--text-muted);">Offset:</label>
+      <input type="range" id="latOffset" min="0" max="150" value="40" step="5" style="flex:1;">
+      <span id="latVal" style="font-weight:700; width:45px;">40 ms</span>
+    </div>
+    <p style="color:var(--text-muted); font-size:0.75rem; margin-top:6px;">
+      If recorded harmonies feel slightly delayed behind the backing loop, adjust this offset forward to compensate for your device's audio input buffer.
+    </p>
+  </details>
+</main>
+
+<script>
+(() => {
+  let ctx = null, mic = null, proc = null, stream = null;
+  let tracks = [], loopDur = 0, isPlaying = false, loopStart = 0, animId = null;
+  let recState = 'IDLE', targetIdx = -1, chunks = [], countInStep = 0, countTimer = null;
+
+  const btnPlay = document.getElementById('btnPlay'), btnRec = document.getElementById('btnRec');
+  const playText = document.getElementById('playText'), recText = document.getElementById('recText'), playIcon = document.getElementById('playIcon');
+  const bpmInput = document.getElementById('bpm'), barsSelect = document.getElementById('bars');
+  const clickTone = document.getElementById('clickTone'), clickRhythm = document.getElementById('clickRhythm'), chkClick = document.getElementById('chkClick');
+  const prog = document.getElementById('prog'), stat = document.getElementById('stat'), timeDisp = document.getElementById('time');
+  const tracksContainer = document.getElementById('tracksContainer'), emptyMsg = document.getElementById('emptyMsg');
+  const tCount = document.getElementById('tCount'), btnExportWav = document.getElementById('btnExportWav'), btnExportMp3 = document.getElementById('btnExportMp3'), btnClear = document.getElementById('btnClear');
+  const latOffset = document.getElementById('latOffset'), latVal = document.getElementById('latVal');
+
+  latOffset.oninput = () => latVal.textContent = `${latOffset.value} ms`;
+
+  async function initAudio() {
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (ctx.state === 'suspended') await ctx.resume();
+    if (!stream) {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+        mic = ctx.createMediaStreamSource(stream);
+        proc = ctx.createScriptProcessor(4096, 1, 1);
+        proc.onaudioprocess = (e) => {
+          if (recState === 'REC_T1' || recState === 'REC_LAYER') chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+        };
+        mic.connect(proc);
+        const mute = ctx.createGain(); mute.gain.value = 0;
+        proc.connect(mute); mute.connect(ctx.destination);
+      } catch (err) {
+        console.warn("Microphone access not granted yet: ", err.message);
+      }
+    }
+  }
+
+  function playClick(isDownbeat = false) {
+    if (!ctx || !chkClick.checked) return;
+    const tone = clickTone.value;
+    const t = ctx.currentTime;
+
+    if (tone === 'wood') {
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      const baseFreq = isDownbeat ? 880 : 620;
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(baseFreq * 1.5, t);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq, t + 0.025);
+      g.gain.setValueAtTime(isDownbeat ? 0.45 : 0.28, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.045);
+    } else if (tone === 'snap') {
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(isDownbeat ? 340 : 280, t);
+      osc.frequency.exponentialRampToValueAtTime(120, t + 0.02);
+      g.gain.setValueAtTime(isDownbeat ? 0.4 : 0.25, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.04);
+    } else if (tone === 'thump') {
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(isDownbeat ? 110 : 80, t);
+      osc.frequency.exponentialRampToValueAtTime(45, t + 0.06);
+      g.gain.setValueAtTime(isDownbeat ? 0.6 : 0.35, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.09);
+    } else if (tone === 'kalimba') {
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      const freq = isDownbeat ? 1175 : 880;
+      osc.type = 'sine'; osc.frequency.setValueAtTime(freq, t);
+      g.gain.setValueAtTime(isDownbeat ? 0.35 : 0.2, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + (isDownbeat ? 0.25 : 0.15));
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.28);
+    } else if (tone === 'shaker') {
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(isDownbeat ? 2400 : 1800, t);
+      g.gain.setValueAtTime(isDownbeat ? 0.3 : 0.18, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.035);
+    } else {
+      const osc = ctx.createOscillator(), g = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(isDownbeat ? 1200 : 800, t);
+      g.gain.setValueAtTime(isDownbeat ? 0.4 : 0.22, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(t); osc.stop(t + 0.035);
+    }
+  }
+
+  function updateUI() {
+    tCount.textContent = tracks.length;
+    btnPlay.disabled = false;
+    btnExportWav.disabled = tracks.length === 0;
+    btnExportMp3.disabled = tracks.length === 0;
+    bpmInput.disabled = tracks.length > 0;
+    barsSelect.disabled = tracks.length > 0;
+
+    if (!isPlaying) {
+      playText.textContent = tracks.length === 0 ? 'Play Rhythm' : 'Play All';
+      playIcon.textContent = '▶';
+    }
+
+    if (tracks.length === 0) {
+      tracksContainer.innerHTML = ''; tracksContainer.appendChild(emptyMsg); emptyMsg.style.display = 'block';
+      recText.textContent = 'Record Base Loop (Track 1)';
+      return;
+    }
+    emptyMsg.style.display = 'none';
+    recText.textContent = tracks.length < 10 ? `Add Layer ${tracks.length + 1}` : '10 Layers Reached';
+
+    tracksContainer.innerHTML = '';
+    tracks.forEach((t, i) => {
+      const el = document.createElement('div');
+      el.className = `track-row ${t.rec ? 'recording' : ''} ${t.armed ? 'armed' : ''}`;
+      el.innerHTML = `
+        <div>
+          <input class="track-input" value="${t.name}">
+          <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">${t.rec ? '● RECORDING' : t.armed ? 'ARMED (SYNCING)' : 'READY'}</div>
+        </div>
+        <div class="track-mix">
+          <div class="slider-grp"><label>VOL</label><input type="range" class="vol" min="0" max="1" step="0.05" value="${t.vol}"></div>
+          <div class="slider-grp"><label>PAN</label><input type="range" class="pan" min="-1" max="1" step="0.1" value="${t.pan}"></div>
+        </div>
+        <div class="track-btns">
+          <button class="tgl-btn ${t.muted ? 'mute-on' : ''}" data-act="mute">M</button>
+          <button class="tgl-btn ${t.solo ? 'solo-on' : ''}" data-act="solo">S</button>
+        </div>
+        <button class="del-btn" data-act="del">🗑️</button>
+      `;
+      el.querySelector('.track-input').onchange = (e) => t.name = e.target.value;
+      el.querySelector('.vol').oninput = (e) => { t.vol = parseFloat(e.target.value); if (t.gain) t.gain.gain.setValueAtTime(t.vol, ctx.currentTime); };
+      el.querySelector('.pan').oninput = (e) => { t.pan = parseFloat(e.target.value); if (t.panner) t.panner.pan.setValueAtTime(t.pan, ctx.currentTime); };
+      el.querySelector('[data-act="mute"]').onclick = () => { t.muted = !t.muted; applyMix(); updateUI(); };
+      el.querySelector('[data-act="solo"]').onclick = () => { t.solo = !t.solo; applyMix(); updateUI(); };
+      el.querySelector('[data-act="del"]').onclick = () => { if (t.src) t.src.stop(); tracks.splice(i, 1); if (tracks.length===0){ stop(); loopDur = 0;} updateUI(); };
+      tracksContainer.appendChild(el);
+    });
+  }
+
+  function applyMix() {
+    const hasSolo = tracks.some(t => t.solo);
+    tracks.forEach(t => {
+      if (!t.gain) return;
+      t.gain.gain.setValueAtTime((t.muted || (hasSolo && !t.solo)) ? 0 : t.vol, ctx.currentTime);
+    });
+  }
+
+  function playTrack(t, startTime) {
+    if (!t.buf) return;
+    if (t.src) { try { t.src.stop(); } catch(e){} }
+    t.src = ctx.createBufferSource();
+    t.src.buffer = t.buf;
+    t.src.loop = true;
+    t.src.loopEnd = loopDur;
+    t.gain = ctx.createGain();
+    const hasSolo = tracks.some(x => x.solo);
+    t.gain.gain.setValueAtTime((t.muted || (hasSolo && !t.solo)) ? 0 : t.vol, ctx.currentTime);
+
+    let finalNode = t.gain;
+    if (ctx.createStereoPanner) {
+      t.panner = ctx.createStereoPanner();
+      t.panner.pan.setValueAtTime(t.pan, ctx.currentTime);
+      t.gain.connect(t.panner);
+      finalNode = t.panner;
+    }
+    finalNode.connect(ctx.destination);
+    t.src.connect(t.gain);
+    t.src.start(startTime);
+  }
+
+  function play() {
+    isPlaying = true;
+    playIcon.textContent = '⏸';
+    playText.textContent = 'Pause';
+    loopStart = ctx.currentTime;
+
+    if (tracks.length === 0) {
+      const bpm = parseFloat(bpmInput.value) || 95;
+      const bCount = barsSelect.value === 'free' ? 4 : parseInt(barsSelect.value);
+      loopDur = (60 / bpm) * (bCount * 4);
+      stat.textContent = `Auditioning rhythm track (${bCount} Bars @ ${bpm} BPM). Practice your melody!`;
+    } else {
+      tracks.forEach(t => playTrack(t, loopStart));
+      stat.textContent = `Looping ${tracks.length} vocal layer${tracks.length > 1 ? 's' : ''}.`;
+    }
+    tick();
+  }
+
+  function stop() {
+    isPlaying = false;
+    playIcon.textContent = '▶';
+    playText.textContent = tracks.length === 0 ? 'Play Rhythm' : 'Play All';
+    tracks.forEach(t => { if (t.src) { try { t.src.stop(); } catch(e){} t.src = null; } });
+    if (animId) cancelAnimationFrame(animId);
+    prog.style.width = '0%';
+    stat.textContent = tracks.length === 0 ? "Rhythm paused. Tap record when ready!" : "Playback paused.";
+  }
+
+  btnPlay.onclick = async () => { await initAudio(); isPlaying ? stop() : play(); };
+
+  let lastSubdivision = -1;
+  function tick() {
+    if (!isPlaying && recState !== 'REC_T1' && recState !== 'REC_LAYER') return;
+    const now = ctx.currentTime;
+    const effectiveDur = loopDur > 0 ? loopDur : ((60 / (parseFloat(bpmInput.value) || 95)) * 16);
+    const elapsed = (now - loopStart) % effectiveDur;
+    prog.style.width = `${((elapsed / effectiveDur) * 100).toFixed(1)}%`;
+    timeDisp.textContent = `${elapsed.toFixed(1)}s / ${effectiveDur.toFixed(1)}s`;
+
+    if (barsSelect.value !== 'free' || tracks.length === 0) {
+      const bpm = parseFloat(bpmInput.value) || 95;
+      const qBeat = 60 / bpm;
+      const eighth = qBeat / 2;
+      const rhythm = clickRhythm.value;
+
+      let subIndex = Math.floor(elapsed / (rhythm === 'eighths' ? eighth : qBeat));
+      if (subIndex !== lastSubdivision) {
+        lastSubdivision = subIndex;
+        if (rhythm === 'standard') {
+          playClick(subIndex % 4 === 0);
+        } else if (rhythm === 'backbeat') {
+          if (subIndex % 4 === 1 || subIndex % 4 === 3) playClick(true);
+        } else if (rhythm === 'eighths') {
+          playClick(subIndex % 8 === 0);
+        } else if (rhythm === 'waltz') {
+          playClick(subIndex % 3 === 0);
+        } else if (rhythm === 'heartbeat') {
+          if (subIndex % 4 === 0) {
+            playClick(true);
+            setTimeout(() => playClick(false), 130);
+          }
+        }
+      }
+    }
+
+    if (recState === 'ARMED') {
+      if (elapsed >= effectiveDur - 0.08 || elapsed < 0.04) startLayerRec();
+    } else if (recState === 'REC_LAYER') {
+      if (now - layerStart >= effectiveDur - 0.02) finishLayerRec();
+    }
+    animId = requestAnimationFrame(tick);
+  }
+
+  btnRec.onclick = async () => {
+    await initAudio();
+    if (tracks.length >= 10) return;
+    if (tracks.length === 0) {
+      if (recState === 'IDLE') startT1Count();
+      else if (recState === 'REC_T1' && barsSelect.value === 'free') finishT1();
+    } else if (recState === 'IDLE') {
+      armLayer();
+    }
+  };
+
+  function startT1Count() {
+    recState = 'COUNT'; countInStep = 4;
+    const ms = (60 / (parseFloat(bpmInput.value) || 95)) * 1000;
+    stat.textContent = `Get ready... 4`; playClick(false);
+    countTimer = setInterval(() => {
+      countInStep--;
+      if (countInStep > 0) { stat.textContent = `Get ready... ${countInStep}`; playClick(false); }
+      else { clearInterval(countTimer); startT1Rec(); }
+    }, ms);
+  }
+
+  let t1Start = 0;
+  function startT1Rec() {
+    recState = 'REC_T1'; chunks = []; playClick(true);
+    t1Start = ctx.currentTime; loopStart = t1Start;
+    const bars = barsSelect.value;
+    if (bars !== 'free') {
+      loopDur = (60 / (parseFloat(bpmInput.value) || 95)) * (parseInt(bars) * 4);
+      stat.textContent = `● Recording Track 1 (${bars} Bars)... Sing!`;
+      recText.textContent = `Recording...`;
+      setTimeout(() => { if (recState === 'REC_T1') finishT1(); }, loopDur * 1000);
+    } else {
+      stat.textContent = `● Recording... Tap 'Finish' when phrase ends.`;
+      recText.textContent = `Finish Base Loop`;
+    }
+    tick();
+  }
+
+  function finishT1() {
+    if (barsSelect.value === 'free') loopDur = Math.max(1.0, ctx.currentTime - t1Start);
+    recState = 'IDLE';
+    tracks.push({ name: 'Track 1 (Lead/Beat)', buf: compileBuf(loopDur), vol: 0.9, pan: 0, muted: false, solo: false });
+    stat.textContent = `Track 1 locked (${loopDur.toFixed(2)}s). Seamlessly looping.`;
+    updateUI(); play();
+  }
+
+  let layerStart = 0;
+  function armLayer() {
+    recState = 'ARMED'; targetIdx = tracks.length;
+    tracks.push({ name: `Layer ${tracks.length + 1}`, buf: null, vol: 0.85, pan: tracks.length % 2 === 1 ? -0.35 : 0.35, muted: false, solo: false, armed: true, rec: false });
+    stat.textContent = `Layer armed: will punch-in at the start of next cycle.`;
+    recText.textContent = `Waiting for cycle start...`;
+    updateUI(); if (!isPlaying) play();
+  }
+
+  function startLayerRec() {
+    recState = 'REC_LAYER'; chunks = []; layerStart = ctx.currentTime;
+    tracks[targetIdx].armed = false; tracks[targetIdx].rec = true;
+    playClick(true); stat.textContent = `● Recording Layer ${targetIdx + 1}...`;
+    recText.textContent = `Recording Layer...`;
+    updateUI();
+  }
+
+  function finishLayerRec() {
+    recState = 'IDLE';
+    tracks[targetIdx].buf = compileBuf(loopDur);
+    tracks[targetIdx].rec = false;
+    playTrack(tracks[targetIdx], ctx.currentTime);
+    stat.textContent = `Layer ${targetIdx + 1} added and in sync!`;
+    updateUI();
+  }
+
+  function compileBuf(dur) {
+    let totalLen = chunks.reduce((a, c) => a + c.length, 0);
+    let full = new Float32Array(totalLen), offset = 0;
+    for (let c of chunks) { full.set(c, offset); offset += c.length; }
+    const latSec = (parseFloat(latOffset.value) || 40) / 1000;
+    const latSamples = Math.floor(latSec * ctx.sampleRate);
+    const targetSamples = Math.floor(dur * ctx.sampleRate);
+    const buf = ctx.createBuffer(1, targetSamples, ctx.sampleRate);
+    const ch = buf.getChannelData(0);
+    for (let i = 0; i < targetSamples; i++) ch[i] = (i + latSamples < full.length) ? full[i + latSamples] : 0;
+    const fade = Math.floor(0.003 * ctx.sampleRate);
+    for (let i = 0; i < fade; i++) { ch[i] *= (i/fade); ch[targetSamples - 1 - i] *= (i/fade); }
+    return buf;
+  }
+
+  btnClear.onclick = () => {
+    if (confirm("Clear all recorded tracks?")) {
+      stop(); tracks = []; loopDur = 0; recState = 'IDLE';
+      updateUI();
+    }
+  };
+
+  function generateStereoMix() {
+    const sr = 44100, num = Math.floor(loopDur * sr);
+    const L = new Float32Array(num), R = new Float32Array(num);
+    const hasSolo = tracks.some(t => t.solo);
+    tracks.forEach(t => {
+      if (!t.buf || t.muted || (hasSolo && !t.solo)) return;
+      const d = t.buf.getChannelData(0);
+      const angle = (t.pan + 1) * (Math.PI / 4);
+      const gL = Math.cos(angle) * t.vol, gR = Math.sin(angle) * t.vol;
+      for (let i = 0; i < Math.min(d.length, num); i++) { L[i] += d[i] * gL; R[i] += d[i] * gR; }
+    });
+    return { L, R, sr };
+  }
+
+  btnExportWav.onclick = () => {
+    if (tracks.length === 0 || loopDur === 0) return;
+    const { L, R, sr } = generateStereoMix();
+    const wav = encodeWAV(L, R, sr);
+    const a = document.createElement('a'); a.href = URL.createObjectURL(wav); a.download = `Maggies_Song_${Date.now()}.wav`; a.click();
+  };
+
+  btnExportMp3.onclick = () => {
+    if (tracks.length === 0 || loopDur === 0) return;
+    const { L, R, sr } = generateStereoMix();
+
+    if (typeof lamejs === 'undefined') {
+      alert("MP3 encoder is currently offline or loading. Downloading lossless WAV format instead!");
+      const wav = encodeWAV(L, R, sr);
+      const a = document.createElement('a'); a.href = URL.createObjectURL(wav); a.download = `Maggies_Song_${Date.now()}.wav`; a.click();
+      return;
+    }
+
+    stat.textContent = "Encoding stereo MP3 (192 kbps)...";
+    const mp3encoder = new lamejs.Mp3Encoder(2, sr, 192);
+    const num = L.length;
+    const leftInt16 = new Int16Array(num);
+    const rightInt16 = new Int16Array(num);
+    for (let i = 0; i < num; i++) {
+      leftInt16[i] = Math.max(-1, Math.min(1, L[i])) * 0x7FFF;
+      rightInt16[i] = Math.max(-1, Math.min(1, R[i])) * 0x7FFF;
+    }
+
+    const blockSize = 1152;
+    const mp3Chunks = [];
+    for (let i = 0; i < num; i += blockSize) {
+      const lChunk = leftInt16.subarray(i, i + blockSize);
+      const rChunk = rightInt16.subarray(i, i + blockSize);
+      const mp3buf = mp3encoder.encodeBuffer(lChunk, rChunk);
+      if (mp3buf.length > 0) mp3Chunks.push(mp3buf);
+    }
+    const endBuf = mp3encoder.flush();
+    if (endBuf.length > 0) mp3Chunks.push(endBuf);
+
+    const blob = new Blob(mp3Chunks, { type: 'audio/mp3' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Maggies_Song_${Date.now()}.mp3`; a.click();
+    stat.textContent = "MP3 exported successfully!";
+  };
+
+  function encodeWAV(l, r, sr) {
+    const b = new ArrayBuffer(44 + l.length * 4), v = new DataView(b);
+    const s = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+    s(0, 'RIFF'); v.setUint32(4, 36 + l.length * 4, true); s(8, 'WAVE'); s(12, 'fmt ');
+    v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 2, true);
+    v.setUint32(24, sr, true); v.setUint32(28, sr * 4, true); v.setUint16(32, 4, true); v.setUint16(34, 16, true);
+    s(36, 'data'); v.setUint32(40, l.length * 4, true);
+    let off = 44;
+    for (let i = 0; i < l.length; i++) {
+      v.setInt16(off, Math.max(-1, Math.min(1, l[i])) * 0x7FFF, true); off += 2;
+      v.setInt16(off, Math.max(-1, Math.min(1, r[i])) * 0x7FFF, true); off += 2;
+    }
+    return new Blob([b], { type: 'audio/wav' });
+  }
+
+  updateUI();
+})();
+</script>
+</body>
+</html>
