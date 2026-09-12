@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Monster Hunter Wilds Chess: Guild Expedition vs. Shadow Apex</title>
+  <style>
+/*<![CDATA[*/
+    :root {
+      --bg-color: #0b0e14;
+      --board-border: #1b2230;
+      --border-accent: #e5b95c;
+      --tile-light: #e2d9c8;
+      --tile-dark: #263043;
+      --tile-selected: #f5cd79;
+      --tile-highlight: rgba(0, 210, 211, 0.55);
+      --tile-capture: rgba(255, 71, 87, 0.75);
+      --text-main: #f1f2f6;
+      --text-muted: #9aa7b8;
+      --accent-gold: #e5b95c;
+      --accent-crimson: #ff4757;
+      --accent-cyan: #00d2d3;
+      --card-bg: #141923;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 12px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(229, 185, 92, 0.35);
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    /* Main Container */
+    .game-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    /* Player / Turn Bar */
+    .turn-bar {
+      width: 100%;
+      background: var(--card-bg);
+      border: 2px solid var(--border-accent);
+      border-radius: 12px;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+    }
+
+    .player-indicator {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .player-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--accent-gold);
+      background: #1b2230;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .player-avatar.black-team {
+      background: #0b0e14;
+      border-color: var(--accent-crimson);
+    }
+
+    .check-badge {
+      background: var(--accent-crimson);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      animation: pulse 1s infinite alternate;
+      display: none;
+      box-shadow: 0 0 10px rgba(255, 71, 87, 0.6);
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.1); }
+    }
+
+    /* Tactical Commentary Banner */
+    .commentary-banner {
+      width: 100%;
+      background: #161b22;
+      border: 2px dashed var(--accent-gold);
+      border-radius: 10px;
+      padding: 7px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      text-align: center;
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    /* Captured Trays */
+    .captured-tray {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      min-height: 30px;
+      gap: 4px;
+      padding: 2px 8px;
+      overflow-x: auto;
+    }
+
+    .captured-icon {
+      width: 25px;
+      height: 25px;
+      opacity: 0.9;
+      flex-shrink: 0;
+    }
+
+    /* The Board Frame */
+    .board-container {
+      position: relative;
+      width: min(92vw, 480px);
+      height: min(92vw, 480px);
+      background: var(--board-border);
+      padding: 8px;
+      border-radius: 14px;
+      border: 2px solid var(--border-accent);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.8);
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .board-container.flipped {
+      transform: rotate(180deg);
+    }
+
+    /* The Chess Grid */
+    .chess-board {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      width: 100%;
+      height: 100%;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid #3e4c63;
+    }
+
+    .square {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .square.light {
+      background-color: var(--tile-light);
+    }
+
+    .square.dark {
+      background-color: var(--tile-dark);
+    }
+
+    .square.selected {
+      background-color: var(--tile-selected) !important;
+      outline: 3px solid var(--accent-gold);
+      outline-offset: -3px;
+      z-index: 2;
+    }
+
+    .square.in-check {
+      background-color: rgba(255, 71, 87, 0.5) !important;
+    }
+
+    /* Coordinates */
+    .coord {
+      position: absolute;
+      font-size: 9px;
+      font-weight: 700;
+      color: #6b7c96;
+      pointer-events: none;
+    }
+    .coord-rank { top: 2px; left: 3px; }
+    .coord-file { bottom: 2px; right: 3px; }
+
+    /* Move Hint Dots (Scoutflies Electric Cyan) */
+    .move-hint {
+      position: absolute;
+      width: 32%;
+      height: 32%;
+      background: var(--tile-highlight);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-cyan);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Focus Strike Reticle / Capture Ring */
+    .capture-hint {
+      position: absolute;
+      width: 88%;
+      height: 88%;
+      border: 4px dashed var(--tile-capture);
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(255, 71, 87, 0.7);
+      pointer-events: none;
+      z-index: 5;
+      animation: rotateDash 8s linear infinite;
+    }
+
+    @keyframes rotateDash {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Piece SVG Wrapper */
+    .mh-piece-wrapper {
+      width: 90%;
+      height: 90%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      transition: transform 0.15s ease-out;
+    }
+
+    .board-container.flipped .mh-piece-wrapper {
+      transform: rotate(180deg);
+    }
+
+    .mh-piece {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+      width: 100%;
+    }
+
+    .btn {
+      background: var(--card-bg);
+      border: 2px solid var(--accent-gold);
+      color: var(--accent-gold);
+      font-size: 0.85rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 3px 0 #0b0e14;
+      transition: all 0.1s;
+    }
+
+    .btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 0 0 #0b0e14;
+    }
+
+    .toggle-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .toggle-wrapper input {
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-gold);
+    }
+
+    /* Promotion Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-box {
+      background: var(--card-bg);
+      border: 3px solid var(--accent-gold);
+      border-radius: 16px;
+      padding: 20px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      animation: popIn 0.25s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .modal-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .promo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .promo-option {
+      background: #1b2230;
+      border: 2px solid #2f3640;
+      border-radius: 12px;
+      padding: 12px 10px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .promo-option:hover, .promo-option:active {
+      background: #263043;
+      border-color: var(--accent-gold);
+      transform: scale(1.04);
+      box-shadow: 0 0 12px rgba(229, 185, 92, 0.4);
+    }
+
+    .promo-svg {
+      width: 60px;
+      height: 60px;
+    }
+
+    .promo-label {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* Game Over Modal */
+    .gameover-box {
+      background: var(--card-bg);
+      border: 4px solid var(--accent-gold);
+      border-radius: 16px;
+      padding: 26px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.85);
+    }
+/*]]>*/
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>⚔️ Monster Hunter Wilds Chess 🐉</h1>
+    <div class="subtitle">Guild Expedition vs. Shadow Apex</div>
+  </header>
+
+  <div class="game-wrapper">
+    <!-- Top Bar: Turn info -->
+    <div class="turn-bar">
+      <div class="player-indicator" id="turnIndicator">
+        <div class="player-avatar" id="turnAvatar"></div>
+        <span id="turnText">Guild Expedition's Turn ⚔️</span>
+      </div>
+      <div class="check-badge" id="checkBadge">FOCUS STRIKE! (Check)</div>
+    </div>
+
+    <!-- Black Captured Tray -->
+    <div class="captured-tray" id="blackCapturedTray"></div>
+
+    <!-- Board -->
+    <div class="board-container" id="boardContainer">
+      <div class="chess-board" id="chessBoard"></div>
+    </div>
+
+    <!-- White Captured Tray -->
+    <div class="captured-tray" id="whiteCapturedTray"></div>
+
+    <!-- Tactical Commentary Banner -->
+    <div class="commentary-banner" id="commentaryBanner">
+      ⚔️ Hunt started! Guild Expedition (White) departs into the Forbidden Lands.
+    </div>
+
+    <!-- Control Buttons -->
+    <div class="controls-bar">
+      <button class="btn" id="btnFlip">🔄 Flip Board</button>
+      <button class="btn" id="btnUndo">↩️ Undo</button>
+      <button class="btn" id="btnNewGame">🆕 New Hunt</button>
+      <button class="btn" id="btnSound">🔊 Sound</button>
+      <label class="toggle-wrapper">
+        <input type="checkbox" id="chkAutoRotate" />
+        <span>Auto-Rotate</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Promotion Modal -->
+  <div class="modal-overlay" id="promoModal">
+    <div class="modal-box">
+      <div class="modal-title">⭐ High Rank Promotion!</div>
+      <div class="modal-subtitle">Your Palico completed the quest! Choose an Apex piece to promote to:</div>
+      <div class="promo-grid" id="promoGrid"></div>
+    </div>
+  </div>
+
+  <!-- Game Over Modal -->
+  <div class="modal-overlay" id="gameOverModal">
+    <div class="gameover-box">
+      <div class="modal-title" id="gameOverTitle">🏆 QUEST COMPLETE!</div>
+      <div class="modal-subtitle" id="gameOverMsg" style="margin-bottom: 20px; font-weight: 600;">The hunt has concluded.</div>
+      <button class="btn" id="btnPlayAgain" style="margin: 0 auto; background: var(--accent-gold); color: #0b0e14; border-color: var(--accent-gold);">⚔️ Start New Hunt</button>
+    </div>
+  </div>
+
+  <script>
+//<![CDATA[
+    // Embedded SVG Piece Assets
+    const PIECE_SVGS = {"P": "<svg viewBox=\"0 0 100 100\" class=\"mh-piece\">\n  <!-- Palico Pawn (White/Guild Team) -->\n  <ellipse cx=\"50\" cy=\"88\" rx=\"24\" ry=\"6\" fill=\"#000\" opacity=\"0.2\"/>\n  <!-- Little Felyne Body in Hunter Tunic -->\n  <ellipse cx=\"50\" cy=\"68\" rx=\"18\" ry=\"16\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"2.5\"/>\n  <ellipse cx=\"50\" cy=\"68\" rx=\"10\" ry=\"10\" fill=\"#f5cd79\"/>\n  <!-- Paws & Boots -->\n  <ellipse cx=\"40\" cy=\"82\" rx=\"6\" ry=\"4\" fill=\"#3e3527\" stroke=\"#2b3545\" stroke-width=\"1.8\"/>\n  <ellipse cx=\"60\" cy=\"82\" rx=\"6\" ry=\"4\" fill=\"#3e3527\" stroke=\"#2b3545\" stroke-width=\"1.8\"/>\n  <!-- Scoutpack on Back -->\n  <rect x=\"26\" y=\"60\" width=\"8\" height=\"12\" rx=\"2\" fill=\"#5c4428\" stroke=\"#2b3545\" stroke-width=\"1.5\"/>\n  <!-- Palico Head -->\n  <circle cx=\"50\" cy=\"42\" r=\"18\" fill=\"#f5cd79\" stroke=\"#2b3545\" stroke-width=\"2.5\"/>\n  <!-- White Muzzle -->\n  <ellipse cx=\"50\" cy=\"46\" rx=\"8\" ry=\"6\" fill=\"#fff\"/>\n  <polygon points=\"48,43 52,43 50,45\" fill=\"#ff758f\"/>\n  <path d=\"M 47 46 Q 50 49 53 46\" fill=\"none\" stroke=\"#2b3545\" stroke-width=\"1.2\"/>\n  <!-- Felyne Eyes -->\n  <ellipse cx=\"43\" cy=\"38\" rx=\"3.5\" ry=\"4.5\" fill=\"#2b3545\"/>\n  <circle cx=\"44\" cy=\"36.5\" r=\"1.5\" fill=\"#fff\"/>\n  <ellipse cx=\"57\" cy=\"38\" rx=\"3.5\" ry=\"4.5\" fill=\"#2b3545\"/>\n  <circle cx=\"58\" cy=\"36.5\" r=\"1.5\" fill=\"#fff\"/>\n  <!-- Whiskers -->\n  <line x1=\"38\" y1=\"45\" x2=\"28\" y2=\"44\" stroke=\"#2b3545\" stroke-width=\"1.2\"/>\n  <line x1=\"38\" y1=\"48\" x2=\"29\" y2=\"50\" stroke=\"#2b3545\" stroke-width=\"1.2\"/>\n  <line x1=\"62\" y1=\"45\" x2=\"72\" y2=\"44\" stroke=\"#2b3545\" stroke-width=\"1.2\"/>\n  <line x1=\"62\" y1=\"48\" x2=\"71\" y2=\"50\" stroke=\"#2b3545\" stroke-width=\"1.2\"/>\n  <!-- Hunter Acorn Helmet with Ear Openings -->\n  <path d=\"M 32 36 C 32 18 68 18 68 36 Z\" fill=\"#6c584c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <!-- Cat Ears Poking Through Helmet -->\n  <polygon points=\"30,26 36,10 44,22\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <polygon points=\"33,24 37,14 42,22\" fill=\"#ffb7b2\"/>\n  <polygon points=\"70,26 64,10 56,22\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <polygon points=\"67,24 63,14 58,22\" fill=\"#ffb7b2\"/>\n  <!-- Helmet Crest Horn / Feather -->\n  <polygon points=\"47,18 50,8 53,18\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"1.5\"/>\n  <!-- Little Bone / Acorn Weapon in Paw -->\n  <line x1=\"68\" y1=\"75\" x2=\"78\" y2=\"48\" stroke=\"#3e3527\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n  <circle cx=\"79\" cy=\"47\" r=\"5\" fill=\"#f5cd79\" stroke=\"#2b3545\" stroke-width=\"1.8\"/>\n  <!-- Scoutfly Cage Lantern on Waist Glowing Cyan -->\n  <rect x=\"26\" y=\"70\" width=\"6\" height=\"8\" rx=\"1.5\" fill=\"#00d2d3\" stroke=\"#2b3545\" stroke-width=\"1.2\"/>\n  <circle cx=\"29\" cy=\"74\" r=\"2\" fill=\"#fff\" opacity=\"0.8\"/>\n</svg>", "p": "<svg viewBox=\"0 0 100 100\" class=\"mh-piece\">\n  <!-- Palico Pawn (Black/Apex Team) -->\n  <ellipse cx=\"50\" cy=\"88\" rx=\"24\" ry=\"6\" fill=\"#000\" opacity=\"0.3\"/>\n  <!-- Dark Hunter Tunic -->\n  <ellipse cx=\"50\" cy=\"68\" rx=\"18\" ry=\"16\" fill=\"#1b2230\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <ellipse cx=\"50\" cy=\"68\" rx=\"10\" ry=\"10\" fill=\"#263043\"/>\n  <!-- Paws & Boots -->\n  <ellipse cx=\"40\" cy=\"82\" rx=\"6\" ry=\"4\" fill=\"#0b0e14\" stroke=\"#ff4757\" stroke-width=\"1.5\"/>\n  <ellipse cx=\"60\" cy=\"82\" rx=\"6\" ry=\"4\" fill=\"#0b0e14\" stroke=\"#ff4757\" stroke-width=\"1.5\"/>\n  <!-- Scoutpack -->\n  <rect x=\"26\" y=\"60\" width=\"8\" height=\"12\" rx=\"2\" fill=\"#10151f\" stroke=\"#2b3545\" stroke-width=\"1.5\"/>\n  <!-- Palico Head (Shadow Panther Coat) -->\n  <circle cx=\"50\" cy=\"42\" r=\"18\" fill=\"#1b2230\" stroke=\"#0b0e14\" stroke-width=\"2.5\"/>\n  <!-- Muzzle -->\n  <ellipse cx=\"50\" cy=\"46\" rx=\"8\" ry=\"6\" fill=\"#364052\"/>\n  <polygon points=\"48,43 52,43 50,45\" fill=\"#ff4757\"/>\n  <path d=\"M 47 46 Q 50 49 53 46\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.2\"/>\n  <!-- Glowing Fierce Amber Eyes -->\n  <ellipse cx=\"43\" cy=\"38\" rx=\"3.5\" ry=\"4.5\" fill=\"#ff4757\"/>\n  <circle cx=\"43\" cy=\"38\" r=\"2\" fill=\"#ffd166\"/>\n  <circle cx=\"44\" cy=\"36.5\" r=\"1\" fill=\"#fff\"/>\n  <ellipse cx=\"57\" cy=\"38\" rx=\"3.5\" ry=\"4.5\" fill=\"#ff4757\"/>\n  <circle cx=\"57\" cy=\"38\" r=\"2\" fill=\"#ffd166\"/>\n  <circle cx=\"58\" cy=\"36.5\" r=\"1\" fill=\"#fff\"/>\n  <!-- Whiskers -->\n  <line x1=\"38\" y1=\"45\" x2=\"28\" y2=\"44\" stroke=\"#a4b0be\" stroke-width=\"1.2\"/>\n  <line x1=\"38\" y1=\"48\" x2=\"29\" y2=\"50\" stroke=\"#a4b0be\" stroke-width=\"1.2\"/>\n  <line x1=\"62\" y1=\"45\" x2=\"72\" y2=\"44\" stroke=\"#a4b0be\" stroke-width=\"1.2\"/>\n  <line x1=\"62\" y1=\"48\" x2=\"71\" y2=\"50\" stroke=\"#a4b0be\" stroke-width=\"1.2\"/>\n  <!-- Obsidian Helmet -->\n  <path d=\"M 32 36 C 32 18 68 18 68 36 Z\" fill=\"#0b0e14\" stroke=\"#ff4757\" stroke-width=\"1.8\"/>\n  <!-- Ears -->\n  <polygon points=\"30,26 36,10 44,22\" fill=\"#1b2230\" stroke=\"#ff4757\" stroke-width=\"1.8\"/>\n  <polygon points=\"33,24 37,14 42,22\" fill=\"#ff4757\"/>\n  <polygon points=\"70,26 64,10 56,22\" fill=\"#1b2230\" stroke=\"#ff4757\" stroke-width=\"1.8\"/>\n  <polygon points=\"67,24 63,14 58,22\" fill=\"#ff4757\"/>\n  <!-- Horn -->\n  <polygon points=\"47,18 50,8 53,18\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.5\"/>\n  <!-- Dark Ore Blade Weapon -->\n  <line x1=\"68\" y1=\"75\" x2=\"78\" y2=\"48\" stroke=\"#ff4757\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n  <circle cx=\"79\" cy=\"47\" r=\"5\" fill=\"#0b0e14\" stroke=\"#ff4757\" stroke-width=\"1.8\"/>\n  <!-- Crimson Scoutfly Cage -->\n  <rect x=\"26\" y=\"70\" width=\"6\" height=\"8\" rx=\"1.5\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.2\"/>\n  <circle cx=\"29\" cy=\"74\" r=\"2\" fill=\"#fff\" opacity=\"0.8\"/>\n</svg>", "N": "<svg viewBox=\"0 0 100 100\" class=\"mh-piece\">\n  <!-- Seikret Mount Knight (White/Guild Team) -->\n  <ellipse cx=\"48\" cy=\"88\" rx=\"26\" ry=\"6\" fill=\"#000\" opacity=\"0.2\"/>\n  <!-- Pedestal Foot -->\n  <path d=\"M 26 84 Q 50 88 74 84 L 70 78 Q 50 82 30 78 Z\" fill=\"#6c584c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <ellipse cx=\"50\" cy=\"78\" rx=\"22\" ry=\"4.5\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <!-- Seikret Raptor Body & Arched Neck -->\n  <path d=\"M 30 78 C 24 58 28 42 42 30 C 48 24 60 20 74 26 C 78 28 82 36 78 44 C 72 50 64 46 60 40 C 56 34 50 34 46 42 C 40 52 44 66 48 76 Z\" \n        fill=\"#f5cd79\" stroke=\"#2b3545\" stroke-width=\"2.5\"/>\n  <!-- Feather / Scale Texture Highlights -->\n  <path d=\"M 36 74 C 30 58 34 44 46 34 C 52 28 62 24 72 29 L 70 36 C 62 30 52 32 48 40 C 44 48 44 62 46 72 Z\" \n        fill=\"#faedcd\"/>\n  <!-- Raptor Beak / Snout (Forward facing) -->\n  <path d=\"M 74 26 L 86 32 L 76 38 Z\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <line x1=\"74\" y1=\"32\" x2=\"84\" y2=\"32\" stroke=\"#2b3545\" stroke-width=\"1.5\"/>\n  <circle cx=\"78\" cy=\"30\" r=\"1\" fill=\"#2b3545\"/>\n  <!-- Fierce Alert Eye -->\n  <circle cx=\"68\" cy=\"28\" r=\"3.5\" fill=\"#2b3545\"/>\n  <circle cx=\"69\" cy=\"27\" r=\"1.3\" fill=\"#00d2d3\"/>\n  <!-- Head Feathers / Crest Tuft -->\n  <path d=\"M 58 20 Q 52 8 62 14 Q 54 18 64 22\" fill=\"#00d2d3\" stroke=\"#2b3545\" stroke-width=\"1.5\"/>\n  <path d=\"M 64 16 Q 60 6 70 12 Q 62 16 70 20\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"1.5\"/>\n  <!-- Saddle & Reins (The signature Seikret gear for weapon swapping) -->\n  <path d=\"M 38 52 C 44 56 50 56 54 50 L 52 44 C 46 48 42 48 36 44 Z\" \n        fill=\"#6c584c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <!-- Gold Saddle Buckle -->\n  <circle cx=\"46\" cy=\"49\" r=\"2.5\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"1\"/>\n  <!-- Leather Reins -->\n  <path d=\"M 46 49 Q 60 48 70 36\" fill=\"none\" stroke=\"#6c584c\" stroke-width=\"2\" stroke-dasharray=\"3,1\"/>\n  <!-- Motion / Leap Speed lines -->\n  <path d=\"M 22 66 Q 16 58 24 54\" fill=\"none\" stroke=\"#e5b95c\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n  <path d=\"M 18 56 Q 12 48 20 44\" fill=\"none\" stroke=\"#e5b95c\" stroke-width=\"1.8\" stroke-linecap=\"round\"/>\n</svg>", "n": "<svg viewBox=\"0 0 100 100\" class=\"mh-piece\">\n  <!-- Seikret Mount Knight (Black/Apex Team) -->\n  <ellipse cx=\"48\" cy=\"88\" rx=\"26\" ry=\"6\" fill=\"#000\" opacity=\"0.3\"/>\n  <!-- Pedestal Foot -->\n  <path d=\"M 26 84 Q 50 88 74 84 L 70 78 Q 50 82 30 78 Z\" fill=\"#0b0e14\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <ellipse cx=\"50\" cy=\"78\" rx=\"22\" ry=\"4.5\" fill=\"#1b2230\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <!-- Shadow Seikret Body -->\n  <path d=\"M 30 78 C 24 58 28 42 42 30 C 48 24 60 20 74 26 C 78 28 82 36 78 44 C 72 50 64 46 60 40 C 56 34 50 34 46 42 C 40 52 44 66 48 76 Z\" \n        fill=\"#1b2230\" stroke=\"#0b0e14\" stroke-width=\"2.5\"/>\n  <!-- Dark Feather Shading -->\n  <path d=\"M 36 74 C 30 58 34 44 46 34 C 52 28 62 24 72 29 L 70 36 C 62 30 52 32 48 40 C 44 48 44 62 46 72 Z\" \n        fill=\"#263043\"/>\n  <!-- Beak -->\n  <path d=\"M 74 26 L 86 32 L 76 38 Z\" fill=\"#0b0e14\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <line x1=\"74\" y1=\"32\" x2=\"84\" y2=\"32\" stroke=\"#ff4757\" stroke-width=\"1.5\"/>\n  <!-- Glowing Crimson Eye -->\n  <circle cx=\"68\" cy=\"28\" r=\"3.5\" fill=\"#ff4757\"/>\n  <circle cx=\"68.5\" cy=\"27.5\" r=\"1.5\" fill=\"#ffd166\"/>\n  <!-- Crimson Crest Feathers -->\n  <path d=\"M 58 20 Q 52 8 62 14 Q 54 18 64 22\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.5\"/>\n  <path d=\"M 64 16 Q 60 6 70 12 Q 62 16 70 20\" fill=\"#ea2027\" stroke=\"#0b0e14\" stroke-width=\"1.5\"/>\n  <!-- Dark Leather Saddle -->\n  <path d=\"M 38 52 C 44 56 50 56 54 50 L 52 44 C 46 48 42 48 36 44 Z\" \n        fill=\"#0b0e14\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <circle cx=\"46\" cy=\"49\" r=\"2.5\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1\"/>\n  <!-- Reins -->\n  <path d=\"M 46 49 Q 60 48 70 36\" fill=\"none\" stroke=\"#ff4757\" stroke-width=\"2\" stroke-dasharray=\"3,1\"/>\n  <!-- Motion lines -->\n  <path d=\"M 22 66 Q 16 58 24 54\" fill=\"none\" stroke=\"#ff4757\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n  <path d=\"M 18 56 Q 12 48 20 44\" fill=\"none\" stroke=\"#ff4757\" stroke-width=\"1.8\" stroke-linecap=\"round\"/>\n</svg>", "R": "<svg viewBox=\"0 0 100 100\" class=\"mh-piece\">\n  <!-- Doshaguma Rook (White/Guild Team) -->\n  <ellipse cx=\"50\" cy=\"88\" rx=\"32\" ry=\"7\" fill=\"#000\" opacity=\"0.2\"/>\n  <!-- Heavy Base Pedestal -->\n  <rect x=\"22\" y=\"78\" width=\"56\" height=\"8\" rx=\"2\" fill=\"#6c584c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <!-- Imposing Square Body (Heavy armored fur & muscle) -->\n  <path d=\"M 24 78 C 22 60 22 42 28 34 L 72 34 C 78 42 78 60 76 78 Z\" \n        fill=\"#d4a373\" stroke=\"#2b3545\" stroke-width=\"2.5\"/>\n  <!-- Fur & Armor Plates -->\n  <path d=\"M 32 78 C 30 62 32 48 36 40 L 64 40 C 68 48 70 62 68 78 Z\" fill=\"#faedcd\"/>\n  <!-- Castle Crenellations / Battlements (Armored Shoulder Spikes) -->\n  <rect x=\"24\" y=\"24\" width=\"52\" height=\"10\" rx=\"2\" fill=\"#6c584c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <!-- Crenellation notches -->\n  <rect x=\"30\" y=\"20\" width=\"8\" height=\"6\" rx=\"1\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"1.5\"/>\n  <rect x=\"46\" y=\"20\" width=\"8\" height=\"6\" rx=\"1\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"1.5\"/>\n  <rect x=\"62\" y=\"20\" width=\"8\" height=\"6\" rx=\"1\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"1.5\"/>\n  <!-- Doshaguma Alpha Head / Heavy Jaw in Center -->\n  <ellipse cx=\"50\" cy=\"46\" rx=\"16\" ry=\"12\" fill=\"#cb997e\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <!-- Fierce Eyes -->\n  <ellipse cx=\"44\" cy=\"42\" rx=\"3\" ry=\"2.5\" fill=\"#2b3545\"/>\n  <circle cx=\"44.5\" cy=\"41.5\" r=\"1\" fill=\"#ff4757\"/>\n  <ellipse cx=\"56\" cy=\"42\" rx=\"3\" ry=\"2.5\" fill=\"#2b3545\"/>\n  <circle cx=\"56.5\" cy=\"41.5\" r=\"1\" fill=\"#ff4757\"/>\n  <!-- Massive Fang Tusks (Iconic Doshaguma Feature) -->\n  <polygon points=\"38,50 42,50 40,58\" fill=\"#fff\" stroke=\"#2b3545\" stroke-width=\"1.2\"/>\n  <polygon points=\"58,50 62,50 60,58\" fill=\"#fff\" stroke=\"#2b3545\" stroke-width=\"1.2\"/>\n  <path d=\"M 42 48 Q 50 52 58 48\" fill=\"none\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <!-- Heavy Chest Scars / Guild Crest -->\n  <path d=\"M 40 64 L 60 64\" stroke=\"#2b3545\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n  <path d=\"M 44 70 L 56 70\" stroke=\"#2b3545\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n</svg>", "r": "<svg viewBox=\"0 0 100 100\" class=\"mh-piece\">\n  <!-- Doshaguma Rook (Black/Apex Team) -->\n  <ellipse cx=\"50\" cy=\"88\" rx=\"32\" ry=\"7\" fill=\"#000\" opacity=\"0.3\"/>\n  <!-- Base Pedestal -->\n  <rect x=\"22\" y=\"78\" width=\"56\" height=\"8\" rx=\"2\" fill=\"#0b0e14\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <!-- Imposing Square Body -->\n  <path d=\"M 24 78 C 22 60 22 42 28 34 L 72 34 C 78 42 78 60 76 78 Z\" \n        fill=\"#1b2230\" stroke=\"#0b0e14\" stroke-width=\"2.5\"/>\n  <path d=\"M 32 78 C 30 62 32 48 36 40 L 64 40 C 68 48 70 62 68 78 Z\" fill=\"#263043\"/>\n  <!-- Castle Crenellations -->\n  <rect x=\"24\" y=\"24\" width=\"52\" height=\"10\" rx=\"2\" fill=\"#0b0e14\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <rect x=\"30\" y=\"20\" width=\"8\" height=\"6\" rx=\"1\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.5\"/>\n  <rect x=\"46\" y=\"20\" width=\"8\" height=\"6\" rx=\"1\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.5\"/>\n  <rect x=\"62\" y=\"20\" width=\"8\" height=\"6\" rx=\"1\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.5\"/>\n  <!-- Head & Jaw -->\n  <ellipse cx=\"50\" cy=\"46\" rx=\"16\" ry=\"12\" fill=\"#1b2230\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <!-- Glowing Crimson Eyes -->\n  <ellipse cx=\"44\" cy=\"42\" rx=\"3\" ry=\"2.5\" fill=\"#ff4757\"/>\n  <circle cx=\"44.5\" cy=\"41.5\" r=\"1\" fill=\"#fff\"/>\n  <ellipse cx=\"56\" cy=\"42\" rx=\"3\" ry=\"2.5\" fill=\"#ff4757\"/>\n  <circle cx=\"56.5\" cy=\"41.5\" r=\"1\" fill=\"#fff\"/>\n  <!-- Tusks -->\n  <polygon points=\"38,50 42,50 40,58\" fill=\"#fff\" stroke=\"#0b0e14\" stroke-width=\"1.2\"/>\n  <polygon points=\"58,50 62,50 60,58\" fill=\"#fff\" stroke=\"#0b0e14\" stroke-width=\"1.2\"/>\n  <path d=\"M 42 48 Q 50 52 58 48\" fill=\"none\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <!-- Chest Lines -->\n  <path d=\"M 40 64 L 60 64\" stroke=\"#ff4757\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n  <path d=\"M 44 70 L 56 70\" stroke=\"#ff4757\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n</svg>", "B": "<svg viewBox=\"0 0 100 100\" class=\"mh-piece\">\n  <!-- Rey Dau Bishop (White/Guild Team) -->\n  <ellipse cx=\"50\" cy=\"88\" rx=\"26\" ry=\"6\" fill=\"#000\" opacity=\"0.2\"/>\n  <!-- Pedestal -->\n  <path d=\"M 28 85 Q 50 88 72 85 L 68 80 Q 50 83 32 80 Z\" fill=\"#6c584c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <ellipse cx=\"50\" cy=\"80\" rx=\"18\" ry=\"4.5\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <!-- Sleek Wyvern Neck / Torso -->\n  <path d=\"M 44 80 L 44 56 L 56 56 L 56 80 Z\" fill=\"#d4a373\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <!-- Bishop Waist Collar -->\n  <ellipse cx=\"50\" cy=\"62\" rx=\"10\" ry=\"4\" fill=\"#00d2d3\" stroke=\"#2b3545\" stroke-width=\"1.8\"/>\n  <!-- Rey Dau Head & Dragon Armor -->\n  <path d=\"M 36 56 C 34 42 42 34 50 34 C 58 34 66 42 64 56 Z\" fill=\"#faedcd\" stroke=\"#2b3545\" stroke-width=\"2.5\"/>\n  <!-- Piercing Blue Wyvern Eyes -->\n  <ellipse cx=\"44\" cy=\"46\" rx=\"3\" ry=\"2\" fill=\"#00d2d3\" stroke=\"#2b3545\" stroke-width=\"1\"/>\n  <circle cx=\"44\" cy=\"46\" r=\"1\" fill=\"#fff\"/>\n  <ellipse cx=\"56\" cy=\"46\" rx=\"3\" ry=\"2\" fill=\"#00d2d3\" stroke=\"#2b3545\" stroke-width=\"1\"/>\n  <circle cx=\"56\" cy=\"46\" r=\"1\" fill=\"#fff\"/>\n  <!-- Twin Railgun Horns (The iconic Rey Dau feature - forms classic Bishop Mitre Cleft) -->\n  <!-- Left Horn -->\n  <path d=\"M 38 40 L 32 10 L 42 22 L 44 38 Z\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <!-- Right Horn -->\n  <path d=\"M 62 40 L 68 10 L 58 22 L 56 38 Z\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <!-- High Voltage Railgun Arc / Sparks between the horns -->\n  <path d=\"M 34 14 L 46 18 L 54 12 L 66 14\" fill=\"none\" stroke=\"#00d2d3\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n  <polygon points=\"50,6 52,11 48,11\" fill=\"#00d2d3\"/>\n  <polygon points=\"50,13 52,8 48,8\" fill=\"#00d2d3\"/>\n</svg>", "b": "<svg viewBox=\"0 0 100 100\" class=\"mh-piece\">\n  <!-- Rey Dau Bishop (Black/Apex Team) -->\n  <ellipse cx=\"50\" cy=\"88\" rx=\"26\" ry=\"6\" fill=\"#000\" opacity=\"0.3\"/>\n  <!-- Pedestal -->\n  <path d=\"M 28 85 Q 50 88 72 85 L 68 80 Q 50 83 32 80 Z\" fill=\"#0b0e14\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <ellipse cx=\"50\" cy=\"80\" rx=\"18\" ry=\"4.5\" fill=\"#1b2230\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <!-- Neck -->\n  <path d=\"M 44 80 L 44 56 L 56 56 L 56 80 Z\" fill=\"#1b2230\" stroke=\"#0b0e14\" stroke-width=\"2\"/>\n  <ellipse cx=\"50\" cy=\"62\" rx=\"10\" ry=\"4\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.8\"/>\n  <!-- Head -->\n  <path d=\"M 36 56 C 34 42 42 34 50 34 C 58 34 66 42 64 56 Z\" fill=\"#263043\" stroke=\"#0b0e14\" stroke-width=\"2.5\"/>\n  <!-- Glowing Red Eyes -->\n  <ellipse cx=\"44\" cy=\"46\" rx=\"3\" ry=\"2\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1\"/>\n  <circle cx=\"44\" cy=\"46\" r=\"1\" fill=\"#fff\"/>\n  <ellipse cx=\"56\" cy=\"46\" rx=\"3\" ry=\"2\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1\"/>\n  <circle cx=\"56\" cy=\"46\" r=\"1\" fill=\"#fff\"/>\n  <!-- Twin Horns -->\n  <path d=\"M 38 40 L 32 10 L 42 22 L 44 38 Z\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"2\"/>\n  <path d=\"M 62 40 L 68 10 L 58 22 L 56 38 Z\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"2\"/>\n  <!-- Red Lightning Arc -->\n  <path d=\"M 34 14 L 46 18 L 54 12 L 66 14\" fill=\"none\" stroke=\"#ff4757\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n  <polygon points=\"50,6 52,11 48,11\" fill=\"#ff4757\"/>\n  <polygon points=\"50,13 52,8 48,8\" fill=\"#ff4757\"/>\n</svg>", "Q": "<svg viewBox=\"0 0 100 100\" class=\"mh-piece\">\n  <!-- Arkveld Queen (White/Guild Team) -->\n  <ellipse cx=\"50\" cy=\"88\" rx=\"30\" ry=\"7\" fill=\"#000\" opacity=\"0.2\"/>\n  <!-- Flowing Dragon Gown / Wyvern Body -->\n  <path d=\"M 26 85 Q 50 88 74 85 L 66 56 Q 50 62 34 56 Z\" fill=\"#faedcd\" stroke=\"#2b3545\" stroke-width=\"2.5\"/>\n  <path d=\"M 26 85 Q 50 88 74 85\" fill=\"none\" stroke=\"#e5b95c\" stroke-width=\"4\"/>\n  <!-- Torso & Dragon Breastplate -->\n  <path d=\"M 36 56 Q 50 62 64 56 L 60 38 Q 50 42 40 38 Z\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <!-- White Wraith Head -->\n  <circle cx=\"50\" cy=\"30\" r=\"14\" fill=\"#fffcf2\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <ellipse cx=\"44\" cy=\"30\" rx=\"2.5\" ry=\"3\" fill=\"#ff4757\"/>\n  <ellipse cx=\"56\" cy=\"30\" rx=\"2.5\" ry=\"3\" fill=\"#ff4757\"/>\n  <!-- Iconic Spreading Chain-Wings (Arkveld's signature whip appendages) -->\n  <path d=\"M 38 42 C 22 36 12 24 16 12 C 20 22 28 32 38 36\" fill=\"none\" stroke=\"#e5b95c\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <path d=\"M 62 42 C 78 36 88 24 84 12 C 80 22 72 32 62 36\" fill=\"none\" stroke=\"#e5b95c\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <!-- Chain Links / Blades on Wings -->\n  <circle cx=\"16\" cy=\"12\" r=\"3\" fill=\"#00d2d3\" stroke=\"#2b3545\" stroke-width=\"1.5\"/>\n  <circle cx=\"84\" cy=\"12\" r=\"3\" fill=\"#00d2d3\" stroke=\"#2b3545\" stroke-width=\"1.5\"/>\n  <!-- 5-Pointed Wraith Crown -->\n  <polygon points=\"36,22 38,10 44,16 50,7 56,16 62,10 64,22\" fill=\"#ffd166\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <circle cx=\"50\" cy=\"7\" r=\"2.5\" fill=\"#ff4757\"/>\n</svg>", "q": "<svg viewBox=\"0 0 100 100\" class=\"mh-piece\">\n  <!-- Arkveld Queen (Black/Apex Team) -->\n  <ellipse cx=\"50\" cy=\"88\" rx=\"30\" ry=\"7\" fill=\"#000\" opacity=\"0.3\"/>\n  <!-- Dark Dragon Gown -->\n  <path d=\"M 26 85 Q 50 88 74 85 L 66 56 Q 50 62 34 56 Z\" fill=\"#1b2230\" stroke=\"#0b0e14\" stroke-width=\"2.5\"/>\n  <path d=\"M 26 85 Q 50 88 74 85\" fill=\"none\" stroke=\"#ff4757\" stroke-width=\"4\"/>\n  <!-- Torso Plate -->\n  <path d=\"M 36 56 Q 50 62 64 56 L 60 38 Q 50 42 40 38 Z\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"2\"/>\n  <!-- Head -->\n  <circle cx=\"50\" cy=\"30\" r=\"14\" fill=\"#10151f\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <ellipse cx=\"44\" cy=\"30\" rx=\"2.5\" ry=\"3\" fill=\"#ff4757\"/>\n  <ellipse cx=\"56\" cy=\"30\" rx=\"2.5\" ry=\"3\" fill=\"#ff4757\"/>\n  <!-- Spreading Chain-Wings -->\n  <path d=\"M 38 42 C 22 36 12 24 16 12 C 20 22 28 32 38 36\" fill=\"none\" stroke=\"#ff4757\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <path d=\"M 62 42 C 78 36 88 24 84 12 C 80 22 72 32 62 36\" fill=\"none\" stroke=\"#ff4757\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <!-- Blades on Wings -->\n  <circle cx=\"16\" cy=\"12\" r=\"3\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.5\"/>\n  <circle cx=\"84\" cy=\"12\" r=\"3\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.5\"/>\n  <!-- Crown -->\n  <polygon points=\"36,22 38,10 44,16 50,7 56,16 62,10 64,22\" fill=\"#0b0e14\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <circle cx=\"50\" cy=\"7\" r=\"2.5\" fill=\"#ffd166\"/>\n</svg>", "K": "<svg viewBox=\"0 0 100 100\" class=\"mh-piece\">\n  <!-- Guild Hunter Sovereign King (White/Guild Team) -->\n  <ellipse cx=\"50\" cy=\"88\" rx=\"34\" ry=\"7\" fill=\"#000\" opacity=\"0.2\"/>\n  <!-- Crossed Great Swords / Guild Expedition Crest at Base -->\n  <path d=\"M 18 85 L 82 85\" stroke=\"#2b3545\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <circle cx=\"50\" cy=\"85\" r=\"4\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"1.5\"/>\n  <!-- Imperial Velvet Cushion (Royal Guild Navy & Gold Fringe) -->\n  <path d=\"M 20 73 Q 50 77 80 73 Q 84 64 78 58 Q 50 62 22 58 Q 16 64 20 73 Z\" \n        fill=\"#1e3799\" stroke=\"#0c2461\" stroke-width=\"2.5\"/>\n  <circle cx=\"18\" cy=\"71\" r=\"3\" fill=\"#ffd166\" stroke=\"#2b3545\" stroke-width=\"1\"/>\n  <circle cx=\"82\" cy=\"71\" r=\"3\" fill=\"#ffd166\" stroke=\"#2b3545\" stroke-width=\"1\"/>\n\n  <!-- THE KING'S IMPERIAL CROWN -->\n  <!-- 1. Royal Domed Velvet Cap inside (Iconic King feature) -->\n  <path d=\"M 28 54 Q 28 32 50 30 Q 72 32 72 54 Z\" fill=\"#4a69bd\" stroke=\"#0c2461\" stroke-width=\"2\"/>\n\n  <!-- 2. Four Heavy Golden Arches closing over the dome -->\n  <path d=\"M 28 54 C 26 36 38 28 50 26 C 45 28 34 38 34 54 Z\" fill=\"#ffd166\" stroke=\"#b07d10\" stroke-width=\"1.8\"/>\n  <path d=\"M 72 54 C 74 36 62 28 50 26 C 55 28 66 38 66 54 Z\" fill=\"#ffd166\" stroke=\"#b07d10\" stroke-width=\"1.8\"/>\n  <path d=\"M 46 54 C 46 36 47 28 50 26 C 53 28 54 36 54 54 Z\" fill=\"#ffe6a7\" stroke=\"#b07d10\" stroke-width=\"1.8\"/>\n\n  <!-- 3. Broad Dragon Plate Fleurons on Rim -->\n  <path d=\"M 26 54 C 24 47 30 45 33 50 C 35 45 40 47 38 54 Z\" fill=\"#ffd166\" stroke=\"#b07d10\" stroke-width=\"1.5\"/>\n  <circle cx=\"32\" cy=\"48\" r=\"1.8\" fill=\"#e5b95c\"/>\n  <path d=\"M 44 54 C 42 45 47 43 50 47 C 53 43 58 45 56 54 Z\" fill=\"#ffd166\" stroke=\"#b07d10\" stroke-width=\"1.5\"/>\n  <circle cx=\"50\" cy=\"47\" r=\"2.2\" fill=\"#00d2d3\"/>\n  <path d=\"M 62 54 C 60 47 65 45 68 50 C 70 45 76 47 74 54 Z\" fill=\"#ffd166\" stroke=\"#b07d10\" stroke-width=\"1.5\"/>\n  <circle cx=\"68\" cy=\"48\" r=\"1.8\" fill=\"#e5b95c\"/>\n\n  <!-- 4. Heavy Golden Circlet Band at Base with Dragon Gems -->\n  <rect x=\"24\" y=\"53\" width=\"52\" height=\"9\" rx=\"3\" fill=\"#e5b95c\" stroke=\"#2b3545\" stroke-width=\"2\"/>\n  <circle cx=\"28\" cy=\"57.5\" r=\"2.2\" fill=\"#ff4757\"/>\n  <circle cx=\"38\" cy=\"57.5\" r=\"2.2\" fill=\"#00d2d3\"/>\n  <circle cx=\"50\" cy=\"57.5\" r=\"2.5\" fill=\"#ffd166\"/>\n  <circle cx=\"62\" cy=\"57.5\" r=\"2.2\" fill=\"#00d2d3\"/>\n  <circle cx=\"72\" cy=\"57.5\" r=\"2.2\" fill=\"#ff4757\"/>\n\n  <!-- 5. Golden Orb (Mound) & Guild Commission Star Finial at top -->\n  <circle cx=\"50\" cy=\"24\" r=\"4.5\" fill=\"#ffd166\" stroke=\"#b07d10\" stroke-width=\"1.8\"/>\n  <!-- Hunter's Guild 4-Pointed Star Finial -->\n  <polygon points=\"50,10 52,14 56,15 52,16 50,20 48,16 44,15 48,14\" fill=\"#00d2d3\" stroke=\"#2b3545\" stroke-width=\"0.8\"/>\n  <circle cx=\"50\" cy=\"15\" r=\"1.5\" fill=\"#fff\"/>\n</svg>", "k": "<svg viewBox=\"0 0 100 100\" class=\"mh-piece\">\n  <!-- Guild Hunter Sovereign King (Black/Apex Team) -->\n  <ellipse cx=\"50\" cy=\"88\" rx=\"34\" ry=\"7\" fill=\"#000\" opacity=\"0.3\"/>\n  <!-- Crossed Dragon Greatswords at Base -->\n  <path d=\"M 18 85 L 82 85\" stroke=\"#ff4757\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n  <circle cx=\"50\" cy=\"85\" r=\"4\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.5\"/>\n  <!-- Obsidian Velvet Cushion with Ruby Tassels -->\n  <path d=\"M 20 73 Q 50 77 80 73 Q 84 64 78 58 Q 50 62 22 58 Q 16 64 20 73 Z\" \n        fill=\"#0b0e14\" stroke=\"#ff4757\" stroke-width=\"2.5\"/>\n  <circle cx=\"18\" cy=\"71\" r=\"3\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1\"/>\n  <circle cx=\"82\" cy=\"71\" r=\"3\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1\"/>\n\n  <!-- THE KING'S IMPERIAL CROWN -->\n  <!-- 1. Crimson Velvet Cap inside -->\n  <path d=\"M 28 54 Q 28 32 50 30 Q 72 32 72 54 Z\" fill=\"#800f2f\" stroke=\"#0b0e14\" stroke-width=\"2\"/>\n\n  <!-- 2. Four Polished Gold Arches -->\n  <path d=\"M 28 54 C 26 36 38 28 50 26 C 45 28 34 38 34 54 Z\" fill=\"#ffd166\" stroke=\"#b07d10\" stroke-width=\"1.8\"/>\n  <path d=\"M 72 54 C 74 36 62 28 50 26 C 55 28 66 38 66 54 Z\" fill=\"#ffd166\" stroke=\"#b07d10\" stroke-width=\"1.8\"/>\n  <path d=\"M 46 54 C 46 36 47 28 50 26 C 53 28 54 36 54 54 Z\" fill=\"#ffe6a7\" stroke=\"#b07d10\" stroke-width=\"1.8\"/>\n\n  <!-- 3. Dragon Fleurons -->\n  <path d=\"M 26 54 C 24 47 30 45 33 50 C 35 45 40 47 38 54 Z\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.5\"/>\n  <circle cx=\"32\" cy=\"48\" r=\"1.8\" fill=\"#ffd166\"/>\n  <path d=\"M 44 54 C 42 45 47 43 50 47 C 53 43 58 45 56 54 Z\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.5\"/>\n  <circle cx=\"50\" cy=\"47\" r=\"2.2\" fill=\"#ffd166\"/>\n  <path d=\"M 62 54 C 60 47 65 45 68 50 C 70 45 76 47 74 54 Z\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"1.5\"/>\n  <circle cx=\"68\" cy=\"48\" r=\"1.8\" fill=\"#ffd166\"/>\n\n  <!-- 4. Circlet Band with Rubies -->\n  <rect x=\"24\" y=\"53\" width=\"52\" height=\"9\" rx=\"3\" fill=\"#1b2230\" stroke=\"#ff4757\" stroke-width=\"2\"/>\n  <circle cx=\"28\" cy=\"57.5\" r=\"2.2\" fill=\"#ff4757\"/>\n  <circle cx=\"38\" cy=\"57.5\" r=\"2.2\" fill=\"#ffd166\"/>\n  <circle cx=\"50\" cy=\"57.5\" r=\"2.5\" fill=\"#ff4757\"/>\n  <circle cx=\"62\" cy=\"57.5\" r=\"2.2\" fill=\"#ffd166\"/>\n  <circle cx=\"72\" cy=\"57.5\" r=\"2.2\" fill=\"#ff4757\"/>\n\n  <!-- 5. Golden Orb & Star Finial -->\n  <circle cx=\"50\" cy=\"24\" r=\"4.5\" fill=\"#ffd166\" stroke=\"#b07d10\" stroke-width=\"1.8\"/>\n  <polygon points=\"50,10 52,14 56,15 52,16 50,20 48,16 44,15 48,14\" fill=\"#ff4757\" stroke=\"#0b0e14\" stroke-width=\"0.8\"/>\n  <circle cx=\"50\" cy=\"15\" r=\"1.5\" fill=\"#ffd166\"/>\n</svg>"};
+
+    // Synthesized Sound Effects via Web Audio API
+    class MonsterHunterAudio {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playMove() {
+        if (!this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(1200, now + 0.08);
+        osc.frequency.exponentialRampToValueAtTime(400, now + 0.18);
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.18, now + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      }
+      playCapture() {
+        if (!this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        const osc1 = this.ctx.createOscillator();
+        const gain1 = this.ctx.createGain();
+        osc1.type = 'sawtooth';
+        osc1.frequency.setValueAtTime(160, now);
+        osc1.frequency.exponentialRampToValueAtTime(40, now + 0.25);
+        gain1.gain.setValueAtTime(0.35, now);
+        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+        osc1.connect(gain1);
+        gain1.connect(this.ctx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.28);
+
+        const osc2 = this.ctx.createOscillator();
+        const gain2 = this.ctx.createGain();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(800, now);
+        osc2.frequency.exponentialRampToValueAtTime(200, now + 0.12);
+        gain2.gain.setValueAtTime(0.2, now);
+        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+        osc2.connect(gain2);
+        gain2.connect(this.ctx.destination);
+        osc2.start(now);
+        osc2.stop(now + 0.14);
+      }
+      playCheck() {
+        if (!this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const filter = this.ctx.createBiquadFilter();
+        const gain = this.ctx.createGain();
+        osc1.type = 'sawtooth';
+        osc2.type = 'sawtooth';
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(900, now);
+        osc1.frequency.setValueAtTime(180, now);
+        osc1.frequency.linearRampToValueAtTime(320, now + 0.2);
+        osc1.frequency.exponentialRampToValueAtTime(140, now + 0.55);
+        osc2.frequency.setValueAtTime(185, now);
+        osc2.frequency.linearRampToValueAtTime(328, now + 0.2);
+        osc2.frequency.exponentialRampToValueAtTime(144, now + 0.55);
+        gain.gain.setValueAtTime(0.01, now);
+        gain.gain.linearRampToValueAtTime(0.28, now + 0.08);
+        gain.gain.setValueAtTime(0.28, now + 0.35);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+        osc1.connect(filter);
+        osc2.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.6);
+        osc2.stop(now + 0.6);
+      }
+      playFanfare() {
+        if (!this.enabled) return;
+        this.init();
+        const now = this.ctx.currentTime;
+        const notes = [440, 554.37, 659.25, 880, 1108.73];
+        notes.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          const t = now + idx * 0.14;
+          osc.frequency.setValueAtTime(freq, t);
+          gain.gain.setValueAtTime(0.01, t);
+          gain.gain.linearRampToValueAtTime(0.25, t + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.45);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.45);
+        });
+      }
+    }
+
+    // Tactical Monster Hunter Wilds Commentary
+    const COMMENTARY = {
+      P: [
+        "Palico scampers forward with acorn hammer raised!",
+        "Palico deploys a Vigorwasp station along the trail!",
+        "Brave Palico advances to scout the canyon ahead!"
+      ],
+      R: [
+        "Doshaguma charges in an unstoppable straight line!",
+        "Heavy fanged beast anchors the rank with raw brute power!",
+        "Doshaguma rumbles forward, shaking the canyon floor!"
+      ],
+      N: [
+        "Seikret vaults over the dunes in a bounding leap!",
+        "Whistle sounded! Seikret maneuvers into flanking position.",
+        "Nimble Seikret clears the terrain obstacles with ease!"
+      ],
+      B: [
+        "Rey Dau sweeps diagonally across the sky!",
+        "Twin railgun horns crackle with high-voltage thunder!",
+        "Aerial strike! Rey Dau cuts diagonally through the storm."
+      ],
+      Q: [
+        "The White Wraith swoops across the board with chain-blade wings!",
+        "Arkveld unleashes devastating reach across open ranks!",
+        "The flagship apex commands the Forbidden Lands with lethal speed!"
+      ],
+      K: [
+        "The Guild Master stands resolute, surveying the expedition map.",
+        "Great Sword at the ready, the Commander holds the line.",
+        "Guarding the base camp, the Sovereign Hunter stands firm."
+      ],
+      capture: [
+        "💥 FOCUS STRIKE! Exposed wound detonated and piece carved!",
+        "⚔️ POWER CLASH! Hunter overpowers the rival!",
+        "🎯 OFFSET ATTACK! Brutal counter sweeps the square!",
+        "⚡ PART BROKEN! Target repelled from the hunt!"
+      ],
+      check: [
+        "⚠️ ROAR! Apex predator locks eyes with the Hunter!",
+        "⚠️ FOCUS MODE: The King is exposed to an immediate strike!",
+        "⚠️ DANGER! Critical threat incoming on the Commander!"
+      ]
+    };
+
+    // Game Engine Implementation
+    class MonsterHunterChess {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.board = [
+          ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+          ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          [null, null, null, null, null, null, null, null],
+          ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+          ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ];
+        this.turn = 'w';
+        this.castling = { K: true, Q: true, k: true, q: true };
+        this.enPassant = null;
+        this.history = [];
+        this.capturedWhite = [];
+        this.capturedBlack = [];
+      }
+      cloneBoard(b) {
+        return b.map(r => [...r]);
+      }
+      isWhite(p) { return p && p === p.toUpperCase(); }
+      isBlack(p) { return p && p === p.toLowerCase(); }
+      getColor(p) { if (!p) return null; return this.isWhite(p) ? 'w' : 'b'; }
+      inBounds(r, c) { return r >= 0 && r < 8 && c >= 0 && c < 8; }
+      findKing(board, color) {
+        const target = color === 'w' ? 'K' : 'k';
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            if (board[r][c] === target) return { r, c };
+          }
+        }
+        return null;
+      }
+      isSquareAttacked(r, c, color, board = this.board) {
+        const oppColor = color === 'w' ? 'b' : 'w';
+        const pawnP = oppColor === 'w' ? 'P' : 'p';
+        const pawnStep = color === 'w' ? -1 : 1;
+        for (let dc of [-1, 1]) {
+          const pr = r + pawnStep, pc = c + dc;
+          if (this.inBounds(pr, pc) && board[pr][pc] === pawnP) return true;
+        }
+        const knightP = oppColor === 'w' ? 'N' : 'n';
+        const knightOffsets = [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]];
+        for (let [dr, dc] of knightOffsets) {
+          const nr = r + dr, nc = c + dc;
+          if (this.inBounds(nr, nc) && board[nr][nc] === knightP) return true;
+        }
+        const kingP = oppColor === 'w' ? 'K' : 'k';
+        for (let dr = -1; dr <= 1; dr++) {
+          for (let dc = -1; dc <= 1; dc++) {
+            if (dr === 0 && dc === 0) continue;
+            const kr = r + dr, kc = c + dc;
+            if (this.inBounds(kr, kc) && board[kr][kc] === kingP) return true;
+          }
+        }
+        const rookP = oppColor === 'w' ? 'R' : 'r';
+        const queenP = oppColor === 'w' ? 'Q' : 'q';
+        for (let [dr, dc] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
+          let cr = r + dr, cc = c + dc;
+          while (this.inBounds(cr, cc)) {
+            const p = board[cr][cc];
+            if (p) {
+              if (p === rookP || p === queenP) return true;
+              break;
+            }
+            cr += dr; cc += dc;
+          }
+        }
+        const bishopP = oppColor === 'w' ? 'B' : 'b';
+        for (let [dr, dc] of [[-1, -1], [-1, 1], [1, -1], [1, 1]]) {
+          let cr = r + dr, cc = c + dc;
+          while (this.inBounds(cr, cc)) {
+            const p = board[cr][cc];
+            if (p) {
+              if (p === bishopP || p === queenP) return true;
+              break;
+            }
+            cr += dr; cc += dc;
+          }
+        }
+        return false;
+      }
+      isCheck(color = this.turn, board = this.board) {
+        const kPos = this.findKing(board, color);
+        if (!kPos) return false;
+        return this.isSquareAttacked(kPos.r, kPos.c, color, board);
+      }
+      getPseudoLegalMoves(r, c) {
+        const p = this.board[r][c];
+        if (!p) return [];
+        const color = this.getColor(p);
+        if (color !== this.turn) return [];
+        const moves = [];
+        const pType = p.toUpperCase();
+
+        if (pType === 'P') {
+          const dir = color === 'w' ? -1 : 1;
+          const startRank = color === 'w' ? 6 : 1;
+          const promoRank = color === 'w' ? 0 : 7;
+          if (this.inBounds(r + dir, c) && !this.board[r + dir][c]) {
+            moves.push({ from: { r, c }, to: { r: r + dir, c }, isPromo: (r + dir) === promoRank });
+            if (r === startRank && !this.board[r + 2 * dir][c]) {
+              moves.push({ from: { r, c }, to: { r: r + 2 * dir, c }, isDoublePawn: true });
+            }
+          }
+          for (let dc of [-1, 1]) {
+            const tr = r + dir, tc = c + dc;
+            if (this.inBounds(tr, tc)) {
+              const target = this.board[tr][tc];
+              if (target && this.getColor(target) !== color) {
+                moves.push({ from: { r, c }, to: { r: tr, c: tc }, isPromo: tr === promoRank, isCapture: true });
+              } else if (this.enPassant && this.enPassant.r === tr && this.enPassant.c === tc) {
+                moves.push({ from: { r, c }, to: { r: tr, c: tc }, isEnPassant: true, isCapture: true });
+              }
+            }
+          }
+        } else if (pType === 'N') {
+          const knightOffsets = [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]];
+          for (let [dr, dc] of knightOffsets) {
+            const tr = r + dr, tc = c + dc;
+            if (this.inBounds(tr, tc)) {
+              const target = this.board[tr][tc];
+              if (!target || this.getColor(target) !== color) {
+                moves.push({ from: { r, c }, to: { r: tr, c: tc }, isCapture: !!target });
+              }
+            }
+          }
+        } else if (pType === 'B' || pType === 'R' || pType === 'Q') {
+          const dirs = [];
+          if (pType === 'B' || pType === 'Q') dirs.push([-1, -1], [-1, 1], [1, -1], [1, 1]);
+          if (pType === 'R' || pType === 'Q') dirs.push([-1, 0], [1, 0], [0, -1], [0, 1]);
+          for (let [dr, dc] of dirs) {
+            let tr = r + dr, tc = c + dc;
+            while (this.inBounds(tr, tc)) {
+              const target = this.board[tr][tc];
+              if (!target) {
+                moves.push({ from: { r, c }, to: { r: tr, c: tc } });
+              } else {
+                if (this.getColor(target) !== color) {
+                  moves.push({ from: { r, c }, to: { r: tr, c: tc }, isCapture: true });
+                }
+                break;
+              }
+              tr += dr; tc += dc;
+            }
+          }
+        } else if (pType === 'K') {
+          for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+              if (dr === 0 && dc === 0) continue;
+              const tr = r + dr, tc = c + dc;
+              if (this.inBounds(tr, tc)) {
+                const target = this.board[tr][tc];
+                if (!target || this.getColor(target) !== color) {
+                  moves.push({ from: { r, c }, to: { r: tr, c: tc }, isCapture: !!target });
+                }
+              }
+            }
+          }
+          if (!this.isCheck(color)) {
+            if (color === 'w' && r === 7 && c === 4) {
+              if (this.castling.K && !this.board[7][5] && !this.board[7][6] && this.board[7][7] === 'R') {
+                if (!this.isSquareAttacked(7, 5, 'w') && !this.isSquareAttacked(7, 6, 'w')) {
+                  moves.push({ from: { r, c }, to: { r: 7, c: 6 }, isCastle: 'K' });
+                }
+              }
+              if (this.castling.Q && !this.board[7][3] && !this.board[7][2] && !this.board[7][1] && this.board[7][0] === 'R') {
+                if (!this.isSquareAttacked(7, 3, 'w') && !this.isSquareAttacked(7, 2, 'w')) {
+                  moves.push({ from: { r, c }, to: { r: 7, c: 2 }, isCastle: 'Q' });
+                }
+              }
+            } else if (color === 'b' && r === 0 && c === 4) {
+              if (this.castling.k && !this.board[0][5] && !this.board[0][6] && this.board[0][7] === 'r') {
+                if (!this.isSquareAttacked(0, 5, 'b') && !this.isSquareAttacked(0, 6, 'b')) {
+                  moves.push({ from: { r, c }, to: { r: 0, c: 6 }, isCastle: 'k' });
+                }
+              }
+              if (this.castling.q && !this.board[0][3] && !this.board[0][2] && !this.board[0][1] && this.board[0][0] === 'r') {
+                if (!this.isSquareAttacked(0, 3, 'b') && !this.isSquareAttacked(0, 2, 'b')) {
+                  moves.push({ from: { r, c }, to: { r: 0, c: 2 }, isCastle: 'q' });
+                }
+              }
+            }
+          }
+        }
+        return moves;
+      }
+      getLegalMoves(r, c) {
+        const pseudo = this.getPseudoLegalMoves(r, c);
+        return pseudo.filter(m => {
+          const nextBoard = this.cloneBoard(this.board);
+          const piece = nextBoard[m.from.r][m.from.c];
+          nextBoard[m.to.r][m.to.c] = piece;
+          nextBoard[m.from.r][m.from.c] = null;
+          if (m.isEnPassant) {
+            const epRow = piece === 'P' ? m.to.r + 1 : m.to.r - 1;
+            nextBoard[epRow][m.to.c] = null;
+          }
+          const color = this.getColor(piece);
+          return !this.isCheck(color, nextBoard);
+        });
+      }
+      getAllLegalMoves() {
+        const all = [];
+        for (let r = 0; r < 8; r++) {
+          for (let c = 0; c < 8; c++) {
+            if (this.board[r][c] && this.getColor(this.board[r][c]) === this.turn) {
+              all.push(...this.getLegalMoves(r, c));
+            }
+          }
+        }
+        return all;
+      }
+      makeMove(move, promotionChoice = 'Q') {
+        const { from, to, isCastle, isEnPassant, isDoublePawn, isPromo } = move;
+        const piece = this.board[from.r][from.c];
+        const color = this.getColor(piece);
+        let captured = this.board[to.r][to.c];
+
+        this.history.push({
+          board: this.cloneBoard(this.board),
+          turn: this.turn,
+          castling: { ...this.castling },
+          enPassant: this.enPassant ? { ...this.enPassant } : null,
+          capturedWhite: [...this.capturedWhite],
+          capturedBlack: [...this.capturedBlack],
+          move: { ...move, piece, captured, promotionChoice }
+        });
+
+        this.board[to.r][to.c] = piece;
+        this.board[from.r][from.c] = null;
+
+        if (isEnPassant) {
+          const epRow = color === 'w' ? to.r + 1 : to.r - 1;
+          captured = this.board[epRow][to.c];
+          this.board[epRow][to.c] = null;
+        }
+
+        if (captured) {
+          if (this.isWhite(captured)) this.capturedWhite.push(captured);
+          else this.capturedBlack.push(captured);
+        }
+
+        if (isCastle) {
+          if (isCastle === 'K') { this.board[7][5] = 'R'; this.board[7][7] = null; }
+          else if (isCastle === 'Q') { this.board[7][3] = 'R'; this.board[7][0] = null; }
+          else if (isCastle === 'k') { this.board[0][5] = 'r'; this.board[0][7] = null; }
+          else if (isCastle === 'q') { this.board[0][3] = 'r'; this.board[0][0] = null; }
+        }
+
+        if (isPromo) {
+          const promoPiece = color === 'w' ? promotionChoice.toUpperCase() : promotionChoice.toLowerCase();
+          this.board[to.r][to.c] = promoPiece;
+        }
+
+        if (piece === 'K') { this.castling.K = false; this.castling.Q = false; }
+        if (piece === 'k') { this.castling.k = false; this.castling.q = false; }
+        if (from.r === 7 && from.c === 7) this.castling.K = false;
+        if (from.r === 7 && from.c === 0) this.castling.Q = false;
+        if (from.r === 0 && from.c === 7) this.castling.k = false;
+        if (from.r === 0 && from.c === 0) this.castling.q = false;
+        if (to.r === 7 && to.c === 7) this.castling.K = false;
+        if (to.r === 7 && to.c === 0) this.castling.Q = false;
+        if (to.r === 0 && to.c === 7) this.castling.k = false;
+        if (to.r === 0 && to.c === 0) this.castling.q = false;
+
+        if (isDoublePawn) {
+          const epRow = color === 'w' ? from.r - 1 : from.r + 1;
+          this.enPassant = { r: epRow, c: from.c };
+        } else {
+          this.enPassant = null;
+        }
+
+        this.turn = this.turn === 'w' ? 'b' : 'w';
+
+        const oppMoves = this.getAllLegalMoves();
+        const inCheck = this.isCheck(this.turn);
+        let status = 'active';
+        if (oppMoves.length === 0) {
+          status = inCheck ? 'checkmate' : 'stalemate';
+        }
+
+        return { status, inCheck, captured, piece };
+      }
+      undo() {
+        if (this.history.length === 0) return null;
+        const last = this.history.pop();
+        this.board = last.board;
+        this.turn = last.turn;
+        this.castling = last.castling;
+        this.enPassant = last.enPassant;
+        this.capturedWhite = last.capturedWhite;
+        this.capturedBlack = last.capturedBlack;
+        return last;
+      }
+    }
+
+    // Controller & UI Binding
+    const game = new MonsterHunterChess();
+    const audio = new MonsterHunterAudio();
+    let selectedSquare = null;
+    let validMoves = [];
+    let isFlipped = false;
+    let pendingPromoMove = null;
+
+    const boardEl = document.getElementById('chessBoard');
+    const boardContainer = document.getElementById('boardContainer');
+    const turnIndicator = document.getElementById('turnIndicator');
+    const turnAvatar = document.getElementById('turnAvatar');
+    const turnText = document.getElementById('turnText');
+    const checkBadge = document.getElementById('checkBadge');
+    const commentaryBanner = document.getElementById('commentaryBanner');
+    const whiteCapturedTray = document.getElementById('whiteCapturedTray');
+    const blackCapturedTray = document.getElementById('blackCapturedTray');
+    const chkAutoRotate = document.getElementById('chkAutoRotate');
+    const promoModal = document.getElementById('promoModal');
+    const promoGrid = document.getElementById('promoGrid');
+    const gameOverModal = document.getElementById('gameOverModal');
+    const gameOverTitle = document.getElementById('gameOverTitle');
+    const gameOverMsg = document.getElementById('gameOverMsg');
+
+    function renderBoard() {
+      boardEl.innerHTML = '';
+      const inCheck = game.isCheck(game.turn);
+      const kPos = inCheck ? game.findKing(game.board, game.turn) : null;
+
+      for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+          const sq = document.createElement('div');
+          const isLight = (r + c) % 2 === 0;
+          sq.className = `square ${isLight ? 'light' : 'dark'}`;
+          sq.dataset.r = r;
+          sq.dataset.c = c;
+
+          // Coordinate labels
+          if (c === 0) {
+            const rankLabel = document.createElement('span');
+            rankLabel.className = 'coord coord-rank';
+            rankLabel.innerText = 8 - r;
+            sq.appendChild(rankLabel);
+          }
+          if (r === 7) {
+            const fileLabel = document.createElement('span');
+            fileLabel.className = 'coord coord-file';
+            fileLabel.innerText = String.fromCharCode(97 + c);
+            sq.appendChild(fileLabel);
+          }
+
+          // Selected highlight
+          if (selectedSquare && selectedSquare.r === r && selectedSquare.c === c) {
+            sq.classList.add('selected');
+          }
+
+          // King in check red highlight
+          if (kPos && kPos.r === r && kPos.c === c) {
+            sq.classList.add('in-check');
+          }
+
+          // Piece
+          const p = game.board[r][c];
+          if (p && PIECE_SVGS[p]) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'mh-piece-wrapper';
+            wrapper.innerHTML = PIECE_SVGS[p];
+            sq.appendChild(wrapper);
+          }
+
+          // Move hint
+          const moveMatch = validMoves.find(m => m.to.r === r && m.to.c === c);
+          if (moveMatch) {
+            const hint = document.createElement('div');
+            hint.className = moveMatch.isCapture ? 'capture-hint' : 'move-hint';
+            sq.appendChild(hint);
+          }
+
+          sq.addEventListener('click', () => onSquareClick(r, c));
+          boardEl.appendChild(sq);
+        }
+      }
+
+      updateStatusUI();
+    }
+
+    function onSquareClick(r, c) {
+      const p = game.board[r][c];
+      const pColor = game.getColor(p);
+
+      // If clicked on own piece: select it
+      if (p && pColor === game.turn) {
+        selectedSquare = { r, c };
+        validMoves = game.getLegalMoves(r, c);
+        renderBoard();
+        return;
+      }
+
+      // If a piece is already selected, check if clicked square is a valid target
+      if (selectedSquare) {
+        const targetMove = validMoves.find(m => m.to.r === r && m.to.c === c);
+        if (targetMove) {
+          if (targetMove.isPromo) {
+            pendingPromoMove = targetMove;
+            openPromoModal();
+          } else {
+            executeMove(targetMove);
+          }
+          return;
+        }
+      }
+
+      // Otherwise deselect
+      selectedSquare = null;
+      validMoves = [];
+      renderBoard();
+    }
+
+    function executeMove(move, promoChoice = 'Q') {
+      const res = game.makeMove(move, promoChoice);
+      selectedSquare = null;
+      validMoves = [];
+
+      // Audio feedback
+      if (res.status === 'checkmate') {
+        audio.playFanfare();
+      } else if (res.inCheck) {
+        audio.playCheck();
+      } else if (res.captured) {
+        audio.playCapture();
+      } else {
+        audio.playMove();
+      }
+
+      // Commentary flavor
+      const pType = (move.isPromo ? promoChoice : res.piece).toUpperCase();
+      let comment = '';
+      if (res.status === 'checkmate') {
+        const winner = game.turn === 'w' ? 'Shadow Apex (Black)' : 'Guild Expedition (White)';
+        comment = `🏆 QUEST COMPLETE! ${winner} triumph in the Forbidden Lands!`;
+      } else if (res.inCheck) {
+        comment = COMMENTARY.check[Math.floor(Math.random() * COMMENTARY.check.length)];
+      } else if (res.captured) {
+        comment = COMMENTARY.capture[Math.floor(Math.random() * COMMENTARY.capture.length)];
+      } else if (COMMENTARY[pType]) {
+        const arr = COMMENTARY[pType];
+        comment = arr[Math.floor(Math.random() * arr.length)];
+      }
+      commentaryBanner.innerText = comment;
+
+      // Auto-rotate if enabled
+      if (chkAutoRotate.checked) {
+        isFlipped = (game.turn === 'b');
+        boardContainer.classList.toggle('flipped', isFlipped);
+      }
+
+      renderBoard();
+
+      if (res.status === 'checkmate') {
+        const winner = game.turn === 'w' ? 'Shadow Apex (Black)' : 'Guild Expedition (White)';
+        gameOverTitle.innerText = '🏆 QUEST COMPLETE!';
+        gameOverMsg.innerText = `${winner} win the expedition! The Forbidden Lands have been conquered.`;
+        gameOverModal.style.display = 'flex';
+      } else if (res.status === 'stalemate') {
+        gameOverTitle.innerText = '⛺ CAMP CEASEFIRE!';
+        gameOverMsg.innerText = 'Neither side can make a move! Both sides retreat to base camp.';
+        gameOverModal.style.display = 'flex';
+      }
+    }
+
+    function openPromoModal() {
+      promoGrid.innerHTML = '';
+      const color = game.turn;
+      const options = color === 'w' ? [
+        { key: 'Q', title: 'Arkveld (Queen)' },
+        { key: 'R', title: 'Doshaguma (Rook)' },
+        { key: 'N', title: 'Seikret Mount (Knight)' },
+        { key: 'B', title: 'Rey Dau (Bishop)' }
+      ] : [
+        { key: 'q', title: 'Arkveld (Queen)' },
+        { key: 'r', title: 'Doshaguma (Rook)' },
+        { key: 'n', title: 'Seikret Mount (Knight)' },
+        { key: 'b', title: 'Rey Dau (Bishop)' }
+      ];
+
+      options.forEach(opt => {
+        const optKey = opt.key;
+        const card = document.createElement('div');
+        card.className = 'promo-option';
+        card.innerHTML = `
+          <div class="promo-svg">${PIECE_SVGS[optKey]}</div>
+          <div class="promo-label">${opt.title}</div>
+        `;
+        card.addEventListener('click', () => {
+          promoModal.style.display = 'none';
+          if (pendingPromoMove) {
+            const move = pendingPromoMove;
+            pendingPromoMove = null;
+            executeMove(move, opt.key.toUpperCase());
+          }
+        });
+        promoGrid.appendChild(card);
+      });
+
+      promoModal.style.display = 'flex';
+    }
+
+    function updateStatusUI() {
+      const isWhiteTurn = game.turn === 'w';
+      turnText.innerText = isWhiteTurn ? "Guild Expedition's Turn ⚔️" : "Shadow Apex's Turn 🐉";
+      turnAvatar.className = `player-avatar ${isWhiteTurn ? '' : 'black-team'}`;
+      turnAvatar.innerHTML = isWhiteTurn ? PIECE_SVGS['K'] : PIECE_SVGS['k'];
+
+      const inCheck = game.isCheck(game.turn);
+      checkBadge.style.display = inCheck ? 'inline-block' : 'none';
+
+      // Update captured trays
+      whiteCapturedTray.innerHTML = game.capturedWhite.map(p => `<div class="captured-icon">${PIECE_SVGS[p]}</div>`).join('');
+      blackCapturedTray.innerHTML = game.capturedBlack.map(p => `<div class="captured-icon">${PIECE_SVGS[p]}</div>`).join('');
+    }
+
+    // Event Listeners
+    document.getElementById('btnFlip').addEventListener('click', () => {
+      isFlipped = !isFlipped;
+      boardContainer.classList.toggle('flipped', isFlipped);
+    });
+
+    document.getElementById('btnUndo').addEventListener('click', () => {
+      const undone = game.undo();
+      if (undone) {
+        selectedSquare = null;
+        validMoves = [];
+        commentaryBanner.innerText = '↩️ Tactical retreat! Turn rolled back.';
+        if (chkAutoRotate.checked) {
+          isFlipped = (game.turn === 'b');
+          boardContainer.classList.toggle('flipped', isFlipped);
+        }
+        renderBoard();
+      }
+    });
+
+    document.getElementById('btnNewGame').addEventListener('click', () => {
+      if (confirm('Embark on a new Monster Hunter Wilds chess match?')) {
+        game.reset();
+        selectedSquare = null;
+        validMoves = [];
+        isFlipped = false;
+        boardContainer.classList.remove('flipped');
+        commentaryBanner.innerText = '⚔️ Fresh hunt initialized! Guild Expedition (White) to move.';
+        gameOverModal.style.display = 'none';
+        renderBoard();
+      }
+    });
+
+    document.getElementById('btnPlayAgain').addEventListener('click', () => {
+      game.reset();
+      selectedSquare = null;
+      validMoves = [];
+      isFlipped = false;
+      boardContainer.classList.remove('flipped');
+      commentaryBanner.innerText = '⚔️ Fresh hunt initialized! Guild Expedition (White) to move.';
+      gameOverModal.style.display = 'none';
+      renderBoard();
+    });
+
+    const btnSound = document.getElementById('btnSound');
+    btnSound.addEventListener('click', () => {
+      audio.enabled = !audio.enabled;
+      btnSound.innerText = audio.enabled ? '🔊 Sound' : '🔇 Muted';
+    });
+
+    // Initial render
+    renderBoard();
+//]]>
+  </script>
+</body>
+</html>
