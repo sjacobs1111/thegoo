@@ -9,16 +9,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-main: #0c0f14;
-      --bg-card: rgba(22, 26, 34, 0.95);
+      --bg-main: #0e1116;
+      --bg-card: rgba(24, 28, 36, 0.88);
       --border-bronze: #8c6d3b;
       --bronze-bright: #d4af37;
-      --reydau-gold: #f59e0b;
-      --reydau-glow: rgba(245, 158, 11, 0.6);
+      --bronze-dark: #4a3818;
+      --hunter-gold: #f59e0b;
+      --hunter-glow: rgba(245, 158, 11, 0.5);
       --arkveld-teal: #06b6d4;
-      --arkveld-glow: rgba(6, 182, 212, 0.6);
-      --slot-empty: #161922;
-      --slot-border: #2b3342;
+      --arkveld-glow: rgba(6, 182, 212, 0.55);
+      --slot-empty: #1a1e26;
+      --slot-border: #28303d;
+      --grid-board: #151a23;
     }
 
     * {
@@ -31,17 +33,17 @@
     body {
       background-color: var(--bg-main);
       background-image: 
-        radial-gradient(circle at 50% 12%, rgba(30, 41, 59, 0.7) 0%, transparent 70%),
-        radial-gradient(circle at 10% 85%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
-        radial-gradient(circle at 90% 85%, rgba(6, 182, 212, 0.12) 0%, transparent 50%),
-        linear-gradient(to bottom, #080a0e, #11151d);
+        radial-gradient(circle at 50% 20%, rgba(30, 41, 59, 0.6) 0%, transparent 70%),
+        radial-gradient(circle at 10% 80%, rgba(140, 109, 59, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+        linear-gradient(to bottom, #090b0e, #11151c);
       color: #e2e8f0;
       font-family: 'Nunito', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 16px 12px;
+      padding: 18px 12px;
     }
 
     header {
@@ -51,7 +53,7 @@
 
     .subtitle {
       font-family: 'Cinzel', serif;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       letter-spacing: 0.3em;
       color: var(--bronze-bright);
       text-transform: uppercase;
@@ -61,13 +63,13 @@
     h1 {
       font-family: 'Cinzel', serif;
       font-weight: 900;
-      font-size: clamp(1.5rem, 3.2vw, 2.3rem);
+      font-size: clamp(1.6rem, 3.5vw, 2.5rem);
       letter-spacing: 0.08em;
-      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 45%, #94a3b8 100%);
+      background: linear-gradient(180deg, #fff 0%, #cbd5e1 45%, #94a3b8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 4px 18px rgba(0, 0, 0, 0.8);
-      margin: 2px 0 4px 0;
+      margin: 2px 0 6px 0;
     }
 
     .badge-bar {
@@ -75,7 +77,7 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       color: #94a3b8;
       font-family: 'Cinzel', serif;
     }
@@ -85,8 +87,8 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      max-width: 640px;
-      margin-bottom: 12px;
+      max-width: 680px;
+      margin-bottom: 14px;
       gap: 10px;
     }
 
@@ -100,8 +102,8 @@
       align-items: center;
       gap: 10px;
       position: relative;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       cursor: pointer;
     }
 
@@ -110,8 +112,8 @@
     }
 
     .player-card.p1.active {
-      border-color: var(--reydau-gold);
-      box-shadow: 0 0 18px var(--reydau-glow);
+      border-color: var(--hunter-gold);
+      box-shadow: 0 0 18px var(--hunter-glow);
     }
 
     .player-card.p2.active {
@@ -127,23 +129,24 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      border: 2px solid rgba(255, 255, 255, 0.25);
     }
 
     .p1 .avatar {
-      background: radial-gradient(circle at 35% 30%, #fef3c7 0%, #f59e0b 50%, #92400e 100%);
-      box-shadow: 0 0 12px var(--reydau-glow);
+      background: radial-gradient(circle, #f59e0b 0%, #b45309 85%);
+      box-shadow: 0 0 10px var(--hunter-glow);
     }
 
     .p2 .avatar {
-      background: radial-gradient(circle at 35% 30%, #cffafe 0%, #06b6d4 50%, #155e75 100%);
-      box-shadow: 0 0 12px var(--arkveld-glow);
+      background: radial-gradient(circle, #06b6d4 0%, #0e7490 85%);
+      box-shadow: 0 0 10px var(--arkveld-glow);
     }
 
     .avatar svg {
-      width: 32px;
-      height: 32px;
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8));
+      width: 30px;
+      height: 30px;
+      fill: #ffffff;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
     }
 
     .player-info {
@@ -151,19 +154,9 @@
       min-width: 0;
     }
 
-    .player-title {
-      font-size: 0.65rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .p1 .player-title { color: #f59e0b; }
-    .p2 .player-title { color: #22d3ee; }
-
     .player-name {
       font-family: 'Cinzel', serif;
-      font-size: 0.98rem;
+      font-size: 0.95rem;
       font-weight: 700;
       white-space: nowrap;
       overflow: hidden;
@@ -179,17 +172,17 @@
       color: var(--bronze-bright);
     }
 
-    .p1 .player-name { color: #fef08a; }
+    .p1 .player-name { color: #fde68a; }
     .p2 .player-name { color: #a5f3fc; }
 
     .score-display {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       color: #94a3b8;
       font-weight: 600;
     }
 
     .score-num {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: #ffffff;
       margin-left: 2px;
@@ -197,27 +190,27 @@
 
     .turn-indicator {
       text-align: center;
-      padding: 6px 10px;
+      padding: 5px 12px;
       font-family: 'Cinzel', serif;
       font-size: 0.85rem;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       font-weight: 700;
       color: #e2e8f0;
       border: 1px solid var(--border-bronze);
       border-radius: 4px;
-      background: rgba(14, 17, 22, 0.95);
+      background: rgba(14, 17, 22, 0.9);
       min-width: 140px;
     }
 
     .drop-guide-container {
       width: 100%;
-      max-width: 560px;
+      max-width: 580px;
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 8px;
       padding: 0 10px;
-      height: 38px;
+      height: 36px;
       margin-bottom: 4px;
     }
 
@@ -226,21 +219,15 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      border-radius: 4px;
-      transition: background 0.15s ease;
-    }
-
-    .drop-guide-slot:hover {
-      background: rgba(255, 255, 255, 0.04);
     }
 
     .ghost-token {
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       opacity: 0;
       transition: opacity 0.15s ease, transform 0.15s ease;
-      transform: translateY(-3px);
+      transform: translateY(-4px);
     }
 
     .drop-guide-slot:hover .ghost-token,
@@ -251,25 +238,25 @@
 
     .ghost-p1 {
       background: radial-gradient(circle at 35% 35%, #fbbf24, #b45309);
-      box-shadow: 0 0 14px var(--reydau-glow);
+      box-shadow: 0 0 12px var(--hunter-glow);
     }
 
     .ghost-p2 {
       background: radial-gradient(circle at 35% 35%, #22d3ee, #0891b2);
-      box-shadow: 0 0 14px var(--arkveld-glow);
+      box-shadow: 0 0 12px var(--arkveld-glow);
     }
 
     .board-frame {
-      background: linear-gradient(145deg, #202734, #11151c);
+      background: linear-gradient(145deg, #222936, #12161f);
       border: 3px solid var(--border-bronze);
       border-radius: 14px;
       padding: 12px;
       box-shadow: 
-        0 14px 40px rgba(0, 0, 0, 0.85),
+        0 12px 35px rgba(0, 0, 0, 0.75),
         inset 0 2px 4px rgba(255, 255, 255, 0.08),
         inset 0 -3px 8px rgba(0, 0, 0, 0.9);
       position: relative;
-      max-width: 560px;
+      max-width: 580px;
       width: 100%;
     }
 
@@ -278,10 +265,10 @@
       grid-template-columns: repeat(7, 1fr);
       grid-template-rows: repeat(6, 1fr);
       gap: 8px;
-      background: #090c12;
+      background: #0b0e14;
       padding: 10px;
       border-radius: 8px;
-      border: 1px solid #283344;
+      border: 1px solid #2d3748;
     }
 
     .cell {
@@ -291,73 +278,74 @@
       border: 2px solid var(--slot-border);
       box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.85);
       position: relative;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: border-color 0.15s ease;
     }
 
-    .cell:hover {
-      border-color: #3e4a5d;
+    .board-frame:hover .cell {
+      border-color: #3b4759;
     }
 
     .token {
-      width: 90%;
-      height: 90%;
+      width: 92%;
+      height: 92%;
       border-radius: 50%;
       position: absolute;
       display: flex;
       align-items: center;
       justify-content: center;
-      pointer-events: none;
       box-shadow: 
-        inset 0 2px 5px rgba(255, 255, 255, 0.45),
-        0 4px 10px rgba(0, 0, 0, 0.7);
+        inset 0 2px 4px rgba(255, 255, 255, 0.4),
+        0 4px 10px rgba(0, 0, 0, 0.65);
     }
 
     .token svg {
-      width: 72%;
-      height: 72%;
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.85));
+      width: 66%;
+      height: 66%;
+      fill: #ffffff;
+      opacity: 0.95;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.75));
     }
 
     .token-p1 {
       background: radial-gradient(circle at 35% 30%, #fef3c7 0%, #f59e0b 45%, #92400e 100%);
-      border: 1.5px solid #fde68a;
+      border: 1px solid #fde68a;
     }
 
     .token-p2 {
       background: radial-gradient(circle at 35% 30%, #cffafe 0%, #06b6d4 45%, #155e75 100%);
-      border: 1.5px solid #a5f3fc;
+      border: 1px solid #a5f3fc;
     }
 
-    @keyframes tokenDrop {
+    @keyframes dropIn {
       0% {
-        transform: translateY(-70px) scale(0.85);
-        opacity: 0.3;
+        transform: translateY(var(--drop-from));
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
       }
-      65% {
-        transform: translateY(0) scale(1.04);
-        opacity: 1;
+      70% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
       }
-      82% {
-        transform: translateY(-8px) scale(0.98);
+      85% {
+        transform: translateY(-12px);
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
       }
       100% {
-        transform: translateY(0) scale(1);
-        opacity: 1;
+        transform: translateY(0);
       }
     }
 
     .token.falling {
-      animation: tokenDrop 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      animation: dropIn 0.42s forwards;
     }
 
     @keyframes winPulse {
       0%, 100% {
         transform: scale(1);
-        box-shadow: 0 0 16px #ffd700, inset 0 0 8px #fff;
+        box-shadow: 0 0 15px #ffd700, inset 0 0 8px #fff;
       }
       50% {
         transform: scale(1.08);
@@ -378,7 +366,7 @@
       align-items: center;
       gap: 10px;
       margin-top: 14px;
-      max-width: 560px;
+      max-width: 580px;
       width: 100%;
     }
 
@@ -435,7 +423,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(8, 10, 14, 0.8);
+      background: rgba(8, 10, 14, 0.75);
       backdrop-filter: blur(4px);
       display: flex;
       align-items: center;
@@ -443,7 +431,7 @@
       z-index: 50;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease;
+      transition: opacity 0.3s ease;
     }
 
     .modal-backdrop.active {
@@ -457,11 +445,11 @@
       border-radius: 12px;
       padding: 24px 28px;
       text-align: center;
-      max-width: 440px;
+      max-width: 420px;
       width: 90%;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 24px rgba(212, 175, 55, 0.25);
       transform: scale(0.92);
-      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .modal-backdrop.active .quest-card {
@@ -470,21 +458,21 @@
 
     .quest-header {
       font-family: 'Cinzel', serif;
-      font-size: 1.55rem;
+      font-size: 1.6rem;
       font-weight: 900;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       margin-bottom: 8px;
     }
 
-    .quest-reydau {
+    .quest-complete {
       color: #fbbf24;
-      text-shadow: 0 0 18px rgba(251, 191, 36, 0.7);
+      text-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
     }
 
-    .quest-arkveld {
+    .quest-failed {
       color: #22d3ee;
-      text-shadow: 0 0 18px rgba(34, 211, 238, 0.7);
+      text-shadow: 0 0 16px rgba(34, 211, 238, 0.6);
     }
 
     .quest-draw {
@@ -495,7 +483,7 @@
       font-size: 0.92rem;
       color: #cbd5e1;
       margin-bottom: 20px;
-      line-height: 1.45;
+      line-height: 1.4;
     }
 
     .modal-btn-row {
@@ -504,7 +492,7 @@
       justify-content: center;
     }
 
-    @media (max-width: 520px) {
+    @media (max-width: 500px) {
       .dashboard {
         flex-direction: column;
       }
@@ -525,8 +513,8 @@
 <body>
 
   <header>
-    <div class="subtitle">Forbidden Lands: Apex Turf War</div>
-    <h1>Connect 4: Monster Encounter</h1>
+    <div class="subtitle">Forbidden Lands Expedition</div>
+    <h1>Connect 4: Apex Turf War</h1>
     <div class="badge-bar">
       <span>✦ Local Hotseat ✦</span>
       <span>Apex Wyvern Clash</span>
@@ -538,53 +526,60 @@
   <section class="dashboard">
     <div class="player-card p1 active" id="cardP1" onclick="editPlayerName(1)">
       <div class="avatar">
-        <!-- Rey Dau: Crowned railgun thunder horns & fierce apex wyvern head -->
-        <svg viewBox="0 0 100 100">
-          <path d="M50 18 L55 30 L63 33 L57 41 L50 38 L43 41 L37 33 L45 30 Z" fill="#fff"/>
-          <path d="M44 28 L34 5 L28 7 L36 24 L24 12 L19 16 L31 32 L20 28 L17 34 L29 44 L39 39 Z" fill="#fff"/>
-          <path d="M56 28 L66 5 L72 7 L64 24 L76 12 L81 16 L69 32 L80 28 L83 34 L71 44 L61 39 Z" fill="#fff"/>
-          <path d="M50 3 L53 14 L49 15 L52 23 L48 23 L51 14 L47 13 Z" fill="#fef08a"/>
-          <path d="M36 45 L50 51 L64 45 L59 55 L50 59 L41 55 Z" fill="#fff"/>
-          <polygon points="41,49 46,50 43,53" fill="#78350f"/>
-          <polygon points="59,49 54,50 57,53" fill="#78350f"/>
-          <path d="M50 61 L62 57 L68 67 L50 93 L32 67 L38 57 Z" fill="#fff"/>
-          <path d="M30 52 L19 61 L31 65 L25 73 L37 70 Z" fill="#fff"/>
-          <path d="M70 52 L81 61 L69 65 L75 73 L63 70 Z" fill="#fff"/>
-          <path d="M42 67 L50 72 L58 67 L50 83 Z" fill="#92400e"/>
+        <!-- Rey Dau: Authentic Monster Hunter icon with dual railgun horns and thunder crest -->
+        <svg viewBox="0 0 64 64" fill="currentColor">
+          <path d="M21 4 L26 18 L24 20 L27 26 L23 27 L19 22 L21 18 L16 8 Z"/>
+          <path d="M23 2 L27 12 L24 13 L21 4 Z"/>
+          <path d="M15 11 L19 20 L16 21 L13 13 Z"/>
+          <path d="M43 4 L48 8 L43 18 L45 22 L41 27 L37 26 L40 20 L38 18 Z"/>
+          <path d="M41 2 L43 4 L40 13 L37 12 Z"/>
+          <path d="M49 11 L51 13 L48 21 L45 20 Z"/>
+          <path d="M32 1 L34 9 L32 13 L30 9 Z"/>
+          <path d="M32 15 L35 22 L32 25 L29 22 Z"/>
+          <path d="M22 27 L32 23 L42 27 L44 32 L32 29 L20 32 Z"/>
+          <path d="M23 33 L29 32 L26 36 Z"/>
+          <path d="M41 33 L38 36 L35 32 Z"/>
+          <path d="M26 33 L32 30 L38 33 L36 43 L32 48 L28 43 Z"/>
+          <path d="M26 45 L32 58 L38 45 L34 46 L32 52 L30 46 Z"/>
+          <path d="M18 29 L12 35 L18 37 L14 43 L21 42 L18 49 L25 46 Z"/>
+          <path d="M46 29 L52 35 L46 37 L50 43 L43 42 L46 49 L39 46 Z"/>
+          <path d="M32 53 L34 60 L32 63 L30 60 Z"/>
         </svg>
       </div>
       <div class="player-info">
-        <div class="player-title">Apex of Windward Plains</div>
-        <div class="player-name" id="nameP1" title="Click to rename">Rey Dau</div>
+        <div class="player-name" id="nameP1" title="Click to change name">Rey Dau</div>
         <div class="score-display">Dominance: <span class="score-num" id="scoreP1">0</span></div>
       </div>
     </div>
 
-    <div class="turn-indicator" id="turnIndicator">Rey Dau's Turn</div>
+    <div class="turn-indicator" id="turnIndicator">Rey Dau's Move</div>
 
     <div class="player-card p2" id="cardP2" onclick="editPlayerName(2)">
       <div class="avatar">
-        <!-- Arkveld: White Wraith - Swept recurved horns and whip-chain bladed tendrils -->
-        <svg viewBox="0 0 100 100">
-          <path d="M50 16 L58 30 L54 42 L50 38 L46 42 L42 30 Z" fill="#fff"/>
-          <path d="M44 28 C33 16 18 10 10 16 C12 24 22 30 35 36 Z" fill="#fff"/>
-          <path d="M37 36 C27 30 13 30 7 38 C13 42 25 42 37 44 Z" fill="#fff"/>
-          <path d="M56 28 C67 16 82 10 90 16 C88 24 78 30 65 36 Z" fill="#fff"/>
-          <path d="M63 36 C73 30 87 30 93 38 C87 42 75 42 63 44 Z" fill="#fff"/>
-          <path d="M50 40 L61 46 L57 58 L50 54 L43 58 L39 46 Z" fill="#fff"/>
-          <polygon points="43,47 48,48 45,51" fill="#0e7490"/>
-          <polygon points="57,47 52,48 55,51" fill="#0e7490"/>
-          <path d="M43 58 L50 55 L57 58 L50 80 Z" fill="#fff"/>
-          <path d="M21 46 C15 58 13 72 23 86 C25 80 23 68 31 62 L25 60 Z" fill="#fff"/>
-          <path d="M79 46 C85 58 87 72 77 86 C75 80 77 68 69 62 L75 60 Z" fill="#fff"/>
-          <path d="M25 82 L35 92 L33 80 Z" fill="#a5f3fc"/>
-          <path d="M75 82 L65 92 L67 80 Z" fill="#a5f3fc"/>
-          <path d="M50 82 L46 95 L50 91 L54 95 Z" fill="#a5f3fc"/>
+        <!-- Arkveld: Authentic Monster Hunter icon with swept horns and chain whip tendrils -->
+        <svg viewBox="0 0 64 64" fill="currentColor">
+          <path d="M30 17 C25 11 17 5 7 7 C5 13 11 19 21 23 L25 22 Z"/>
+          <path d="M24 23 C17 19 9 17 4 23 C8 27 16 27 24 26 Z"/>
+          <path d="M34 17 C39 11 47 5 57 7 C59 13 53 19 43 23 L39 22 Z"/>
+          <path d="M40 23 C47 19 55 17 60 23 C56 27 48 27 40 26 Z"/>
+          <path d="M32 9 L35 19 L32 22 L29 19 Z"/>
+          <path d="M25 25 L32 21 L39 25 L38 33 L32 30 L26 33 Z"/>
+          <path d="M27 32 L31 31 L29 35 Z"/>
+          <path d="M37 32 L33 31 L35 35 Z"/>
+          <path d="M28 33 L32 31 L36 33 L35 43 L32 49 L29 43 Z"/>
+          <path d="M28 44 L32 54 L36 44 L34 45 L32 50 L30 45 Z"/>
+          <path d="M14 25 C9 31 7 39 11 45 L14 43 C11 38 12 32 15 27 Z"/>
+          <path d="M10 43 C7 49 9 55 15 59 L17 56 C12 53 11 48 13 44 Z"/>
+          <path d="M15 56 L19 62 L21 58 L18 55 Z"/>
+          <path d="M50 25 C55 31 57 39 53 45 L50 43 C53 38 52 32 49 27 Z"/>
+          <path d="M54 43 C57 49 55 55 49 59 L47 56 C52 53 53 48 51 44 Z"/>
+          <path d="M49 56 L45 62 L43 58 L46 55 Z"/>
+          <path d="M26 48 L23 54 L27 52 L25 58 L30 53 Z"/>
+          <path d="M38 48 L41 54 L37 52 L39 58 L34 53 Z"/>
         </svg>
       </div>
       <div class="player-info">
-        <div class="player-title">The White Wraith</div>
-        <div class="player-name" id="nameP2" title="Click to rename">Arkveld</div>
+        <div class="player-name" id="nameP2" title="Click to change name">Arkveld</div>
         <div class="score-display">Dominance: <span class="score-num" id="scoreP2">0</span></div>
       </div>
     </div>
@@ -606,10 +601,10 @@
     <button class="btn" id="btnRestart" onclick="resetRound()" title="Start a new round (R)">
       ⚔ New Turf War
     </button>
-    <button class="btn" id="btnResetScores" onclick="resetScoreboard()" title="Reset records">
+    <button class="btn" id="btnResetScores" onclick="resetScoreboard()" title="Reset dominance records">
       ⌫ Reset Scores
     </button>
-    <button class="btn" id="btnSound" onclick="toggleSound()" title="Toggle audio (M)">
+    <button class="btn" id="btnSound" onclick="toggleSound()" title="Toggle sounds (M)">
       🔊 Sound: ON
     </button>
   </footer>
@@ -618,13 +613,13 @@
     Couch Controls: <kbd>1</kbd>–<kbd>7</kbd> to drop | <kbd>←</kbd> / <kbd>→</kbd> or <kbd>A</kbd> / <kbd>D</kbd> select column | <kbd>Space</kbd> or <kbd>Enter</kbd> drop | <kbd>U</kbd> undo | <kbd>R</kbd> reset
   </div>
 
-  <!-- Turf War Outcome Modal -->
+  <!-- Quest Outcome Modal -->
   <div class="modal-backdrop" id="questModal">
     <div class="quest-card">
       <div class="quest-header" id="modalHeader">Turf War Victory</div>
-      <div class="quest-desc" id="modalDesc">An Apex Monster has conquered the battlefield!</div>
+      <div class="quest-desc" id="modalDesc">An Apex Wyvern has claimed dominion!</div>
       <div class="modal-btn-row">
-        <button class="btn" onclick="closeModalAndReset()">⚔ Next Turf War</button>
+        <button class="btn" onclick="closeModalAndReset()">⚔ Start Next Battle</button>
         <button class="btn" onclick="closeModalOnly()">Review Battlefield</button>
       </div>
     </div>
@@ -634,7 +629,7 @@
     const ROWS = 6;
     const COLS = 7;
     let board = [];
-    let currentPlayer = 1; // 1 = Rey Dau (Orange/Gold), 2 = Arkveld (Teal/Blue)
+    let currentPlayer = 1; // 1 = Rey Dau (Orange/Gold), 2 = Arkveld (Teal)
     let moveHistory = [];
     let isGameOver = false;
     let isAnimating = false;
@@ -644,139 +639,145 @@
     let scores = { p1: 0, p2: 0, draws: 0 };
     let playerNames = { p1: "Rey Dau", p2: "Arkveld" };
 
-    // Safe storage reader with validation
     try {
-      const savedScores = localStorage.getItem('mhw_turfwar_scores');
-      if (savedScores) {
-        const parsed = JSON.parse(savedScores);
-        if (parsed && typeof parsed.p1 === 'number' && typeof parsed.p2 === 'number') {
-          scores = parsed;
-        }
-      }
-      const savedNames = localStorage.getItem('mhw_turfwar_names');
+      const savedScores = localStorage.getItem('mhw_connect4_scores');
+      if (savedScores) scores = JSON.parse(savedScores);
+      const savedNames = localStorage.getItem('mhw_connect4_names');
       if (savedNames) {
-        const parsedNames = JSON.parse(savedNames);
-        if (parsedNames && parsedNames.p1 && parsedNames.p2) {
-          playerNames = parsedNames;
-        }
+        const parsed = JSON.parse(savedNames);
+        if (parsed.p1 && parsed.p1 !== "Guild Hunter") playerNames.p1 = parsed.p1;
+        if (parsed.p2) playerNames.p2 = parsed.p2;
       }
     } catch (e) {
-      console.warn("Storage access restricted, using default values", e);
+      console.warn("Storage access restricted", e);
     }
 
+    // Procedural Audio Engine (Web Audio API)
     let audioCtx = null;
 
-    function playSound(type, player = 1) {
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSound(type) {
       if (!soundEnabled) return;
       try {
-        if (!audioCtx) {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (AudioContext) audioCtx = new AudioContext();
-        }
-        if (!audioCtx) return;
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume().catch(() => {});
-        }
-
+        initAudio();
         const now = audioCtx.currentTime;
 
         if (type === 'drop') {
-          if (player === 1) {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(320, now);
-            osc.frequency.exponentialRampToValueAtTime(55, now + 0.2);
-            gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(now);
-            osc.stop(now + 0.2);
-          } else {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(580, now);
-            osc.frequency.exponentialRampToValueAtTime(180, now + 0.18);
-            gain.gain.setValueAtTime(0.28, now);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(now);
-            osc.stop(now + 0.18);
-          }
-        } else if (type === 'win') {
-          const freqs = player === 1 
-            ? [392.00, 493.88, 587.33, 783.99]
-            : [440.00, 523.25, 659.25, 880.00];
+          const osc1 = audioCtx.createOscillator();
+          const osc2 = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
 
+          osc1.type = 'sawtooth';
+          osc1.frequency.setValueAtTime(320, now);
+          osc1.frequency.exponentialRampToValueAtTime(70, now + 0.18);
+
+          osc2.type = 'triangle';
+          osc2.frequency.setValueAtTime(140, now);
+          osc2.frequency.exponentialRampToValueAtTime(40, now + 0.22);
+
+          gain.gain.setValueAtTime(0.35, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.22);
+          osc2.stop(now + 0.22);
+        } else if (type === 'win') {
+          const freqs = [440, 554.37, 659.25, 880];
           freqs.forEach((freq, idx) => {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = player === 1 ? 'sawtooth' : 'sine';
+            osc.type = 'sine';
             osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-            gain.gain.setValueAtTime(0.0001, now + idx * 0.08);
-            gain.gain.linearRampToValueAtTime(0.16, now + idx * 0.08 + 0.03);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.85);
+
+            gain.gain.setValueAtTime(0.001, now + idx * 0.08);
+            gain.gain.linearRampToValueAtTime(0.18, now + idx * 0.08 + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start(now + idx * 0.08);
-            osc.stop(now + 0.9);
+            osc.stop(now + 0.95);
           });
         } else if (type === 'undo') {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
           osc.type = 'sine';
           osc.frequency.setValueAtTime(240, now);
-          osc.frequency.linearRampToValueAtTime(160, now + 0.08);
-          gain.gain.setValueAtTime(0.12, now);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+          osc.frequency.linearRampToValueAtTime(180, now + 0.1);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.1);
           osc.connect(gain);
           gain.connect(audioCtx.destination);
           osc.start(now);
-          osc.stop(now + 0.08);
+          osc.stop(now + 0.1);
         }
-      } catch (err) {}
+      } catch (err) {
+        console.warn("Audio unavailable:", err);
+      }
     }
 
     function toggleSound() {
       soundEnabled = !soundEnabled;
       const btn = document.getElementById('btnSound');
-      if (btn) btn.innerText = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
+      btn.innerText = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
     }
 
-    const reyDauLogoSvg = `
-      <svg viewBox="0 0 100 100">
-        <path d="M50 18 L55 30 L63 33 L57 41 L50 38 L43 41 L37 33 L45 30 Z" fill="#fff"/>
-        <path d="M44 28 L34 5 L28 7 L36 24 L24 12 L19 16 L31 32 L20 28 L17 34 L29 44 L39 39 Z" fill="#fff"/>
-        <path d="M56 28 L66 5 L72 7 L64 24 L76 12 L81 16 L69 32 L80 28 L83 34 L71 44 L61 39 Z" fill="#fff"/>
-        <path d="M50 3 L53 14 L49 15 L52 23 L48 23 L51 14 L47 13 Z" fill="#fef08a"/>
-        <path d="M36 45 L50 51 L64 45 L59 55 L50 59 L41 55 Z" fill="#fff"/>
-        <polygon points="41,49 46,50 43,53" fill="#78350f"/>
-        <polygon points="59,49 54,50 57,53" fill="#78350f"/>
-        <path d="M50 61 L62 57 L68 67 L50 93 L32 67 L38 57 Z" fill="#fff"/>
-        <path d="M30 52 L19 61 L31 65 L25 73 L37 70 Z" fill="#fff"/>
-        <path d="M70 52 L81 61 L69 65 L75 73 L63 70 Z" fill="#fff"/>
-        <path d="M42 67 L50 72 L58 67 L50 83 Z" fill="#92400e"/>
+    // Rey Dau: Thunder Railgun Wyvern Monster Hunter Badge
+    const reyDauIconSvg = `
+      <svg viewBox="0 0 64 64" fill="currentColor">
+        <path d="M21 4 L26 18 L24 20 L27 26 L23 27 L19 22 L21 18 L16 8 Z"/>
+        <path d="M23 2 L27 12 L24 13 L21 4 Z"/>
+        <path d="M15 11 L19 20 L16 21 L13 13 Z"/>
+        <path d="M43 4 L48 8 L43 18 L45 22 L41 27 L37 26 L40 20 L38 18 Z"/>
+        <path d="M41 2 L43 4 L40 13 L37 12 Z"/>
+        <path d="M49 11 L51 13 L48 21 L45 20 Z"/>
+        <path d="M32 1 L34 9 L32 13 L30 9 Z"/>
+        <path d="M32 15 L35 22 L32 25 L29 22 Z"/>
+        <path d="M22 27 L32 23 L42 27 L44 32 L32 29 L20 32 Z"/>
+        <path d="M23 33 L29 32 L26 36 Z"/>
+        <path d="M41 33 L38 36 L35 32 Z"/>
+        <path d="M26 33 L32 30 L38 33 L36 43 L32 48 L28 43 Z"/>
+        <path d="M26 45 L32 58 L38 45 L34 46 L32 52 L30 46 Z"/>
+        <path d="M18 29 L12 35 L18 37 L14 43 L21 42 L18 49 L25 46 Z"/>
+        <path d="M46 29 L52 35 L46 37 L50 43 L43 42 L46 49 L39 46 Z"/>
+        <path d="M32 53 L34 60 L32 63 L30 60 Z"/>
       </svg>`;
 
-    const arkveldLogoSvg = `
-      <svg viewBox="0 0 100 100">
-        <path d="M50 16 L58 30 L54 42 L50 38 L46 42 L42 30 Z" fill="#fff"/>
-        <path d="M44 28 C33 16 18 10 10 16 C12 24 22 30 35 36 Z" fill="#fff"/>
-        <path d="M37 36 C27 30 13 30 7 38 C13 42 25 42 37 44 Z" fill="#fff"/>
-        <path d="M56 28 C67 16 82 10 90 16 C88 24 78 30 65 36 Z" fill="#fff"/>
-        <path d="M63 36 C73 30 87 30 93 38 C87 42 75 42 63 44 Z" fill="#fff"/>
-        <path d="M50 40 L61 46 L57 58 L50 54 L43 58 L39 46 Z" fill="#fff"/>
-        <polygon points="43,47 48,48 45,51" fill="#0e7490"/>
-        <polygon points="57,47 52,48 55,51" fill="#0e7490"/>
-        <path d="M43 58 L50 55 L57 58 L50 80 Z" fill="#fff"/>
-        <path d="M21 46 C15 58 13 72 23 86 C25 80 23 68 31 62 L25 60 Z" fill="#fff"/>
-        <path d="M79 46 C85 58 87 72 77 86 C75 80 77 68 69 62 L75 60 Z" fill="#fff"/>
-        <path d="M25 82 L35 92 L33 80 Z" fill="#a5f3fc"/>
-        <path d="M75 82 L65 92 L67 80 Z" fill="#a5f3fc"/>
-        <path d="M50 82 L46 95 L50 91 L54 95 Z" fill="#a5f3fc"/>
+    // Arkveld: The White Wraith Swept Horns & Chain Whip Wing Badge
+    const arkveldIconSvg = `
+      <svg viewBox="0 0 64 64" fill="currentColor">
+        <path d="M30 17 C25 11 17 5 7 7 C5 13 11 19 21 23 L25 22 Z"/>
+        <path d="M24 23 C17 19 9 17 4 23 C8 27 16 27 24 26 Z"/>
+        <path d="M34 17 C39 11 47 5 57 7 C59 13 53 19 43 23 L39 22 Z"/>
+        <path d="M40 23 C47 19 55 17 60 23 C56 27 48 27 40 26 Z"/>
+        <path d="M32 9 L35 19 L32 22 L29 19 Z"/>
+        <path d="M25 25 L32 21 L39 25 L38 33 L32 30 L26 33 Z"/>
+        <path d="M27 32 L31 31 L29 35 Z"/>
+        <path d="M37 32 L33 31 L35 35 Z"/>
+        <path d="M28 33 L32 31 L36 33 L35 43 L32 49 L29 43 Z"/>
+        <path d="M28 44 L32 54 L36 44 L34 45 L32 50 L30 45 Z"/>
+        <path d="M14 25 C9 31 7 39 11 45 L14 43 C11 38 12 32 15 27 Z"/>
+        <path d="M10 43 C7 49 9 55 15 59 L17 56 C12 53 11 48 13 44 Z"/>
+        <path d="M15 56 L19 62 L21 58 L18 55 Z"/>
+        <path d="M50 25 C55 31 57 39 53 45 L50 43 C53 38 52 32 49 27 Z"/>
+        <path d="M54 43 C57 49 55 55 49 59 L47 56 C52 53 53 48 51 44 Z"/>
+        <path d="M49 56 L45 62 L43 58 L46 55 Z"/>
+        <path d="M26 48 L23 54 L27 52 L25 58 L30 53 Z"/>
+        <path d="M38 48 L41 54 L37 52 L39 58 L34 53 Z"/>
       </svg>`;
 
     function initGame() {
@@ -786,15 +787,10 @@
       isAnimating = false;
       currentPlayer = 1;
 
-      const p1El = document.getElementById('nameP1');
-      const p2El = document.getElementById('nameP2');
-      const s1El = document.getElementById('scoreP1');
-      const s2El = document.getElementById('scoreP2');
-
-      if (p1El) p1El.innerText = playerNames.p1;
-      if (p2El) p2El.innerText = playerNames.p2;
-      if (s1El) s1El.innerText = scores.p1;
-      if (s2El) s2El.innerText = scores.p2;
+      document.getElementById('nameP1').innerText = playerNames.p1;
+      document.getElementById('nameP2').innerText = playerNames.p2;
+      document.getElementById('scoreP1').innerText = scores.p1;
+      document.getElementById('scoreP2').innerText = scores.p2;
 
       renderBoard();
       renderDropGuides();
@@ -803,17 +799,13 @@
 
     function renderDropGuides() {
       const guideContainer = document.getElementById('dropGuides');
-      if (!guideContainer) return;
       guideContainer.innerHTML = '';
       for (let c = 0; c < COLS; c++) {
         const guide = document.createElement('div');
         guide.className = 'drop-guide-slot';
         guide.dataset.col = c;
         guide.innerHTML = `<div class="ghost-token ${currentPlayer === 1 ? 'ghost-p1' : 'ghost-p2'}"></div>`;
-        guide.onclick = (e) => {
-          e.stopPropagation();
-          handleColSelect(c);
-        };
+        guide.onclick = () => handleColSelect(c);
         guideContainer.appendChild(guide);
       }
       updateKeyboardGuide();
@@ -821,7 +813,6 @@
 
     function renderBoard() {
       const grid = document.getElementById('boardGrid');
-      if (!grid) return;
       grid.innerHTML = '';
       for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
@@ -829,10 +820,7 @@
           cell.className = 'cell';
           cell.dataset.row = r;
           cell.dataset.col = c;
-          cell.onclick = (e) => {
-            e.stopPropagation();
-            handleColSelect(c);
-          };
+          cell.onclick = () => handleColSelect(c);
           grid.appendChild(cell);
         }
       }
@@ -850,11 +838,7 @@
     }
 
     function handleColSelect(col) {
-      if (isGameOver) {
-        resetRound();
-        return;
-      }
-      if (isAnimating) return;
+      if (isGameOver || isAnimating) return;
       dropInColumn(col);
     }
 
@@ -874,34 +858,32 @@
       moveHistory.push({ row: targetRow, col: col, player: currentPlayer });
 
       const cell = document.querySelector(`.cell[data-row="${targetRow}"][data-col="${col}"]`);
-      if (cell) {
-        const token = document.createElement('div');
-        token.className = `token ${currentPlayer === 1 ? 'token-p1' : 'token-p2'} falling`;
-        token.innerHTML = currentPlayer === 1 ? reyDauLogoSvg : arkveldLogoSvg;
-        cell.appendChild(token);
-      }
+      const token = document.createElement('div');
+      token.className = `token ${currentPlayer === 1 ? 'token-p1' : 'token-p2'} falling`;
+      token.innerHTML = currentPlayer === 1 ? reyDauIconSvg : arkveldIconSvg;
 
-      playSound('drop', currentPlayer);
+      const cellHeight = cell.getBoundingClientRect().height || 54;
+      const dropDistance = -((targetRow + 1) * (cellHeight + 8) + 30);
+      token.style.setProperty('--drop-from', `${dropDistance}px`);
+
+      cell.appendChild(token);
+      playSound('drop');
 
       setTimeout(() => {
-        try {
-          const addedToken = cell?.querySelector('.token');
-          if (addedToken) addedToken.classList.remove('falling');
+        token.classList.remove('falling');
+        isAnimating = false;
 
-          const winCells = checkWin(targetRow, col, currentPlayer);
-          if (winCells) {
-            handleWin(winCells, currentPlayer);
-          } else if (isBoardFull()) {
-            handleDraw();
-          } else {
-            currentPlayer = currentPlayer === 1 ? 2 : 1;
-            updateTurnIndicator();
-            updateKeyboardGuide();
-          }
-        } finally {
-          isAnimating = false;
+        const winCells = checkWin(targetRow, col, currentPlayer);
+        if (winCells) {
+          handleWin(winCells, currentPlayer);
+        } else if (isBoardFull()) {
+          handleDraw();
+        } else {
+          currentPlayer = currentPlayer === 1 ? 2 : 1;
+          updateTurnIndicator();
+          updateKeyboardGuide();
         }
-      }, 290);
+      }, 420);
     }
 
     function checkWin(r, c, player) {
@@ -941,7 +923,7 @@
 
     function handleWin(winCells, winner) {
       isGameOver = true;
-      playSound('win', winner);
+      playSound('win');
 
       winCells.forEach(({ r, c }) => {
         const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
@@ -953,33 +935,28 @@
       else scores.p2++;
       saveScores();
 
-      const s1 = document.getElementById('scoreP1');
-      const s2 = document.getElementById('scoreP2');
-      if (s1) s1.innerText = scores.p1;
-      if (s2) s2.innerText = scores.p2;
+      document.getElementById('scoreP1').innerText = scores.p1;
+      document.getElementById('scoreP2').innerText = scores.p2;
 
       const modal = document.getElementById('questModal');
       const header = document.getElementById('modalHeader');
       const desc = document.getElementById('modalDesc');
 
-      if (modal && header && desc) {
-        if (winner === 1) {
-          header.className = "quest-header quest-reydau";
-          header.innerText = "REY DAU DOMINATES!";
-          desc.innerText = `${playerNames.p1} aligned 4 thunder weakpoints! A blinding lightning railgun blast claims dominion over the Forbidden Lands!`;
-        } else {
-          header.className = "quest-header quest-arkveld";
-          header.innerText = "ARKVELD TRIUMPHS!";
-          desc.innerText = `${playerNames.p2} struck with 4 chained tendrils! The White Wraith envelops the plains in ruthless ruin!`;
-        }
-
-        setTimeout(() => {
-          modal.classList.add('active');
-        }, 500);
+      if (winner === 1) {
+        header.className = "quest-header quest-complete";
+        header.innerText = "REY DAU DOMINATES";
+        desc.innerText = `${playerNames.p1} aligned 4 thunder strikes! A devastating railgun blast claims dominion over the Forbidden Lands!`;
+      } else {
+        header.className = "quest-header quest-failed";
+        header.innerText = "ARKVELD TRIUMPHS";
+        desc.innerText = `${playerNames.p2} struck with 4 chained tendrils! The White Wraith claims absolute dominion!`;
       }
 
-      const ind = document.getElementById('turnIndicator');
-      if (ind) ind.innerText = `${winner === 1 ? playerNames.p1 : playerNames.p2} Victorious!`;
+      document.getElementById('turnIndicator').innerText = `${winner === 1 ? playerNames.p1 : playerNames.p2} Wins!`;
+
+      setTimeout(() => {
+        modal.classList.add('active');
+      }, 700);
     }
 
     function handleDraw() {
@@ -991,17 +968,14 @@
       const header = document.getElementById('modalHeader');
       const desc = document.getElementById('modalDesc');
 
-      if (modal && header && desc) {
-        header.className = "quest-header quest-draw";
-        header.innerText = "STALEMATE CLASH";
-        desc.innerText = "Neither Apex could break the deadlock! Both beasts retreat into the sandstorm to clash another day.";
-        setTimeout(() => {
-          modal.classList.add('active');
-        }, 500);
-      }
+      header.className = "quest-header quest-draw";
+      header.innerText = "STALEMATE CLASH";
+      desc.innerText = "Neither Apex Wyvern could establish four-in-a-row! The battle ends in a draw.";
+      document.getElementById('turnIndicator').innerText = "Draw!";
 
-      const ind = document.getElementById('turnIndicator');
-      if (ind) ind.innerText = "Stalemate!";
+      setTimeout(() => {
+        modal.classList.add('active');
+      }, 600);
     }
 
     function updateTurnIndicator() {
@@ -1010,13 +984,13 @@
       const cardP2 = document.getElementById('cardP2');
 
       if (currentPlayer === 1) {
-        if (ind) ind.innerText = `${playerNames.p1}'s Turn`;
-        if (cardP1) cardP1.classList.add('active');
-        if (cardP2) cardP2.classList.remove('active');
+        ind.innerText = `${playerNames.p1}'s Turn`;
+        cardP1.classList.add('active');
+        cardP2.classList.remove('active');
       } else {
-        if (ind) ind.innerText = `${playerNames.p2}'s Turn`;
-        if (cardP2) cardP2.classList.add('active');
-        if (cardP1) cardP1.classList.remove('active');
+        ind.innerText = `${playerNames.p2}'s Turn`;
+        cardP2.classList.add('active');
+        cardP1.classList.remove('active');
       }
     }
 
@@ -1034,10 +1008,8 @@
         if (lastMove.player === 1) scores.p1 = Math.max(0, scores.p1 - 1);
         else scores.p2 = Math.max(0, scores.p2 - 1);
         saveScores();
-        const s1 = document.getElementById('scoreP1');
-        const s2 = document.getElementById('scoreP2');
-        if (s1) s1.innerText = scores.p1;
-        if (s2) s2.innerText = scores.p2;
+        document.getElementById('scoreP1').innerText = scores.p1;
+        document.getElementById('scoreP2').innerText = scores.p2;
       }
 
       currentPlayer = lastMove.player;
@@ -1052,19 +1024,17 @@
     }
 
     function resetScoreboard() {
-      if (confirm("Reset dominance records for both monsters?")) {
+      if (confirm("Reset hunt win records for both monsters?")) {
         scores = { p1: 0, p2: 0, draws: 0 };
         saveScores();
-        const s1 = document.getElementById('scoreP1');
-        const s2 = document.getElementById('scoreP2');
-        if (s1) s1.innerText = 0;
-        if (s2) s2.innerText = 0;
+        document.getElementById('scoreP1').innerText = 0;
+        document.getElementById('scoreP2').innerText = 0;
       }
     }
 
     function saveScores() {
       try {
-        localStorage.setItem('mhw_turfwar_scores', JSON.stringify(scores));
+        localStorage.setItem('mhw_connect4_scores', JSON.stringify(scores));
       } catch (e) {}
     }
 
@@ -1076,19 +1046,16 @@
         if (playerNum === 1) playerNames.p1 = newName.trim().slice(0, 16);
         else playerNames.p2 = newName.trim().slice(0, 16);
         try {
-          localStorage.setItem('mhw_turfwar_names', JSON.stringify(playerNames));
+          localStorage.setItem('mhw_connect4_names', JSON.stringify(playerNames));
         } catch (e) {}
-        const p1El = document.getElementById('nameP1');
-        const p2El = document.getElementById('nameP2');
-        if (p1El) p1El.innerText = playerNames.p1;
-        if (p2El) p2El.innerText = playerNames.p2;
+        document.getElementById('nameP1').innerText = playerNames.p1;
+        document.getElementById('nameP2').innerText = playerNames.p2;
         updateTurnIndicator();
       }
     }
 
     function closeModalOnly() {
-      const modal = document.getElementById('questModal');
-      if (modal) modal.classList.remove('active');
+      document.getElementById('questModal').classList.remove('active');
     }
 
     function closeModalAndReset() {
@@ -1097,10 +1064,7 @@
     }
 
     window.addEventListener('keydown', (e) => {
-      const modal = document.getElementById('questModal');
-      const modalActive = modal && modal.classList.contains('active');
-      if (modalActive) {
-        if (e.key === '.classList.contains('active');
+      const modalActive = document.getElementById('questModal').classList.contains('active');
       if (modalActive) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
@@ -1135,11 +1099,9 @@
       }
     });
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initGame);
-    } else {
+    window.onload = () => {
       initGame();
-    }
+    };
   </script>
 </body>
 </html>
