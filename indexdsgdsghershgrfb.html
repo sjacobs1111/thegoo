@@ -1,422 +1,1145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>HarmonyLoop Studio</title>
-<style>
-  :root {
-    --bg-primary: #12141a;
-    --bg-secondary: #1a1d26;
-    --bg-card: #232734;
-    --bg-card-hover: #2b3142;
-    --accent: #ff5e62;
-    --accent-gradient: linear-gradient(135deg, #ff9966, #ff5e62);
-    --secondary-accent: #00d2ff;
-    --text-primary: #f0f3f8;
-    --text-muted: #8c96a8;
-    --border: #2e3447;
-    --radius: 12px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  header {
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .logo { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-  .logo span { background: var(--accent-gradient); color: white; border-radius: 50%; width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.9rem; }
-  .tip { font-size: 0.8rem; color: #ffc400; background: rgba(255, 196, 0, 0.1); border: 1px solid rgba(255, 196, 0, 0.3); padding: 4px 10px; border-radius: 14px; }
-  main { max-width: 860px; width: 100%; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
-  .panel { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 14px; }
-  .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
-  .btn { border: none; border-radius: 8px; padding: 10px 18px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-  .btn:active { transform: scale(0.98); }
-  .btn-primary { background: var(--accent-gradient); color: white; }
-  .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
-  .btn-danger { background: rgba(255, 80, 80, 0.15); color: #ff6b6b; border: 1px solid rgba(255, 80, 80, 0.3); }
-  .badge { background: var(--bg-card); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); display: flex; align-items: center; gap: 6px; font-size: 0.85rem; }
-  .badge label { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; font-weight: 700; }
-  .badge input, .badge select { background: transparent; border: none; color: var(--text-primary); font-weight: 700; outline: none; }
-  .badge select option { background: var(--bg-card); }
-  .progress-wrap { height: 12px; background: var(--bg-card); border-radius: 6px; overflow: hidden; position: relative; border: 1px solid var(--border); }
-  .progress-fill { height: 100%; width: 0%; background: var(--accent-gradient); transition: width 0.05s linear; }
-  .status { font-size: 0.85rem; color: var(--text-muted); display: flex; justify-content: space-between; }
-  .tracks-head { display: flex; justify-content: space-between; align-items: center; }
-  .track-list { display: flex; flex-direction: column; gap: 8px; }
-  .track-row { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; display: grid; grid-template-columns: 140px 1fr auto auto; align-items: center; gap: 12px; }
-  @media (max-width: 640px) {
-    .track-row { grid-template-columns: 1fr auto; }
-    .track-mix { grid-column: 1 / -1; }
-  }
-  .track-row.recording { border-color: #ff3344; background: rgba(255, 51, 68, 0.08); }
-  .track-row.armed { border-color: #ffaa00; background: rgba(255, 170, 0, 0.08); }
-  .track-input { background: transparent; border: none; color: var(--text-primary); font-weight: 700; font-size: 0.9rem; outline: none; }
-  .track-mix { display: flex; align-items: center; gap: 12px; }
-  .slider-grp { display: flex; align-items: center; gap: 6px; flex: 1; }
-  .slider-grp label { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; }
-  .slider-grp input { flex: 1; -webkit-appearance: none; background: var(--bg-card); height: 5px; border-radius: 3px; outline: none; }
-  .slider-grp input::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--secondary-accent); cursor: pointer; }
-  .track-btns { display: flex; gap: 4px; }
-  .tgl-btn { width: 28px; height: 28px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text-muted); font-size: 0.75rem; font-weight: 700; cursor: pointer; }
-  .tgl-btn.mute-on { background: #ff4444; color: white; }
-  .tgl-btn.solo-on { background: #ffaa00; color: #12141a; }
-  .del-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; padding: 4px; }
-  .del-btn:hover { color: #ff6b6b; }
-  .empty { text-align: center; padding: 36px 16px; border: 2px dashed var(--border); border-radius: 8px; color: var(--text-muted); }
-  details { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 16px; font-size: 0.85rem; }
-  details summary { cursor: pointer; font-weight: 600; color: var(--text-muted); }
-</style>
-</head>
-<body>
-<header>
-  <div class="logo"><span>♪</span> HarmonyLoop Studio</div>
-  <div class="tip">🎧 Use wired headphones to eliminate latency & mic bleed</div>
-</header>
-<main>
-  <div class="panel">
-    <div class="row">
-      <div style="display:flex; gap:8px;">
-        <button id="btnPlay" class="btn btn-secondary" disabled><span id="playIcon">▶</span> Play</button>
-        <button id="btnRec" class="btn btn-primary">● <span id="recText">Record Base Loop (Track 1)</span></button>
-      </div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <div class="badge"><label>BPM</label><input type="number" id="bpm" value="95" min="40" max="220" style="width:46px;"></div>
-        <div class="badge">
-          <label>Bars</label>
-          <select id="bars">
-            <option value="2">2 Bars (8 beats)</option>
-            <option value="4" selected>4 Bars (16 beats)</option>
-            <option value="8">8 Bars (32 beats)</option>
-            <option value="free">Freeform Tap</option>
-          </select>
-        </div>
-        <div class="badge"><label>Click</label><input type="checkbox" id="click" checked></div>
-      </div>
-    </div>
-    <div class="progress-wrap"><div class="progress-fill" id="prog"></div></div>
-    <div class="status"><span id="stat">Ready. Put headphones on and tap record.</span><span id="time">0.0s / 0.0s</span></div>
-  </div>
-
-  <div class="tracks-head">
-    <h3 style="font-size: 1rem;">Vocal Layers (<span id="tCount">0</span>/10)</h3>
-    <div style="display:flex; gap:6px;">
-      <button id="btnExport" class="btn btn-secondary" style="padding:6px 12px; font-size:0.8rem;" disabled>💾 Export WAV</button>
-      <button id="btnClear" class="btn btn-danger" style="padding:6px 12px; font-size:0.8rem;">Reset All</button>
-    </div>
-  </div>
-
-  <div class="track-list" id="tracksContainer">
-    <div class="empty" id="emptyMsg">No vocal layers yet. Record Track 1 to start the loop cycle!</div>
-  </div>
-
-  <details>
-    <summary>⚙️ Vocal Timing Offset (Latency Calibration)</summary>
-    <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
-      <label style="font-size:0.8rem; color:var(--text-muted);">Offset:</label>
-      <input type="range" id="latOffset" min="0" max="150" value="40" step="5" style="flex:1;">
-      <span id="latVal" style="font-weight:700; width:45px;">40 ms</span>
-    </div>
-    <p style="color:var(--text-muted); font-size:0.75rem; margin-top:6px;">
-      If recorded harmonies feel slightly delayed behind the backing loop, adjust this offset forward to compensate for your device's audio input buffer.
-    </p>
-  </details>
-</main>
-
-<script>
-(() => {
-  let ctx = null, mic = null, proc = null, stream = null;
-  let tracks = [], loopDur = 0, isPlaying = false, loopStart = 0, animId = null;
-  let recState = 'IDLE', targetIdx = -1, chunks = [], countInStep = 0, countTimer = null;
-
-  const btnPlay = document.getElementById('btnPlay'), btnRec = document.getElementById('btnRec');
-  const recText = document.getElementById('recText'), playIcon = document.getElementById('playIcon');
-  const bpmInput = document.getElementById('bpm'), barsSelect = document.getElementById('bars'), chkClick = document.getElementById('click');
-  const prog = document.getElementById('prog'), stat = document.getElementById('stat'), timeDisp = document.getElementById('time');
-  const tracksContainer = document.getElementById('tracksContainer'), emptyMsg = document.getElementById('emptyMsg');
-  const tCount = document.getElementById('tCount'), btnExport = document.getElementById('btnExport'), btnClear = document.getElementById('btnClear');
-  const latOffset = document.getElementById('latOffset'), latVal = document.getElementById('latVal');
-
-  latOffset.oninput = () => latVal.textContent = `${latOffset.value} ms`;
-
-  async function initAudio() {
-    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
-    if (ctx.state === 'suspended') await ctx.resume();
-    if (!stream) {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
-      mic = ctx.createMediaStreamSource(stream);
-      proc = ctx.createScriptProcessor(4096, 1, 1);
-      proc.onaudioprocess = (e) => {
-        if (recState === 'REC_T1' || recState === 'REC_LAYER') chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
-      };
-      mic.connect(proc);
-      const mute = ctx.createGain(); mute.gain.value = 0;
-      proc.connect(mute); mute.connect(ctx.destination);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monster Hunter Wilds: Apex Turf War Connect 4</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0c0f14;
+      --bg-card: rgba(22, 26, 34, 0.95);
+      --border-bronze: #8c6d3b;
+      --bronze-bright: #d4af37;
+      --reydau-gold: #f59e0b;
+      --reydau-glow: rgba(245, 158, 11, 0.6);
+      --arkveld-teal: #06b6d4;
+      --arkveld-glow: rgba(6, 182, 212, 0.6);
+      --slot-empty: #161922;
+      --slot-border: #2b3342;
     }
-  }
 
-  function beep(freq = 800, dur = 0.05, vol = 0.3) {
-    if (!ctx) return;
-    const osc = ctx.createOscillator(), g = ctx.createGain();
-    osc.frequency.setValueAtTime(freq, ctx.currentTime);
-    g.gain.setValueAtTime(vol, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-    osc.connect(g); g.connect(ctx.destination);
-    osc.start(); osc.stop(ctx.currentTime + dur);
-  }
-
-  function updateUI() {
-    tCount.textContent = tracks.length;
-    btnPlay.disabled = tracks.length === 0;
-    btnExport.disabled = tracks.length === 0;
-    bpmInput.disabled = tracks.length > 0;
-    barsSelect.disabled = tracks.length > 0;
-
-    if (tracks.length === 0) {
-      tracksContainer.innerHTML = ''; tracksContainer.appendChild(emptyMsg); emptyMsg.style.display = 'block';
-      recText.textContent = 'Record Base Loop (Track 1)';
-      return;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
     }
-    emptyMsg.style.display = 'none';
-    recText.textContent = tracks.length < 10 ? `Add Layer ${tracks.length + 1}` : '10 Layers Reached';
 
-    tracksContainer.innerHTML = '';
-    tracks.forEach((t, i) => {
-      const el = document.createElement('div');
-      el.className = `track-row ${t.rec ? 'recording' : ''} ${t.armed ? 'armed' : ''}`;
-      el.innerHTML = `
-        <div>
-          <input class="track-input" value="${t.name}">
-          <div style="font-size:0.7rem; color:var(--text-muted); font-weight:700;">${t.rec ? '● RECORDING' : t.armed ? 'ARMED (SYNCING)' : 'READY'}</div>
-        </div>
-        <div class="track-mix">
-          <div class="slider-grp"><label>VOL</label><input type="range" class="vol" min="0" max="1" step="0.05" value="${t.vol}"></div>
-          <div class="slider-grp"><label>PAN</label><input type="range" class="pan" min="-1" max="1" step="0.1" value="${t.pan}"></div>
-        </div>
-        <div class="track-btns">
-          <button class="tgl-btn ${t.muted ? 'mute-on' : ''}" data-act="mute">M</button>
-          <button class="tgl-btn ${t.solo ? 'solo-on' : ''}" data-act="solo">S</button>
-        </div>
-        <button class="del-btn" data-act="del">🗑️</button>
-      `;
-      el.querySelector('.track-input').onchange = (e) => t.name = e.target.value;
-      el.querySelector('.vol').oninput = (e) => { t.vol = parseFloat(e.target.value); if (t.gain) t.gain.gain.setValueAtTime(t.vol, ctx.currentTime); };
-      el.querySelector('.pan').oninput = (e) => { t.pan = parseFloat(e.target.value); if (t.panner) t.panner.pan.setValueAtTime(t.pan, ctx.currentTime); };
-      el.querySelector('[data-act="mute"]').onclick = () => { t.muted = !t.muted; applyMix(); updateUI(); };
-      el.querySelector('[data-act="solo"]').onclick = () => { t.solo = !t.solo; applyMix(); updateUI(); };
-      el.querySelector('[data-act="del"]').onclick = () => { if (t.src) t.src.stop(); tracks.splice(i, 1); if (tracks.length===0){ stop(); loopDur = 0;} updateUI(); };
-      tracksContainer.appendChild(el);
-    });
-  }
-
-  function applyMix() {
-    const hasSolo = tracks.some(t => t.solo);
-    tracks.forEach(t => {
-      if (!t.gain) return;
-      t.gain.gain.setValueAtTime((t.muted || (hasSolo && !t.solo)) ? 0 : t.vol, ctx.currentTime);
-    });
-  }
-
-  function playTrack(t, startTime) {
-    if (!t.buf) return;
-    if (t.src) { try { t.src.stop(); } catch(e){} }
-    t.src = ctx.createBufferSource();
-    t.src.buffer = t.buf;
-    t.src.loop = true;
-    t.src.loopEnd = loopDur;
-    t.gain = ctx.createGain();
-    const hasSolo = tracks.some(x => x.solo);
-    t.gain.gain.setValueAtTime((t.muted || (hasSolo && !t.solo)) ? 0 : t.vol, ctx.currentTime);
-
-    let finalNode = t.gain;
-    if (ctx.createStereoPanner) {
-      t.panner = ctx.createStereoPanner();
-      t.panner.pan.setValueAtTime(t.pan, ctx.currentTime);
-      t.gain.connect(t.panner);
-      finalNode = t.panner;
+    body {
+      background-color: var(--bg-main);
+      background-image: 
+        radial-gradient(circle at 50% 12%, rgba(30, 41, 59, 0.7) 0%, transparent 70%),
+        radial-gradient(circle at 10% 85%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 90% 85%, rgba(6, 182, 212, 0.12) 0%, transparent 50%),
+        linear-gradient(to bottom, #080a0e, #11151d);
+      color: #e2e8f0;
+      font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 12px;
     }
-    finalNode.connect(ctx.destination);
-    t.src.connect(t.gain);
-    t.src.start(startTime);
-  }
 
-  function play() {
-    if (!tracks.length) return;
-    isPlaying = true;
-    playIcon.textContent = '⏸';
-    loopStart = ctx.currentTime;
-    tracks.forEach(t => playTrack(t, loopStart));
-    tick();
-  }
+    header {
+      text-align: center;
+      margin-bottom: 12px;
+    }
 
-  function stop() {
-    isPlaying = false;
-    playIcon.textContent = '▶';
-    tracks.forEach(t => { if (t.src) { try { t.src.stop(); } catch(e){} t.src = null; } });
-    if (animId) cancelAnimationFrame(animId);
-    prog.style.width = '0%';
-  }
+    .subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.3em;
+      color: var(--bronze-bright);
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    }
 
-  btnPlay.onclick = async () => { await initAudio(); isPlaying ? stop() : play(); };
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: clamp(1.5rem, 3.2vw, 2.3rem);
+      letter-spacing: 0.08em;
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 45%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.8);
+      margin: 2px 0 4px 0;
+    }
 
-  let lastBeat = -1;
-  function tick() {
-    if (!isPlaying && recState !== 'REC_T1' && recState !== 'REC_LAYER') return;
-    const now = ctx.currentTime;
-    const elapsed = (now - loopStart) % loopDur;
-    prog.style.width = `${((elapsed / loopDur) * 100).toFixed(1)}%`;
-    timeDisp.textContent = `${elapsed.toFixed(1)}s / ${loopDur.toFixed(1)}s`;
+    .badge-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-family: 'Cinzel', serif;
+    }
 
-    if (chkClick.checked && barsSelect.value !== 'free') {
-      const bLen = 60 / (parseFloat(bpmInput.value) || 95);
-      const curBeat = Math.floor(elapsed / bLen);
-      if (curBeat !== lastBeat) {
-        lastBeat = curBeat;
-        beep(curBeat % 4 === 0 ? 1100 : 700, 0.03, 0.25);
+    .dashboard {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 640px;
+      margin-bottom: 12px;
+      gap: 10px;
+    }
+
+    .player-card {
+      flex: 1;
+      background: var(--bg-card);
+      border: 2px solid var(--border-bronze);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+      cursor: pointer;
+    }
+
+    .player-card.active {
+      transform: translateY(-2px);
+    }
+
+    .player-card.p1.active {
+      border-color: var(--reydau-gold);
+      box-shadow: 0 0 18px var(--reydau-glow);
+    }
+
+    .player-card.p2.active {
+      border-color: var(--arkveld-teal);
+      box-shadow: 0 0 18px var(--arkveld-glow);
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .p1 .avatar {
+      background: radial-gradient(circle at 35% 30%, #fef3c7 0%, #f59e0b 50%, #92400e 100%);
+      box-shadow: 0 0 12px var(--reydau-glow);
+    }
+
+    .p2 .avatar {
+      background: radial-gradient(circle at 35% 30%, #cffafe 0%, #06b6d4 50%, #155e75 100%);
+      box-shadow: 0 0 12px var(--arkveld-glow);
+    }
+
+    .avatar svg {
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8));
+    }
+
+    .player-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .player-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .p1 .player-title { color: #f59e0b; }
+    .p2 .player-title { color: #22d3ee; }
+
+    .player-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.98rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .player-name:hover::after {
+      content: '✎';
+      font-size: 0.7rem;
+      color: var(--bronze-bright);
+    }
+
+    .p1 .player-name { color: #fef08a; }
+    .p2 .player-name { color: #a5f3fc; }
+
+    .score-display {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .score-num {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-left: 2px;
+    }
+
+    .turn-indicator {
+      text-align: center;
+      padding: 6px 10px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #e2e8f0;
+      border: 1px solid var(--border-bronze);
+      border-radius: 4px;
+      background: rgba(14, 17, 22, 0.95);
+      min-width: 140px;
+    }
+
+    .drop-guide-container {
+      width: 100%;
+      max-width: 560px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      padding: 0 10px;
+      height: 38px;
+      margin-bottom: 4px;
+    }
+
+    .drop-guide-slot {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.15s ease;
+    }
+
+    .drop-guide-slot:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .ghost-token {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      transform: translateY(-3px);
+    }
+
+    .drop-guide-slot:hover .ghost-token,
+    .drop-guide-slot.keyboard-focus .ghost-token {
+      opacity: 0.85;
+      transform: translateY(0);
+    }
+
+    .ghost-p1 {
+      background: radial-gradient(circle at 35% 35%, #fbbf24, #b45309);
+      box-shadow: 0 0 14px var(--reydau-glow);
+    }
+
+    .ghost-p2 {
+      background: radial-gradient(circle at 35% 35%, #22d3ee, #0891b2);
+      box-shadow: 0 0 14px var(--arkveld-glow);
+    }
+
+    .board-frame {
+      background: linear-gradient(145deg, #202734, #11151c);
+      border: 3px solid var(--border-bronze);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 
+        0 14px 40px rgba(0, 0, 0, 0.85),
+        inset 0 2px 4px rgba(255, 255, 255, 0.08),
+        inset 0 -3px 8px rgba(0, 0, 0, 0.9);
+      position: relative;
+      max-width: 560px;
+      width: 100%;
+    }
+
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      gap: 8px;
+      background: #090c12;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #283344;
+    }
+
+    .cell {
+      aspect-ratio: 1 / 1;
+      background: var(--slot-empty);
+      border-radius: 50%;
+      border: 2px solid var(--slot-border);
+      box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.85);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+
+    .cell:hover {
+      border-color: #3e4a5d;
+    }
+
+    .token {
+      width: 90%;
+      height: 90%;
+      border-radius: 50%;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      box-shadow: 
+        inset 0 2px 5px rgba(255, 255, 255, 0.45),
+        0 4px 10px rgba(0, 0, 0, 0.7);
+    }
+
+    .token svg {
+      width: 72%;
+      height: 72%;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.85));
+    }
+
+    .token-p1 {
+      background: radial-gradient(circle at 35% 30%, #fef3c7 0%, #f59e0b 45%, #92400e 100%);
+      border: 1.5px solid #fde68a;
+    }
+
+    .token-p2 {
+      background: radial-gradient(circle at 35% 30%, #cffafe 0%, #06b6d4 45%, #155e75 100%);
+      border: 1.5px solid #a5f3fc;
+    }
+
+    @keyframes tokenDrop {
+      0% {
+        transform: translateY(-70px) scale(0.85);
+        opacity: 0.3;
+      }
+      65% {
+        transform: translateY(0) scale(1.04);
+        opacity: 1;
+      }
+      82% {
+        transform: translateY(-8px) scale(0.98);
+      }
+      100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
       }
     }
 
-    if (recState === 'ARMED') {
-      if (elapsed >= loopDur - 0.08 || elapsed < 0.04) startLayerRec();
-    } else if (recState === 'REC_LAYER') {
-      if (now - layerStart >= loopDur - 0.02) finishLayerRec();
+    .token.falling {
+      animation: tokenDrop 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     }
-    animId = requestAnimationFrame(tick);
-  }
 
-  btnRec.onclick = async () => {
-    await initAudio();
-    if (tracks.length >= 10) return;
-    if (tracks.length === 0) {
-      if (recState === 'IDLE') startT1Count();
-      else if (recState === 'REC_T1' && barsSelect.value === 'free') finishT1();
-    } else if (recState === 'IDLE') {
-      armLayer();
+    @keyframes winPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 16px #ffd700, inset 0 0 8px #fff;
+      }
+      50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 26px #ffedd5, inset 0 0 14px #fff;
+      }
     }
-  };
 
-  function startT1Count() {
-    recState = 'COUNT'; countInStep = 4;
-    const ms = (60 / (parseFloat(bpmInput.value) || 95)) * 1000;
-    stat.textContent = `Get ready... 4`; beep(800, 0.05, 0.4);
-    countTimer = setInterval(() => {
-      countInStep--;
-      if (countInStep > 0) { stat.textContent = `Get ready... ${countInStep}`; beep(800, 0.05, 0.4); }
-      else { clearInterval(countTimer); startT1Rec(); }
-    }, ms);
-  }
-
-  let t1Start = 0;
-  function startT1Rec() {
-    recState = 'REC_T1'; chunks = []; beep(1300, 0.1, 0.6);
-    t1Start = ctx.currentTime; loopStart = t1Start;
-    const bars = barsSelect.value;
-    if (bars !== 'free') {
-      loopDur = (60 / (parseFloat(bpmInput.value) || 95)) * (parseInt(bars) * 4);
-      stat.textContent = `● Recording Track 1 (${bars} Bars)... Sing!`;
-      recText.textContent = `Recording...`;
-      setTimeout(() => { if (recState === 'REC_T1') finishT1(); }, loopDur * 1000);
-    } else {
-      stat.textContent = `● Recording... Tap 'Finish' when phrase ends.`;
-      recText.textContent = `Finish Base Loop`;
+    .token.winning {
+      animation: winPulse 1.2s infinite ease-in-out !important;
+      z-index: 5;
+      border: 2px solid #ffffff;
     }
-    tick();
-  }
 
-  function finishT1() {
-    if (barsSelect.value === 'free') loopDur = Math.max(1.0, ctx.currentTime - t1Start);
-    recState = 'IDLE';
-    tracks.push({ name: 'Track 1 (Base)', buf: compileBuf(loopDur), vol: 0.9, pan: 0, muted: false, solo: false });
-    stat.textContent = `Track 1 locked (${loopDur.toFixed(2)}s). Seamlessly looping.`;
-    updateUI(); play();
-  }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      max-width: 560px;
+      width: 100%;
+    }
 
-  let layerStart = 0;
-  function armLayer() {
-    recState = 'ARMED'; targetIdx = tracks.length;
-    tracks.push({ name: `Layer ${tracks.length + 1}`, buf: null, vol: 0.85, pan: tracks.length % 2 === 1 ? -0.35 : 0.35, muted: false, solo: false, armed: true, rec: false });
-    stat.textContent = `Layer armed: will punch-in at the start of next cycle.`;
-    recText.textContent = `Waiting for cycle start...`;
-    updateUI(); if (!isPlaying) play();
-  }
+    .btn {
+      background: linear-gradient(180deg, #2b3545 0%, #171d26 100%);
+      color: #e2e8f0;
+      border: 1px solid var(--border-bronze);
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
 
-  function startLayerRec() {
-    recState = 'REC_LAYER'; chunks = []; layerStart = ctx.currentTime;
-    tracks[targetIdx].armed = false; tracks[targetIdx].rec = true;
-    beep(1200, 0.04, 0.3); stat.textContent = `● Recording Layer ${targetIdx + 1}...`;
-    recText.textContent = `Recording Layer...`;
-    updateUI();
-  }
+    .btn:hover:not(:disabled) {
+      background: linear-gradient(180deg, #374459 0%, #1e2530 100%);
+      border-color: var(--bronze-bright);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
 
-  function finishLayerRec() {
-    recState = 'IDLE';
-    tracks[targetIdx].buf = compileBuf(loopDur);
-    tracks[targetIdx].rec = false;
-    playTrack(tracks[targetIdx], ctx.currentTime);
-    stat.textContent = `Layer ${targetIdx + 1} added and in sync!`;
-    updateUI();
-  }
+    .btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
 
-  function compileBuf(dur) {
-    let totalLen = chunks.reduce((a, c) => a + c.length, 0);
-    let full = new Float32Array(totalLen), offset = 0;
-    for (let c of chunks) { full.set(c, offset); offset += c.length; }
-    const latSec = (parseFloat(latOffset.value) || 40) / 1000;
-    const latSamples = Math.floor(latSec * ctx.sampleRate);
-    const targetSamples = Math.floor(dur * ctx.sampleRate);
-    const buf = ctx.createBuffer(1, targetSamples, ctx.sampleRate);
-    const ch = buf.getChannelData(0);
-    for (let i = 0; i < targetSamples; i++) ch[i] = (i + latSamples < full.length) ? full[i + latSamples] : 0;
-    const fade = Math.floor(0.003 * ctx.sampleRate);
-    for (let i = 0; i < fade; i++) { ch[i] *= (i/fade); ch[targetSamples - 1 - i] *= (i/fade); }
-    return buf;
-  }
+    .keyboard-hint {
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: #64748b;
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
 
-  btnClear.onclick = () => { if (confirm("Clear all recorded tracks?")) { stop(); tracks = []; loopDur = 0; recState = 'IDLE'; updateUI(); } };
+    .keyboard-hint kbd {
+      background: #1e2530;
+      border: 1px solid #334155;
+      border-radius: 3px;
+      padding: 1px 4px;
+      color: #cbd5e1;
+      font-family: monospace;
+      font-size: 0.75rem;
+    }
 
-  btnExport.onclick = () => {
-    const sr = 44100, num = Math.floor(loopDur * sr);
-    const L = new Float32Array(num), R = new Float32Array(num);
-    const hasSolo = tracks.some(t => t.solo);
-    tracks.forEach(t => {
-      if (!t.buf || t.muted || (hasSolo && !t.solo)) return;
-      const d = t.buf.getChannelData(0);
-      const angle = (t.pan + 1) * (Math.PI / 4);
-      const gL = Math.cos(angle) * t.vol, gR = Math.sin(angle) * t.vol;
-      for (let i = 0; i < Math.min(d.length, num); i++) { L[i] += d[i] * gL; R[i] += d[i] * gR; }
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(8, 10, 14, 0.8);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .quest-card {
+      background: linear-gradient(180deg, #1b222d 0%, #0d1117 100%);
+      border: 2px solid var(--border-bronze);
+      border-radius: 12px;
+      padding: 24px 28px;
+      text-align: center;
+      max-width: 440px;
+      width: 90%;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 24px rgba(212, 175, 55, 0.25);
+      transform: scale(0.92);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-backdrop.active .quest-card {
+      transform: scale(1);
+    }
+
+    .quest-header {
+      font-family: 'Cinzel', serif;
+      font-size: 1.55rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .quest-reydau {
+      color: #fbbf24;
+      text-shadow: 0 0 18px rgba(251, 191, 36, 0.7);
+    }
+
+    .quest-arkveld {
+      color: #22d3ee;
+      text-shadow: 0 0 18px rgba(34, 211, 238, 0.7);
+    }
+
+    .quest-draw {
+      color: #94a3b8;
+    }
+
+    .quest-desc {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      margin-bottom: 20px;
+      line-height: 1.45;
+    }
+
+    .modal-btn-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    @media (max-width: 520px) {
+      .dashboard {
+        flex-direction: column;
+      }
+      .turn-indicator {
+        order: -1;
+        width: 100%;
+      }
+      .board-frame {
+        padding: 8px;
+      }
+      .board-grid {
+        gap: 5px;
+        padding: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="subtitle">Forbidden Lands: Apex Turf War</div>
+    <h1>Connect 4: Monster Encounter</h1>
+    <div class="badge-bar">
+      <span>✦ Local Hotseat ✦</span>
+      <span>Apex Wyvern Clash</span>
+      <span>✦ Same Couch Duel ✦</span>
+    </div>
+  </header>
+
+  <!-- Player Status Cards & Scoreboard -->
+  <section class="dashboard">
+    <div class="player-card p1 active" id="cardP1" onclick="editPlayerName(1)">
+      <div class="avatar">
+        <!-- Rey Dau: Crowned railgun thunder horns & fierce apex wyvern head -->
+        <svg viewBox="0 0 100 100">
+          <path d="M50 18 L55 30 L63 33 L57 41 L50 38 L43 41 L37 33 L45 30 Z" fill="#fff"/>
+          <path d="M44 28 L34 5 L28 7 L36 24 L24 12 L19 16 L31 32 L20 28 L17 34 L29 44 L39 39 Z" fill="#fff"/>
+          <path d="M56 28 L66 5 L72 7 L64 24 L76 12 L81 16 L69 32 L80 28 L83 34 L71 44 L61 39 Z" fill="#fff"/>
+          <path d="M50 3 L53 14 L49 15 L52 23 L48 23 L51 14 L47 13 Z" fill="#fef08a"/>
+          <path d="M36 45 L50 51 L64 45 L59 55 L50 59 L41 55 Z" fill="#fff"/>
+          <polygon points="41,49 46,50 43,53" fill="#78350f"/>
+          <polygon points="59,49 54,50 57,53" fill="#78350f"/>
+          <path d="M50 61 L62 57 L68 67 L50 93 L32 67 L38 57 Z" fill="#fff"/>
+          <path d="M30 52 L19 61 L31 65 L25 73 L37 70 Z" fill="#fff"/>
+          <path d="M70 52 L81 61 L69 65 L75 73 L63 70 Z" fill="#fff"/>
+          <path d="M42 67 L50 72 L58 67 L50 83 Z" fill="#92400e"/>
+        </svg>
+      </div>
+      <div class="player-info">
+        <div class="player-title">Apex of Windward Plains</div>
+        <div class="player-name" id="nameP1" title="Click to rename">Rey Dau</div>
+        <div class="score-display">Dominance: <span class="score-num" id="scoreP1">0</span></div>
+      </div>
+    </div>
+
+    <div class="turn-indicator" id="turnIndicator">Rey Dau's Turn</div>
+
+    <div class="player-card p2" id="cardP2" onclick="editPlayerName(2)">
+      <div class="avatar">
+        <!-- Arkveld: White Wraith - Swept recurved horns and whip-chain bladed tendrils -->
+        <svg viewBox="0 0 100 100">
+          <path d="M50 16 L58 30 L54 42 L50 38 L46 42 L42 30 Z" fill="#fff"/>
+          <path d="M44 28 C33 16 18 10 10 16 C12 24 22 30 35 36 Z" fill="#fff"/>
+          <path d="M37 36 C27 30 13 30 7 38 C13 42 25 42 37 44 Z" fill="#fff"/>
+          <path d="M56 28 C67 16 82 10 90 16 C88 24 78 30 65 36 Z" fill="#fff"/>
+          <path d="M63 36 C73 30 87 30 93 38 C87 42 75 42 63 44 Z" fill="#fff"/>
+          <path d="M50 40 L61 46 L57 58 L50 54 L43 58 L39 46 Z" fill="#fff"/>
+          <polygon points="43,47 48,48 45,51" fill="#0e7490"/>
+          <polygon points="57,47 52,48 55,51" fill="#0e7490"/>
+          <path d="M43 58 L50 55 L57 58 L50 80 Z" fill="#fff"/>
+          <path d="M21 46 C15 58 13 72 23 86 C25 80 23 68 31 62 L25 60 Z" fill="#fff"/>
+          <path d="M79 46 C85 58 87 72 77 86 C75 80 77 68 69 62 L75 60 Z" fill="#fff"/>
+          <path d="M25 82 L35 92 L33 80 Z" fill="#a5f3fc"/>
+          <path d="M75 82 L65 92 L67 80 Z" fill="#a5f3fc"/>
+          <path d="M50 82 L46 95 L50 91 L54 95 Z" fill="#a5f3fc"/>
+        </svg>
+      </div>
+      <div class="player-info">
+        <div class="player-title">The White Wraith</div>
+        <div class="player-name" id="nameP2" title="Click to rename">Arkveld</div>
+        <div class="score-display">Dominance: <span class="score-num" id="scoreP2">0</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ghost Preview Row -->
+  <div class="drop-guide-container" id="dropGuides"></div>
+
+  <!-- Game Board -->
+  <main class="board-frame">
+    <div class="board-grid" id="boardGrid"></div>
+  </main>
+
+  <!-- Controls -->
+  <footer class="controls">
+    <button class="btn" id="btnUndo" onclick="undoMove()" title="Undo last drop (U)">
+      ↺ Undo Move
+    </button>
+    <button class="btn" id="btnRestart" onclick="resetRound()" title="Start a new round (R)">
+      ⚔ New Turf War
+    </button>
+    <button class="btn" id="btnResetScores" onclick="resetScoreboard()" title="Reset records">
+      ⌫ Reset Scores
+    </button>
+    <button class="btn" id="btnSound" onclick="toggleSound()" title="Toggle audio (M)">
+      🔊 Sound: ON
+    </button>
+  </footer>
+
+  <div class="keyboard-hint">
+    Couch Controls: <kbd>1</kbd>–<kbd>7</kbd> to drop | <kbd>←</kbd> / <kbd>→</kbd> or <kbd>A</kbd> / <kbd>D</kbd> select column | <kbd>Space</kbd> or <kbd>Enter</kbd> drop | <kbd>U</kbd> undo | <kbd>R</kbd> reset
+  </div>
+
+  <!-- Turf War Outcome Modal -->
+  <div class="modal-backdrop" id="questModal">
+    <div class="quest-card">
+      <div class="quest-header" id="modalHeader">Turf War Victory</div>
+      <div class="quest-desc" id="modalDesc">An Apex Monster has conquered the battlefield!</div>
+      <div class="modal-btn-row">
+        <button class="btn" onclick="closeModalAndReset()">⚔ Next Turf War</button>
+        <button class="btn" onclick="closeModalOnly()">Review Battlefield</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ROWS = 6;
+    const COLS = 7;
+    let board = [];
+    let currentPlayer = 1; // 1 = Rey Dau (Orange/Gold), 2 = Arkveld (Teal/Blue)
+    let moveHistory = [];
+    let isGameOver = false;
+    let isAnimating = false;
+    let keyboardCol = 3;
+    let soundEnabled = true;
+
+    let scores = { p1: 0, p2: 0, draws: 0 };
+    let playerNames = { p1: "Rey Dau", p2: "Arkveld" };
+
+    // Safe storage reader with validation
+    try {
+      const savedScores = localStorage.getItem('mhw_turfwar_scores');
+      if (savedScores) {
+        const parsed = JSON.parse(savedScores);
+        if (parsed && typeof parsed.p1 === 'number' && typeof parsed.p2 === 'number') {
+          scores = parsed;
+        }
+      }
+      const savedNames = localStorage.getItem('mhw_turfwar_names');
+      if (savedNames) {
+        const parsedNames = JSON.parse(savedNames);
+        if (parsedNames && parsedNames.p1 && parsedNames.p2) {
+          playerNames = parsedNames;
+        }
+      }
+    } catch (e) {
+      console.warn("Storage access restricted, using default values", e);
+    }
+
+    let audioCtx = null;
+
+    function playSound(type, player = 1) {
+      if (!soundEnabled) return;
+      try {
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) audioCtx = new AudioContext();
+        }
+        if (!audioCtx) return;
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+
+        const now = audioCtx.currentTime;
+
+        if (type === 'drop') {
+          if (player === 1) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(320, now);
+            osc.frequency.exponentialRampToValueAtTime(55, now + 0.2);
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.2);
+          } else {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(580, now);
+            osc.frequency.exponentialRampToValueAtTime(180, now + 0.18);
+            gain.gain.setValueAtTime(0.28, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.18);
+          }
+        } else if (type === 'win') {
+          const freqs = player === 1 
+            ? [392.00, 493.88, 587.33, 783.99]
+            : [440.00, 523.25, 659.25, 880.00];
+
+          freqs.forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = player === 1 ? 'sawtooth' : 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            gain.gain.setValueAtTime(0.0001, now + idx * 0.08);
+            gain.gain.linearRampToValueAtTime(0.16, now + idx * 0.08 + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.85);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + 0.9);
+          });
+        } else if (type === 'undo') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(240, now);
+          osc.frequency.linearRampToValueAtTime(160, now + 0.08);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        }
+      } catch (err) {}
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById('btnSound');
+      if (btn) btn.innerText = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
+    }
+
+    const reyDauLogoSvg = `
+      <svg viewBox="0 0 100 100">
+        <path d="M50 18 L55 30 L63 33 L57 41 L50 38 L43 41 L37 33 L45 30 Z" fill="#fff"/>
+        <path d="M44 28 L34 5 L28 7 L36 24 L24 12 L19 16 L31 32 L20 28 L17 34 L29 44 L39 39 Z" fill="#fff"/>
+        <path d="M56 28 L66 5 L72 7 L64 24 L76 12 L81 16 L69 32 L80 28 L83 34 L71 44 L61 39 Z" fill="#fff"/>
+        <path d="M50 3 L53 14 L49 15 L52 23 L48 23 L51 14 L47 13 Z" fill="#fef08a"/>
+        <path d="M36 45 L50 51 L64 45 L59 55 L50 59 L41 55 Z" fill="#fff"/>
+        <polygon points="41,49 46,50 43,53" fill="#78350f"/>
+        <polygon points="59,49 54,50 57,53" fill="#78350f"/>
+        <path d="M50 61 L62 57 L68 67 L50 93 L32 67 L38 57 Z" fill="#fff"/>
+        <path d="M30 52 L19 61 L31 65 L25 73 L37 70 Z" fill="#fff"/>
+        <path d="M70 52 L81 61 L69 65 L75 73 L63 70 Z" fill="#fff"/>
+        <path d="M42 67 L50 72 L58 67 L50 83 Z" fill="#92400e"/>
+      </svg>`;
+
+    const arkveldLogoSvg = `
+      <svg viewBox="0 0 100 100">
+        <path d="M50 16 L58 30 L54 42 L50 38 L46 42 L42 30 Z" fill="#fff"/>
+        <path d="M44 28 C33 16 18 10 10 16 C12 24 22 30 35 36 Z" fill="#fff"/>
+        <path d="M37 36 C27 30 13 30 7 38 C13 42 25 42 37 44 Z" fill="#fff"/>
+        <path d="M56 28 C67 16 82 10 90 16 C88 24 78 30 65 36 Z" fill="#fff"/>
+        <path d="M63 36 C73 30 87 30 93 38 C87 42 75 42 63 44 Z" fill="#fff"/>
+        <path d="M50 40 L61 46 L57 58 L50 54 L43 58 L39 46 Z" fill="#fff"/>
+        <polygon points="43,47 48,48 45,51" fill="#0e7490"/>
+        <polygon points="57,47 52,48 55,51" fill="#0e7490"/>
+        <path d="M43 58 L50 55 L57 58 L50 80 Z" fill="#fff"/>
+        <path d="M21 46 C15 58 13 72 23 86 C25 80 23 68 31 62 L25 60 Z" fill="#fff"/>
+        <path d="M79 46 C85 58 87 72 77 86 C75 80 77 68 69 62 L75 60 Z" fill="#fff"/>
+        <path d="M25 82 L35 92 L33 80 Z" fill="#a5f3fc"/>
+        <path d="M75 82 L65 92 L67 80 Z" fill="#a5f3fc"/>
+        <path d="M50 82 L46 95 L50 91 L54 95 Z" fill="#a5f3fc"/>
+      </svg>`;
+
+    function initGame() {
+      board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+      moveHistory = [];
+      isGameOver = false;
+      isAnimating = false;
+      currentPlayer = 1;
+
+      const p1El = document.getElementById('nameP1');
+      const p2El = document.getElementById('nameP2');
+      const s1El = document.getElementById('scoreP1');
+      const s2El = document.getElementById('scoreP2');
+
+      if (p1El) p1El.innerText = playerNames.p1;
+      if (p2El) p2El.innerText = playerNames.p2;
+      if (s1El) s1El.innerText = scores.p1;
+      if (s2El) s2El.innerText = scores.p2;
+
+      renderBoard();
+      renderDropGuides();
+      updateTurnIndicator();
+    }
+
+    function renderDropGuides() {
+      const guideContainer = document.getElementById('dropGuides');
+      if (!guideContainer) return;
+      guideContainer.innerHTML = '';
+      for (let c = 0; c < COLS; c++) {
+        const guide = document.createElement('div');
+        guide.className = 'drop-guide-slot';
+        guide.dataset.col = c;
+        guide.innerHTML = `<div class="ghost-token ${currentPlayer === 1 ? 'ghost-p1' : 'ghost-p2'}"></div>`;
+        guide.onclick = (e) => {
+          e.stopPropagation();
+          handleColSelect(c);
+        };
+        guideContainer.appendChild(guide);
+      }
+      updateKeyboardGuide();
+    }
+
+    function renderBoard() {
+      const grid = document.getElementById('boardGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          cell.onclick = (e) => {
+            e.stopPropagation();
+            handleColSelect(c);
+          };
+          grid.appendChild(cell);
+        }
+      }
+    }
+
+    function updateKeyboardGuide() {
+      const guides = document.querySelectorAll('.drop-guide-slot');
+      guides.forEach((g, idx) => {
+        g.classList.toggle('keyboard-focus', idx === keyboardCol);
+        const ghost = g.querySelector('.ghost-token');
+        if (ghost) {
+          ghost.className = `ghost-token ${currentPlayer === 1 ? 'ghost-p1' : 'ghost-p2'}`;
+        }
+      });
+    }
+
+    function handleColSelect(col) {
+      if (isGameOver) {
+        resetRound();
+        return;
+      }
+      if (isAnimating) return;
+      dropInColumn(col);
+    }
+
+    function dropInColumn(col) {
+      let targetRow = -1;
+      for (let r = ROWS - 1; r >= 0; r--) {
+        if (board[r][col] === 0) {
+          targetRow = r;
+          break;
+        }
+      }
+
+      if (targetRow === -1) return;
+
+      isAnimating = true;
+      board[targetRow][col] = currentPlayer;
+      moveHistory.push({ row: targetRow, col: col, player: currentPlayer });
+
+      const cell = document.querySelector(`.cell[data-row="${targetRow}"][data-col="${col}"]`);
+      if (cell) {
+        const token = document.createElement('div');
+        token.className = `token ${currentPlayer === 1 ? 'token-p1' : 'token-p2'} falling`;
+        token.innerHTML = currentPlayer === 1 ? reyDauLogoSvg : arkveldLogoSvg;
+        cell.appendChild(token);
+      }
+
+      playSound('drop', currentPlayer);
+
+      setTimeout(() => {
+        try {
+          const addedToken = cell?.querySelector('.token');
+          if (addedToken) addedToken.classList.remove('falling');
+
+          const winCells = checkWin(targetRow, col, currentPlayer);
+          if (winCells) {
+            handleWin(winCells, currentPlayer);
+          } else if (isBoardFull()) {
+            handleDraw();
+          } else {
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            updateTurnIndicator();
+            updateKeyboardGuide();
+          }
+        } finally {
+          isAnimating = false;
+        }
+      }, 290);
+    }
+
+    function checkWin(r, c, player) {
+      const directions = [
+        { dr: 0, dc: 1 },
+        { dr: 1, dc: 0 },
+        { dr: 1, dc: 1 },
+        { dr: 1, dc: -1 }
+      ];
+
+      for (const { dr, dc } of directions) {
+        let matched = [{ r, c }];
+        for (let i = 1; i < 4; i++) {
+          let nr = r + dr * i;
+          let nc = c + dc * i;
+          if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && board[nr][nc] === player) {
+            matched.push({ r: nr, c: nc });
+          } else break;
+        }
+        for (let i = 1; i < 4; i++) {
+          let nr = r - dr * i;
+          let nc = c - dc * i;
+          if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && board[nr][nc] === player) {
+            matched.push({ r: nr, c: nc });
+          } else break;
+        }
+        if (matched.length >= 4) {
+          return matched;
+        }
+      }
+      return null;
+    }
+
+    function isBoardFull() {
+      return board[0].every(cell => cell !== 0);
+    }
+
+    function handleWin(winCells, winner) {
+      isGameOver = true;
+      playSound('win', winner);
+
+      winCells.forEach(({ r, c }) => {
+        const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+        const tok = cell?.querySelector('.token');
+        if (tok) tok.classList.add('winning');
+      });
+
+      if (winner === 1) scores.p1++;
+      else scores.p2++;
+      saveScores();
+
+      const s1 = document.getElementById('scoreP1');
+      const s2 = document.getElementById('scoreP2');
+      if (s1) s1.innerText = scores.p1;
+      if (s2) s2.innerText = scores.p2;
+
+      const modal = document.getElementById('questModal');
+      const header = document.getElementById('modalHeader');
+      const desc = document.getElementById('modalDesc');
+
+      if (modal && header && desc) {
+        if (winner === 1) {
+          header.className = "quest-header quest-reydau";
+          header.innerText = "REY DAU DOMINATES!";
+          desc.innerText = `${playerNames.p1} aligned 4 thunder weakpoints! A blinding lightning railgun blast claims dominion over the Forbidden Lands!`;
+        } else {
+          header.className = "quest-header quest-arkveld";
+          header.innerText = "ARKVELD TRIUMPHS!";
+          desc.innerText = `${playerNames.p2} struck with 4 chained tendrils! The White Wraith envelops the plains in ruthless ruin!`;
+        }
+
+        setTimeout(() => {
+          modal.classList.add('active');
+        }, 500);
+      }
+
+      const ind = document.getElementById('turnIndicator');
+      if (ind) ind.innerText = `${winner === 1 ? playerNames.p1 : playerNames.p2} Victorious!`;
+    }
+
+    function handleDraw() {
+      isGameOver = true;
+      scores.draws++;
+      saveScores();
+
+      const modal = document.getElementById('questModal');
+      const header = document.getElementById('modalHeader');
+      const desc = document.getElementById('modalDesc');
+
+      if (modal && header && desc) {
+        header.className = "quest-header quest-draw";
+        header.innerText = "STALEMATE CLASH";
+        desc.innerText = "Neither Apex could break the deadlock! Both beasts retreat into the sandstorm to clash another day.";
+        setTimeout(() => {
+          modal.classList.add('active');
+        }, 500);
+      }
+
+      const ind = document.getElementById('turnIndicator');
+      if (ind) ind.innerText = "Stalemate!";
+    }
+
+    function updateTurnIndicator() {
+      const ind = document.getElementById('turnIndicator');
+      const cardP1 = document.getElementById('cardP1');
+      const cardP2 = document.getElementById('cardP2');
+
+      if (currentPlayer === 1) {
+        if (ind) ind.innerText = `${playerNames.p1}'s Turn`;
+        if (cardP1) cardP1.classList.add('active');
+        if (cardP2) cardP2.classList.remove('active');
+      } else {
+        if (ind) ind.innerText = `${playerNames.p2}'s Turn`;
+        if (cardP2) cardP2.classList.add('active');
+        if (cardP1) cardP1.classList.remove('active');
+      }
+    }
+
+    function undoMove() {
+      if (isAnimating || moveHistory.length === 0) return;
+      const lastMove = moveHistory.pop();
+      board[lastMove.row][lastMove.col] = 0;
+
+      const cell = document.querySelector(`.cell[data-row="${lastMove.row}"][data-col="${lastMove.col}"]`);
+      if (cell) cell.innerHTML = '';
+
+      if (isGameOver) {
+        isGameOver = false;
+        document.querySelectorAll('.token.winning').forEach(t => t.classList.remove('winning'));
+        if (lastMove.player === 1) scores.p1 = Math.max(0, scores.p1 - 1);
+        else scores.p2 = Math.max(0, scores.p2 - 1);
+        saveScores();
+        const s1 = document.getElementById('scoreP1');
+        const s2 = document.getElementById('scoreP2');
+        if (s1) s1.innerText = scores.p1;
+        if (s2) s2.innerText = scores.p2;
+      }
+
+      currentPlayer = lastMove.player;
+      playSound('undo');
+      updateTurnIndicator();
+      updateKeyboardGuide();
+    }
+
+    function resetRound() {
+      closeModalOnly();
+      initGame();
+    }
+
+    function resetScoreboard() {
+      if (confirm("Reset dominance records for both monsters?")) {
+        scores = { p1: 0, p2: 0, draws: 0 };
+        saveScores();
+        const s1 = document.getElementById('scoreP1');
+        const s2 = document.getElementById('scoreP2');
+        if (s1) s1.innerText = 0;
+        if (s2) s2.innerText = 0;
+      }
+    }
+
+    function saveScores() {
+      try {
+        localStorage.setItem('mhw_turfwar_scores', JSON.stringify(scores));
+      } catch (e) {}
+    }
+
+    function editPlayerName(playerNum) {
+      const current = playerNum === 1 ? playerNames.p1 : playerNames.p2;
+      const promptTitle = playerNum === 1 ? "Enter Player 1 (Orange Monster) Name:" : "Enter Player 2 (Blue Monster) Name:";
+      const newName = prompt(promptTitle, current);
+      if (newName && newName.trim()) {
+        if (playerNum === 1) playerNames.p1 = newName.trim().slice(0, 16);
+        else playerNames.p2 = newName.trim().slice(0, 16);
+        try {
+          localStorage.setItem('mhw_turfwar_names', JSON.stringify(playerNames));
+        } catch (e) {}
+        const p1El = document.getElementById('nameP1');
+        const p2El = document.getElementById('nameP2');
+        if (p1El) p1El.innerText = playerNames.p1;
+        if (p2El) p2El.innerText = playerNames.p2;
+        updateTurnIndicator();
+      }
+    }
+
+    function closeModalOnly() {
+      const modal = document.getElementById('questModal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    function closeModalAndReset() {
+      closeModalOnly();
+      resetRound();
+    }
+
+    window.addEventListener('keydown', (e) => {
+      const modal = document.getElementById('questModal');
+      const modalActive = modal && modal.classList.contains('active');
+      if (modalActive) {
+        if (e.key === '.classList.contains('active');
+      if (modalActive) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          closeModalAndReset();
+        }
+        return;
+      }
+
+      const num = parseInt(e.key);
+      if (num >= 1 && num <= 7) {
+        keyboardCol = num - 1;
+        updateKeyboardGuide();
+        handleColSelect(keyboardCol);
+        return;
+      }
+
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        keyboardCol = (keyboardCol - 1 + COLS) % COLS;
+        updateKeyboardGuide();
+      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        keyboardCol = (keyboardCol + 1) % COLS;
+        updateKeyboardGuide();
+      } else if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleColSelect(keyboardCol);
+      } else if (e.key === 'u' || e.key === 'U') {
+        undoMove();
+      } else if (e.key === 'r' || e.key === 'R') {
+        resetRound();
+      } else if (e.key === 'm' || e.key === 'M') {
+        toggleSound();
+      }
     });
-    const wav = encodeWAV(L, R, sr);
-    const a = document.createElement('a'); a.href = URL.createObjectURL(wav); a.download = `Vocal_Loop_${Date.now()}.wav`; a.click();
-  };
 
-  function encodeWAV(l, r, sr) {
-    const b = new ArrayBuffer(44 + l.length * 4), v = new DataView(b);
-    const s = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
-    s(0, 'RIFF'); v.setUint32(4, 36 + l.length * 4, true); s(8, 'WAVE'); s(12, 'fmt ');
-    v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 2, true);
-    v.setUint32(24, sr, true); v.setUint32(28, sr * 4, true); v.setUint16(32, 4, true); v.setUint16(34, 16, true);
-    s(36, 'data'); v.setUint32(40, l.length * 4, true);
-    let off = 44;
-    for (let i = 0; i < l.length; i++) {
-      v.setInt16(off, Math.max(-1, Math.min(1, l[i])) * 0x7FFF, true); off += 2;
-      v.setInt16(off, Math.max(-1, Math.min(1, r[i])) * 0x7FFF, true); off += 2;
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initGame);
+    } else {
+      initGame();
     }
-    return new Blob([b], { type: 'audio/wav' });
-  }
-})();
-</script>
+  </script>
 </body>
 </html>
