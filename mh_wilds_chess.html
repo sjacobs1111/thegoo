@@ -349,18 +349,57 @@
     .toggle-wrapper {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
+      gap: 8px;
+      font-size: 0.82rem;
       font-weight: 700;
       color: var(--text-main);
       cursor: pointer;
     }
 
-    .toggle-wrapper input {
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
       cursor: pointer;
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent-gold);
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #212836;
+      border: 1px solid #4a5c78;
+      transition: .25s ease;
+      border-radius: 20px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #9aa7b8;
+      transition: .25s ease;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #e5b95c;
+      border-color: #ffd166;
+      box-shadow: 0 0 8px rgba(229, 185, 92, 0.45);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(16px);
+      background-color: #0b0e14;
     }
 
     /* Promotion Modal */
@@ -497,14 +536,30 @@
 
     <!-- Control Buttons -->
     <div class="controls-bar">
-      <button class="btn" id="btnFlip">🔄 Flip Board</button>
+      <button class="btn" id="btnFlip">🔄 Flip</button>
       <button class="btn" id="btnUndo">↩️ Undo</button>
       <button class="btn" id="btnNewGame">🆕 New Hunt</button>
       <button class="btn" id="btnSound">🔊 Sound</button>
-      <label class="toggle-wrapper">
-        <input type="checkbox" id="chkAutoRotate" />
-        <span>Auto-Rotate</span>
+
+      <!-- Toggle 1: Auto-Flip Board (Default: ON) -->
+      <label class="toggle-wrapper" title="Automatically flip board on turn">
+        <div class="toggle-switch">
+          <input type="checkbox" id="chkAutoFlip" checked="checked" />
+          <span class="slider"></span>
+        </div>
+        <span>Auto-Flip</span>
       </label>
+
+      <!-- Toggle 2: Hide Available Moves -->
+      <label class="toggle-wrapper" title="Hide move and capture hints">
+        <div class="toggle-switch">
+          <input type="checkbox" id="chkHideHints" />
+          <span class="slider"></span>
+        </div>
+        <span>Hide Moves</span>
+      </label>
+
+      <!-- Monster Roster Selector -->
       <div style="display: inline-flex; align-items: center; gap: 6px; margin-left: 4px;">
         <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent-gold);">Roster:</span>
         <select id="selectRoster" style="background: #141b27; color: var(--accent-gold); border: 2px solid var(--accent-gold); border-radius: 8px; padding: 6px 10px; font-weight: 700; font-size: 0.8rem; cursor: pointer; outline: none;">
@@ -1015,7 +1070,8 @@
     const commentaryBanner = document.getElementById('commentaryBanner');
     const whiteCapturedTray = document.getElementById('whiteCapturedTray');
     const blackCapturedTray = document.getElementById('blackCapturedTray');
-    const chkAutoRotate = document.getElementById('chkAutoRotate');
+    const chkAutoFlip = document.getElementById('chkAutoFlip');
+    const chkHideHints = document.getElementById('chkHideHints');
     const promoModal = document.getElementById('promoModal');
     const promoGrid = document.getElementById('promoGrid');
     const gameOverModal = document.getElementById('gameOverModal');
@@ -1068,9 +1124,10 @@
             sq.appendChild(wrapper);
           }
 
-          // Move hint
+          // Move hint (honors Hide Moves toggle)
+          const hideHints = chkHideHints && chkHideHints.checked;
           const moveMatch = validMoves.find(m => m.to.r === r && m.to.c === c);
-          if (moveMatch) {
+          if (moveMatch && !hideHints) {
             const hint = document.createElement('div');
             hint.className = moveMatch.isCapture ? 'capture-hint' : 'move-hint';
             sq.appendChild(hint);
@@ -1148,8 +1205,8 @@
       }
       commentaryBanner.innerText = comment;
 
-      // Auto-rotate if enabled
-      if (chkAutoRotate.checked) {
+      // Auto-flip if enabled (default ON)
+      if (chkAutoFlip && chkAutoFlip.checked) {
         isFlipped = (game.turn === 'b');
         boardContainer.classList.toggle('flipped', isFlipped);
       }
@@ -1232,7 +1289,7 @@
         selectedSquare = null;
         validMoves = [];
         commentaryBanner.innerText = '↩️ Tactical retreat! Turn rolled back.';
-        if (chkAutoRotate.checked) {
+        if (chkAutoFlip && chkAutoFlip.checked) {
           isFlipped = (game.turn === 'b');
           boardContainer.classList.toggle('flipped', isFlipped);
         }
@@ -1245,8 +1302,8 @@
         game.reset();
         selectedSquare = null;
         validMoves = [];
-        isFlipped = false;
-        boardContainer.classList.remove('flipped');
+        isFlipped = chkAutoFlip && chkAutoFlip.checked && (game.turn === 'b');
+        boardContainer.classList.toggle('flipped', isFlipped);
         commentaryBanner.innerText = '⚔️ Fresh hunt initialized! Guild Expedition (White) to move.';
         gameOverModal.style.display = 'none';
         renderBoard();
@@ -1269,6 +1326,23 @@
       audio.enabled = !audio.enabled;
       btnSound.innerText = audio.enabled ? '🔊 Sound' : '🔇 Muted';
     });
+
+    // Toggle 1: Auto-Flip Switch Listener
+    if (chkAutoFlip) {
+      chkAutoFlip.addEventListener('change', () => {
+        if (chkAutoFlip.checked) {
+          isFlipped = (game.turn === 'b');
+        }
+        boardContainer.classList.toggle('flipped', isFlipped);
+      });
+    }
+
+    // Toggle 2: Hide Available Moves Listener
+    if (chkHideHints) {
+      chkHideHints.addEventListener('change', () => {
+        renderBoard();
+      });
+    }
 
     
     // Monster Roster Selection Logic
