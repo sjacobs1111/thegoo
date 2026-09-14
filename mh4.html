@@ -9,16 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-main: #0e1116;
-      --bg-card: rgba(24, 28, 36, 0.9);
+      --bg-main: #0c0f14;
+      --bg-card: rgba(22, 26, 34, 0.95);
       --border-bronze: #8c6d3b;
       --bronze-bright: #d4af37;
       --reydau-gold: #f59e0b;
       --reydau-glow: rgba(245, 158, 11, 0.6);
       --arkveld-teal: #06b6d4;
       --arkveld-glow: rgba(6, 182, 212, 0.6);
-      --slot-empty: #191d26;
-      --slot-border: #28303d;
+      --slot-empty: #161922;
+      --slot-border: #2b3342;
     }
 
     * {
@@ -31,17 +31,17 @@
     body {
       background-color: var(--bg-main);
       background-image: 
-        radial-gradient(circle at 50% 15%, rgba(30, 41, 59, 0.65) 0%, transparent 70%),
-        radial-gradient(circle at 12% 85%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 88% 85%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-        linear-gradient(to bottom, #090b0e, #11151c);
+        radial-gradient(circle at 50% 12%, rgba(30, 41, 59, 0.7) 0%, transparent 70%),
+        radial-gradient(circle at 10% 85%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 90% 85%, rgba(6, 182, 212, 0.12) 0%, transparent 50%),
+        linear-gradient(to bottom, #080a0e, #11151d);
       color: #e2e8f0;
       font-family: 'Nunito', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 18px 12px;
+      padding: 16px 12px;
     }
 
     header {
@@ -51,7 +51,7 @@
 
     .subtitle {
       font-family: 'Cinzel', serif;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       letter-spacing: 0.3em;
       color: var(--bronze-bright);
       text-transform: uppercase;
@@ -61,13 +61,13 @@
     h1 {
       font-family: 'Cinzel', serif;
       font-weight: 900;
-      font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+      font-size: clamp(1.5rem, 3.2vw, 2.3rem);
       letter-spacing: 0.08em;
-      background: linear-gradient(180deg, #fff 0%, #cbd5e1 45%, #94a3b8 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 45%, #94a3b8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-shadow: 0 4px 18px rgba(0, 0, 0, 0.8);
-      margin: 2px 0 6px 0;
+      margin: 2px 0 4px 0;
     }
 
     .badge-bar {
@@ -75,7 +75,7 @@
       align-items: center;
       justify-content: center;
       gap: 12px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: #94a3b8;
       font-family: 'Cinzel', serif;
     }
@@ -85,8 +85,8 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      max-width: 680px;
-      margin-bottom: 14px;
+      max-width: 640px;
+      margin-bottom: 12px;
       gap: 10px;
     }
 
@@ -100,8 +100,8 @@
       align-items: center;
       gap: 10px;
       position: relative;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
       cursor: pointer;
     }
 
@@ -111,12 +111,12 @@
 
     .player-card.p1.active {
       border-color: var(--reydau-gold);
-      box-shadow: 0 0 20px var(--reydau-glow);
+      box-shadow: 0 0 18px var(--reydau-glow);
     }
 
     .player-card.p2.active {
       border-color: var(--arkveld-teal);
-      box-shadow: 0 0 20px var(--arkveld-glow);
+      box-shadow: 0 0 18px var(--arkveld-glow);
     }
 
     .avatar {
@@ -153,10 +153,9 @@
 
     .player-title {
       font-size: 0.65rem;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       font-weight: 700;
-      margin-bottom: -1px;
     }
 
     .p1 .player-title { color: #f59e0b; }
@@ -164,7 +163,7 @@
 
     .player-name {
       font-family: 'Cinzel', serif;
-      font-size: 1rem;
+      font-size: 0.98rem;
       font-weight: 700;
       white-space: nowrap;
       overflow: hidden;
@@ -184,7 +183,7 @@
     .p2 .player-name { color: #a5f3fc; }
 
     .score-display {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: #94a3b8;
       font-weight: 600;
     }
@@ -198,22 +197,22 @@
 
     .turn-indicator {
       text-align: center;
-      padding: 6px 12px;
+      padding: 6px 10px;
       font-family: 'Cinzel', serif;
       font-size: 0.85rem;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       font-weight: 700;
       color: #e2e8f0;
       border: 1px solid var(--border-bronze);
       border-radius: 4px;
       background: rgba(14, 17, 22, 0.95);
-      min-width: 150px;
+      min-width: 140px;
     }
 
     .drop-guide-container {
       width: 100%;
-      max-width: 580px;
+      max-width: 560px;
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 8px;
@@ -227,15 +226,21 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.15s ease;
+    }
+
+    .drop-guide-slot:hover {
+      background: rgba(255, 255, 255, 0.04);
     }
 
     .ghost-token {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       opacity: 0;
       transition: opacity 0.15s ease, transform 0.15s ease;
-      transform: translateY(-4px);
+      transform: translateY(-3px);
     }
 
     .drop-guide-slot:hover .ghost-token,
@@ -255,16 +260,16 @@
     }
 
     .board-frame {
-      background: linear-gradient(145deg, #222936, #12161f);
+      background: linear-gradient(145deg, #202734, #11151c);
       border: 3px solid var(--border-bronze);
       border-radius: 14px;
       padding: 12px;
       box-shadow: 
-        0 14px 40px rgba(0, 0, 0, 0.8),
+        0 14px 40px rgba(0, 0, 0, 0.85),
         inset 0 2px 4px rgba(255, 255, 255, 0.08),
         inset 0 -3px 8px rgba(0, 0, 0, 0.9);
       position: relative;
-      max-width: 580px;
+      max-width: 560px;
       width: 100%;
     }
 
@@ -273,10 +278,10 @@
       grid-template-columns: repeat(7, 1fr);
       grid-template-rows: repeat(6, 1fr);
       gap: 8px;
-      background: #0b0e14;
+      background: #090c12;
       padding: 10px;
       border-radius: 8px;
-      border: 1px solid #2d3748;
+      border: 1px solid #283344;
     }
 
     .cell {
@@ -286,25 +291,26 @@
       border: 2px solid var(--slot-border);
       box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.85);
       position: relative;
-      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      transition: border-color 0.15s ease;
     }
 
-    .board-frame:hover .cell {
-      border-color: #3b4759;
+    .cell:hover {
+      border-color: #3e4a5d;
     }
 
     .token {
-      width: 92%;
-      height: 92%;
+      width: 90%;
+      height: 90%;
       border-radius: 50%;
       position: absolute;
       display: flex;
       align-items: center;
       justify-content: center;
+      pointer-events: none;
       box-shadow: 
         inset 0 2px 5px rgba(255, 255, 255, 0.45),
         0 4px 10px rgba(0, 0, 0, 0.7);
@@ -313,7 +319,7 @@
     .token svg {
       width: 72%;
       height: 72%;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.85));
     }
 
     .token-p1 {
@@ -326,26 +332,26 @@
       border: 1.5px solid #a5f3fc;
     }
 
-    @keyframes dropIn {
+    @keyframes tokenDrop {
       0% {
-        transform: translateY(var(--drop-from));
-        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+        transform: translateY(-70px) scale(0.85);
+        opacity: 0.3;
       }
-      70% {
-        transform: translateY(0);
-        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+      65% {
+        transform: translateY(0) scale(1.04);
+        opacity: 1;
       }
-      85% {
-        transform: translateY(-12px);
-        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+      82% {
+        transform: translateY(-8px) scale(0.98);
       }
       100% {
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
+        opacity: 1;
       }
     }
 
     .token.falling {
-      animation: dropIn 0.42s forwards;
+      animation: tokenDrop 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
     }
 
     @keyframes winPulse {
@@ -355,7 +361,7 @@
       }
       50% {
         transform: scale(1.08);
-        box-shadow: 0 0 28px #ffedd5, inset 0 0 14px #fff;
+        box-shadow: 0 0 26px #ffedd5, inset 0 0 14px #fff;
       }
     }
 
@@ -372,7 +378,7 @@
       align-items: center;
       gap: 10px;
       margin-top: 14px;
-      max-width: 580px;
+      max-width: 560px;
       width: 100%;
     }
 
@@ -437,7 +443,7 @@
       z-index: 50;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.25s ease;
     }
 
     .modal-backdrop.active {
@@ -455,7 +461,7 @@
       width: 90%;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 24px rgba(212, 175, 55, 0.25);
       transform: scale(0.92);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .modal-backdrop.active .quest-card {
@@ -549,12 +555,12 @@
       </div>
       <div class="player-info">
         <div class="player-title">Apex of Windward Plains</div>
-        <div class="player-name" id="nameP1" title="Click to change name">Rey Dau</div>
+        <div class="player-name" id="nameP1" title="Click to rename">Rey Dau</div>
         <div class="score-display">Dominance: <span class="score-num" id="scoreP1">0</span></div>
       </div>
     </div>
 
-    <div class="turn-indicator" id="turnIndicator">Rey Dau's Strike</div>
+    <div class="turn-indicator" id="turnIndicator">Rey Dau's Turn</div>
 
     <div class="player-card p2" id="cardP2" onclick="editPlayerName(2)">
       <div class="avatar">
@@ -578,7 +584,7 @@
       </div>
       <div class="player-info">
         <div class="player-title">The White Wraith</div>
-        <div class="player-name" id="nameP2" title="Click to change name">Arkveld</div>
+        <div class="player-name" id="nameP2" title="Click to rename">Arkveld</div>
         <div class="score-display">Dominance: <span class="score-num" id="scoreP2">0</span></div>
       </div>
     </div>
@@ -600,10 +606,10 @@
     <button class="btn" id="btnRestart" onclick="resetRound()" title="Start a new round (R)">
       ⚔ New Turf War
     </button>
-    <button class="btn" id="btnResetScores" onclick="resetScoreboard()" title="Reset dominance records">
+    <button class="btn" id="btnResetScores" onclick="resetScoreboard()" title="Reset records">
       ⌫ Reset Scores
     </button>
-    <button class="btn" id="btnSound" onclick="toggleSound()" title="Toggle sounds (M)">
+    <button class="btn" id="btnSound" onclick="toggleSound()" title="Toggle audio (M)">
       🔊 Sound: ON
     </button>
   </footer>
@@ -638,134 +644,110 @@
     let scores = { p1: 0, p2: 0, draws: 0 };
     let playerNames = { p1: "Rey Dau", p2: "Arkveld" };
 
+    // Safe storage reader with validation
     try {
       const savedScores = localStorage.getItem('mhw_turfwar_scores');
-      if (savedScores) scores = JSON.parse(savedScores);
+      if (savedScores) {
+        const parsed = JSON.parse(savedScores);
+        if (parsed && typeof parsed.p1 === 'number' && typeof parsed.p2 === 'number') {
+          scores = parsed;
+        }
+      }
       const savedNames = localStorage.getItem('mhw_turfwar_names');
-      if (savedNames) playerNames = JSON.parse(savedNames);
+      if (savedNames) {
+        const parsedNames = JSON.parse(savedNames);
+        if (parsedNames && parsedNames.p1 && parsedNames.p2) {
+          playerNames = parsedNames;
+        }
+      }
     } catch (e) {
-      console.warn("Storage access restricted", e);
+      console.warn("Storage access restricted, using default values", e);
     }
 
-    // Procedural Audio Engine (Web Audio API)
     let audioCtx = null;
-
-    function initAudio() {
-      if (!audioCtx) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContext();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-    }
 
     function playSound(type, player = 1) {
       if (!soundEnabled) return;
       try {
-        initAudio();
+        if (!audioCtx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) audioCtx = new AudioContext();
+        }
+        if (!audioCtx) return;
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
+        }
+
         const now = audioCtx.currentTime;
 
         if (type === 'drop') {
           if (player === 1) {
-            // Rey Dau Thunder Impact: Crackling electric discharge + deep rumble
             const osc = audioCtx.createOscillator();
-            const noiseOsc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-
             osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(360, now);
-            osc.frequency.exponentialRampToValueAtTime(55, now + 0.24);
-
-            noiseOsc.type = 'square';
-            noiseOsc.frequency.setValueAtTime(800, now);
-            noiseOsc.frequency.exponentialRampToValueAtTime(110, now + 0.12);
-
-            gain.gain.setValueAtTime(0.35, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
-
-            osc.connect(gain);
-            noiseOsc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start(now);
-            noiseOsc.start(now);
-            osc.stop(now + 0.24);
-            noiseOsc.stop(now + 0.14);
-          } else {
-            // Arkveld Chained Blade Whip Slash: Metallic resonance + razor slice
-            const osc1 = audioCtx.createOscillator();
-            const osc2 = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-
-            osc1.type = 'triangle';
-            osc1.frequency.setValueAtTime(620, now);
-            osc1.frequency.exponentialRampToValueAtTime(180, now + 0.2);
-
-            osc2.type = 'sine';
-            osc2.frequency.setValueAtTime(880, now);
-            osc2.frequency.exponentialRampToValueAtTime(220, now + 0.15);
-
+            osc.frequency.setValueAtTime(320, now);
+            osc.frequency.exponentialRampToValueAtTime(55, now + 0.2);
             gain.gain.setValueAtTime(0.3, now);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-
-            osc1.connect(gain);
-            osc2.connect(gain);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.2);
+            osc.connect(gain);
             gain.connect(audioCtx.destination);
-
-            osc1.start(now);
-            osc2.start(now);
-            osc1.stop(now + 0.2);
-            osc2.stop(now + 0.15);
+            osc.start(now);
+            osc.stop(now + 0.2);
+          } else {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(580, now);
+            osc.frequency.exponentialRampToValueAtTime(180, now + 0.18);
+            gain.gain.setValueAtTime(0.28, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 0.18);
           }
         } else if (type === 'win') {
           const freqs = player === 1 
-            ? [392.00, 493.88, 587.33, 783.99]  // G Major (Rey Dau thunderous fanfare)
-            : [440.00, 523.25, 659.25, 880.00]; // A Minor (Arkveld spectral fanfare)
+            ? [392.00, 493.88, 587.33, 783.99]
+            : [440.00, 523.25, 659.25, 880.00];
 
           freqs.forEach((freq, idx) => {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = player === 1 ? 'sawtooth' : 'sine';
-            osc.frequency.setValueAtTime(freq, now + idx * 0.09);
-
-            gain.gain.setValueAtTime(0, now + idx * 0.09);
-            gain.gain.linearRampToValueAtTime(0.18, now + idx * 0.09 + 0.04);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.95);
-
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            gain.gain.setValueAtTime(0.0001, now + idx * 0.08);
+            gain.gain.linearRampToValueAtTime(0.16, now + idx * 0.08 + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.85);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-            osc.start(now + idx * 0.09);
-            osc.stop(now + 1.0);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + 0.9);
           });
         } else if (type === 'undo') {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(260, now);
-          osc.frequency.linearRampToValueAtTime(180, now + 0.1);
-          gain.gain.setValueAtTime(0.15, now);
-          gain.gain.linearRampToValueAtTime(0.001, now + 0.1);
+          osc.frequency.setValueAtTime(240, now);
+          osc.frequency.linearRampToValueAtTime(160, now + 0.08);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
           osc.connect(gain);
           gain.connect(audioCtx.destination);
           osc.start(now);
-          osc.stop(now + 0.1);
+          osc.stop(now + 0.08);
         }
-      } catch (err) {
-        console.warn("Audio unavailable:", err);
-      }
+      } catch (err) {}
     }
 
     function toggleSound() {
       soundEnabled = !soundEnabled;
       const btn = document.getElementById('btnSound');
-      btn.innerText = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
+      if (btn) btn.innerText = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
     }
 
-    // High-Detail Monster Vector SVGs
     const reyDauLogoSvg = `
       <svg viewBox="0 0 100 100">
-        <!-- Rey Dau: Crowned railgun thunder horns & fierce apex wyvern head -->
         <path d="M50 18 L55 30 L63 33 L57 41 L50 38 L43 41 L37 33 L45 30 Z" fill="#fff"/>
         <path d="M44 28 L34 5 L28 7 L36 24 L24 12 L19 16 L31 32 L20 28 L17 34 L29 44 L39 39 Z" fill="#fff"/>
         <path d="M56 28 L66 5 L72 7 L64 24 L76 12 L81 16 L69 32 L80 28 L83 34 L71 44 L61 39 Z" fill="#fff"/>
@@ -781,7 +763,6 @@
 
     const arkveldLogoSvg = `
       <svg viewBox="0 0 100 100">
-        <!-- Arkveld: White Wraith - Swept recurved horns and whip-chain bladed tendrils -->
         <path d="M50 16 L58 30 L54 42 L50 38 L46 42 L42 30 Z" fill="#fff"/>
         <path d="M44 28 C33 16 18 10 10 16 C12 24 22 30 35 36 Z" fill="#fff"/>
         <path d="M37 36 C27 30 13 30 7 38 C13 42 25 42 37 44 Z" fill="#fff"/>
@@ -805,10 +786,15 @@
       isAnimating = false;
       currentPlayer = 1;
 
-      document.getElementById('nameP1').innerText = playerNames.p1;
-      document.getElementById('nameP2').innerText = playerNames.p2;
-      document.getElementById('scoreP1').innerText = scores.p1;
-      document.getElementById('scoreP2').innerText = scores.p2;
+      const p1El = document.getElementById('nameP1');
+      const p2El = document.getElementById('nameP2');
+      const s1El = document.getElementById('scoreP1');
+      const s2El = document.getElementById('scoreP2');
+
+      if (p1El) p1El.innerText = playerNames.p1;
+      if (p2El) p2El.innerText = playerNames.p2;
+      if (s1El) s1El.innerText = scores.p1;
+      if (s2El) s2El.innerText = scores.p2;
 
       renderBoard();
       renderDropGuides();
@@ -817,13 +803,17 @@
 
     function renderDropGuides() {
       const guideContainer = document.getElementById('dropGuides');
+      if (!guideContainer) return;
       guideContainer.innerHTML = '';
       for (let c = 0; c < COLS; c++) {
         const guide = document.createElement('div');
         guide.className = 'drop-guide-slot';
         guide.dataset.col = c;
         guide.innerHTML = `<div class="ghost-token ${currentPlayer === 1 ? 'ghost-p1' : 'ghost-p2'}"></div>`;
-        guide.onclick = () => handleColSelect(c);
+        guide.onclick = (e) => {
+          e.stopPropagation();
+          handleColSelect(c);
+        };
         guideContainer.appendChild(guide);
       }
       updateKeyboardGuide();
@@ -831,6 +821,7 @@
 
     function renderBoard() {
       const grid = document.getElementById('boardGrid');
+      if (!grid) return;
       grid.innerHTML = '';
       for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
@@ -838,7 +829,10 @@
           cell.className = 'cell';
           cell.dataset.row = r;
           cell.dataset.col = c;
-          cell.onclick = () => handleColSelect(c);
+          cell.onclick = (e) => {
+            e.stopPropagation();
+            handleColSelect(c);
+          };
           grid.appendChild(cell);
         }
       }
@@ -856,7 +850,11 @@
     }
 
     function handleColSelect(col) {
-      if (isGameOver || isAnimating) return;
+      if (isGameOver) {
+        resetRound();
+        return;
+      }
+      if (isAnimating) return;
       dropInColumn(col);
     }
 
@@ -876,32 +874,34 @@
       moveHistory.push({ row: targetRow, col: col, player: currentPlayer });
 
       const cell = document.querySelector(`.cell[data-row="${targetRow}"][data-col="${col}"]`);
-      const token = document.createElement('div');
-      token.className = `token ${currentPlayer === 1 ? 'token-p1' : 'token-p2'} falling`;
-      token.innerHTML = currentPlayer === 1 ? reyDauLogoSvg : arkveldLogoSvg;
+      if (cell) {
+        const token = document.createElement('div');
+        token.className = `token ${currentPlayer === 1 ? 'token-p1' : 'token-p2'} falling`;
+        token.innerHTML = currentPlayer === 1 ? reyDauLogoSvg : arkveldLogoSvg;
+        cell.appendChild(token);
+      }
 
-      const cellHeight = cell.getBoundingClientRect().height || 54;
-      const dropDistance = -((targetRow + 1) * (cellHeight + 8) + 30);
-      token.style.setProperty('--drop-from', `${dropDistance}px`);
-
-      cell.appendChild(token);
       playSound('drop', currentPlayer);
 
       setTimeout(() => {
-        token.classList.remove('falling');
-        isAnimating = false;
+        try {
+          const addedToken = cell?.querySelector('.token');
+          if (addedToken) addedToken.classList.remove('falling');
 
-        const winCells = checkWin(targetRow, col, currentPlayer);
-        if (winCells) {
-          handleWin(winCells, currentPlayer);
-        } else if (isBoardFull()) {
-          handleDraw();
-        } else {
-          currentPlayer = currentPlayer === 1 ? 2 : 1;
-          updateTurnIndicator();
-          updateKeyboardGuide();
+          const winCells = checkWin(targetRow, col, currentPlayer);
+          if (winCells) {
+            handleWin(winCells, currentPlayer);
+          } else if (isBoardFull()) {
+            handleDraw();
+          } else {
+            currentPlayer = currentPlayer === 1 ? 2 : 1;
+            updateTurnIndicator();
+            updateKeyboardGuide();
+          }
+        } finally {
+          isAnimating = false;
         }
-      }, 420);
+      }, 290);
     }
 
     function checkWin(r, c, player) {
@@ -953,28 +953,33 @@
       else scores.p2++;
       saveScores();
 
-      document.getElementById('scoreP1').innerText = scores.p1;
-      document.getElementById('scoreP2').innerText = scores.p2;
+      const s1 = document.getElementById('scoreP1');
+      const s2 = document.getElementById('scoreP2');
+      if (s1) s1.innerText = scores.p1;
+      if (s2) s2.innerText = scores.p2;
 
       const modal = document.getElementById('questModal');
       const header = document.getElementById('modalHeader');
       const desc = document.getElementById('modalDesc');
 
-      if (winner === 1) {
-        header.className = "quest-header quest-reydau";
-        header.innerText = "REY DAU DOMINATES!";
-        desc.innerText = `${playerNames.p1} aligned 4 thunder weakpoints! A blinding lightning railgun blast claims dominion over the Forbidden Lands!`;
-      } else {
-        header.className = "quest-header quest-arkveld";
-        header.innerText = "ARKVELD TRIUMPHS!";
-        desc.innerText = `${playerNames.p2} struck with 4 chained tendrils! The White Wraith envelops the plains in ruthless ruin!`;
+      if (modal && header && desc) {
+        if (winner === 1) {
+          header.className = "quest-header quest-reydau";
+          header.innerText = "REY DAU DOMINATES!";
+          desc.innerText = `${playerNames.p1} aligned 4 thunder weakpoints! A blinding lightning railgun blast claims dominion over the Forbidden Lands!`;
+        } else {
+          header.className = "quest-header quest-arkveld";
+          header.innerText = "ARKVELD TRIUMPHS!";
+          desc.innerText = `${playerNames.p2} struck with 4 chained tendrils! The White Wraith envelops the plains in ruthless ruin!`;
+        }
+
+        setTimeout(() => {
+          modal.classList.add('active');
+        }, 500);
       }
 
-      document.getElementById('turnIndicator').innerText = `${winner === 1 ? playerNames.p1 : playerNames.p2} Victorious!`;
-
-      setTimeout(() => {
-        modal.classList.add('active');
-      }, 700);
+      const ind = document.getElementById('turnIndicator');
+      if (ind) ind.innerText = `${winner === 1 ? playerNames.p1 : playerNames.p2} Victorious!`;
     }
 
     function handleDraw() {
@@ -986,14 +991,17 @@
       const header = document.getElementById('modalHeader');
       const desc = document.getElementById('modalDesc');
 
-      header.className = "quest-header quest-draw";
-      header.innerText = "STALEMATE CLASH";
-      desc.innerText = "Neither Apex could break the deadlock! Both beasts retreat into the sandstorm to clash another day.";
-      document.getElementById('turnIndicator').innerText = "Stalemate!";
+      if (modal && header && desc) {
+        header.className = "quest-header quest-draw";
+        header.innerText = "STALEMATE CLASH";
+        desc.innerText = "Neither Apex could break the deadlock! Both beasts retreat into the sandstorm to clash another day.";
+        setTimeout(() => {
+          modal.classList.add('active');
+        }, 500);
+      }
 
-      setTimeout(() => {
-        modal.classList.add('active');
-      }, 600);
+      const ind = document.getElementById('turnIndicator');
+      if (ind) ind.innerText = "Stalemate!";
     }
 
     function updateTurnIndicator() {
@@ -1002,13 +1010,13 @@
       const cardP2 = document.getElementById('cardP2');
 
       if (currentPlayer === 1) {
-        ind.innerText = `${playerNames.p1}'s Turn`;
-        cardP1.classList.add('active');
-        cardP2.classList.remove('active');
+        if (ind) ind.innerText = `${playerNames.p1}'s Turn`;
+        if (cardP1) cardP1.classList.add('active');
+        if (cardP2) cardP2.classList.remove('active');
       } else {
-        ind.innerText = `${playerNames.p2}'s Turn`;
-        cardP2.classList.add('active');
-        cardP1.classList.remove('active');
+        if (ind) ind.innerText = `${playerNames.p2}'s Turn`;
+        if (cardP2) cardP2.classList.add('active');
+        if (cardP1) cardP1.classList.remove('active');
       }
     }
 
@@ -1026,8 +1034,10 @@
         if (lastMove.player === 1) scores.p1 = Math.max(0, scores.p1 - 1);
         else scores.p2 = Math.max(0, scores.p2 - 1);
         saveScores();
-        document.getElementById('scoreP1').innerText = scores.p1;
-        document.getElementById('scoreP2').innerText = scores.p2;
+        const s1 = document.getElementById('scoreP1');
+        const s2 = document.getElementById('scoreP2');
+        if (s1) s1.innerText = scores.p1;
+        if (s2) s2.innerText = scores.p2;
       }
 
       currentPlayer = lastMove.player;
@@ -1045,8 +1055,10 @@
       if (confirm("Reset dominance records for both monsters?")) {
         scores = { p1: 0, p2: 0, draws: 0 };
         saveScores();
-        document.getElementById('scoreP1').innerText = 0;
-        document.getElementById('scoreP2').innerText = 0;
+        const s1 = document.getElementById('scoreP1');
+        const s2 = document.getElementById('scoreP2');
+        if (s1) s1.innerText = 0;
+        if (s2) s2.innerText = 0;
       }
     }
 
@@ -1066,14 +1078,17 @@
         try {
           localStorage.setItem('mhw_turfwar_names', JSON.stringify(playerNames));
         } catch (e) {}
-        document.getElementById('nameP1').innerText = playerNames.p1;
-        document.getElementById('nameP2').innerText = playerNames.p2;
+        const p1El = document.getElementById('nameP1');
+        const p2El = document.getElementById('nameP2');
+        if (p1El) p1El.innerText = playerNames.p1;
+        if (p2El) p2El.innerText = playerNames.p2;
         updateTurnIndicator();
       }
     }
 
     function closeModalOnly() {
-      document.getElementById('questModal').classList.remove('active');
+      const modal = document.getElementById('questModal');
+      if (modal) modal.classList.remove('active');
     }
 
     function closeModalAndReset() {
@@ -1082,17 +1097,14 @@
     }
 
     window.addEventListener('keydown', (e) => {
-      const modalActive = document.getElementById('questModal').classList.contains('active');
+      const modal = document.getElementById('questModal');
+      const modalActive = modal && modal.classList.contains('active');
+      if (modalActive) {
+        if (e.key === '.classList.contains('active');
       if (modalActive) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           closeModalAndReset();
-        }
-        return;
-      }
-
-      const num = parseInt(e.key);
-      if (num >= 1Reset();
         }
         return;
       }
@@ -1123,9 +1135,11 @@
       }
     });
 
-    window.onload = () => {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initGame);
+    } else {
       initGame();
-    };
+    }
   </script>
 </body>
 </html>
