@@ -143,10 +143,10 @@
     }
 
     .avatar svg {
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       fill: #ffffff;
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8));
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.85));
     }
 
     .player-info {
@@ -300,7 +300,7 @@
       border-color: #4a5568;
     }
 
-    /* Token styling */
+    /* Token styling with authentic MHwiki vector icons */
     .token {
       width: 92%;
       height: 92%;
@@ -315,11 +315,11 @@
     }
 
     .token svg {
-      width: 66%;
-      height: 66%;
+      width: 68%;
+      height: 68%;
       fill: #ffffff;
       opacity: 0.95;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.75));
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.85));
     }
 
     @keyframes dropIn {
@@ -361,7 +361,7 @@
       border: 2px solid #ffffff;
     }
 
-    /* Controls */
+    /* Touch Controls */
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -397,7 +397,7 @@
       border-color: var(--bronze-bright);
     }
 
-    /* Modal dialogs */
+    /* Modal Dialogs */
     .modal-backdrop {
       position: fixed;
       top: 0;
@@ -522,7 +522,7 @@
       text-align: center;
       cursor: pointer;
       transition: all 0.2s ease;
-    }
+    }}
 
     .monster-option:active {
       transform: scale(0.95);
@@ -551,7 +551,7 @@
       width: 32px;
       height: 32px;
       fill: #ffffff;
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8));
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.85));
     }
 
     .monster-option-name {
@@ -671,7 +671,7 @@
     <div class="roster-card" onclick="event.stopPropagation()">
       <div class="roster-header">
         <div class="roster-title" id="rosterModalTitle">Select Your Monster</div>
-        <div class="roster-subtitle">Choose from 8 Apex Wyverns to represent you on the field</div>
+        <div class="roster-subtitle">Choose from 8 Apex Wyverns based on their official MHwiki icon designs</div>
       </div>
       <div class="roster-grid" id="rosterGrid"></div>
       <div class="modal-btn-row">
@@ -690,97 +690,97 @@
     let isAnimating = false;
     let soundEnabled = true;
 
-    // 8 Roster Monsters with authentic vector logos and orb styles
+    // 8 Roster Monsters with authentic MHwiki vector icons and orb styles
     const MONSTERS = [
-      {
-        "id": "reydau",
-        "name": "Rey Dau",
-        "title": "Apex of Windward Plains",
-        "color": "#f59e0b",
-        "gradient": "radial-gradient(circle at 35% 30%, #fef3c7 0%, #f59e0b 45%, #92400e 100%)",
-        "border": "#fde68a",
-        "glow": "rgba(245, 158, 11, 0.6)",
-        "textColor": "#fef08a",
-        "svg": `<svg viewBox="0 0 64 64" fill="currentColor"><path d="M21 4 L26 18 L24 20 L27 26 L23 27 L19 22 L21 18 L16 8 Z"/><path d="M23 2 L27 12 L24 13 L21 4 Z"/><path d="M15 11 L19 20 L16 21 L13 13 Z"/><path d="M43 4 L48 8 L43 18 L45 22 L41 27 L37 26 L40 20 L38 18 Z"/><path d="M41 2 L43 4 L40 13 L37 12 Z"/><path d="M49 11 L51 13 L48 21 L45 20 Z"/><path d="M32 1 L34 9 L32 13 L30 9 Z"/><path d="M32 15 L35 22 L32 25 L29 22 Z"/><path d="M22 27 L32 23 L42 27 L44 32 L32 29 L20 32 Z"/><path d="M23 33 L29 32 L26 36 Z"/><path d="M41 33 L38 36 L35 32 Z"/><path d="M26 33 L32 30 L38 33 L36 43 L32 48 L28 43 Z"/><path d="M26 45 L32 58 L38 45 L34 46 L32 52 L30 46 Z"/><path d="M18 29 L12 35 L18 37 L14 43 L21 42 L18 49 L25 46 Z"/><path d="M46 29 L52 35 L46 37 L50 43 L43 42 L46 49 L39 46 Z"/><path d="M32 53 L34 60 L32 63 L30 60 Z"/></svg>`
-      },
-      {
-        "id": "arkveld",
-        "name": "Arkveld",
-        "title": "The White Wraith",
-        "color": "#06b6d4",
-        "gradient": "radial-gradient(circle at 35% 30%, #cffafe 0%, #06b6d4 45%, #155e75 100%)",
-        "border": "#a5f3fc",
-        "glow": "rgba(6, 182, 212, 0.6)",
-        "textColor": "#a5f3fc",
-        "svg": `<svg viewBox="0 0 64 64" fill="currentColor"><path d="M30 17 C25 11 17 5 7 7 C5 13 11 19 21 23 L25 22 Z"/><path d="M24 23 C17 19 9 17 4 23 C8 27 16 27 24 26 Z"/><path d="M34 17 C39 11 47 5 57 7 C59 13 53 19 43 23 L39 22 Z"/><path d="M40 23 C47 19 55 17 60 23 C56 27 48 27 40 26 Z"/><path d="M32 9 L35 19 L32 22 L29 19 Z"/><path d="M25 25 L32 21 L39 25 L38 33 L32 30 L26 33 Z"/><path d="M27 32 L31 31 L29 35 Z"/><path d="M37 32 L33 31 L35 35 Z"/><path d="M28 33 L32 31 L36 33 L35 43 L32 49 L29 43 Z"/><path d="M28 44 L32 54 L36 44 L34 45 L32 50 L30 45 Z"/><path d="M14 25 C9 31 7 39 11 45 L14 43 C11 38 12 32 15 27 Z"/><path d="M10 43 C7 49 9 55 15 59 L17 56 C12 53 11 48 13 44 Z"/><path d="M15 56 L19 62 L21 58 L18 55 Z"/><path d="M50 25 C55 31 57 39 53 45 L50 43 C53 38 52 32 49 27 Z"/><path d="M54 43 C57 49 55 55 49 59 L47 56 C52 53 53 48 51 44 Z"/><path d="M49 56 L45 62 L43 58 L46 55 Z"/><path d="M26 48 L23 54 L27 52 L25 58 L30 53 Z"/><path d="M38 48 L41 54 L37 52 L39 58 L34 53 Z"/></svg>`
-      },
-      {
-        "id": "rathalos",
-        "name": "Rathalos",
-        "title": "King of the Skies",
-        "color": "#ef4444",
-        "gradient": "radial-gradient(circle at 35% 30%, #fee2e2 0%, #ef4444 45%, #7f1d1d 100%)",
-        "border": "#fca5a5",
-        "glow": "rgba(239, 68, 68, 0.6)",
-        "textColor": "#fecaca",
-        "svg": `<svg viewBox="0 0 64 64" fill="currentColor"><path d="M32 4 L35 14 L32 17 L29 14 Z"/><path d="M25 8 L30 16 L27 18 L20 12 Z"/><path d="M39 8 L44 12 L37 18 L34 16 Z"/><path d="M17 15 L25 21 L22 23 L13 18 Z"/><path d="M47 15 L51 18 L42 23 L39 21 Z"/><path d="M22 24 L32 20 L42 24 L40 31 L32 28 L24 31 Z"/><path d="M25 29 L30 28 L27 32 Z"/><path d="M39 29 L37 32 L34 28 Z"/><path d="M27 31 L32 29 L37 31 L35 43 L32 48 L29 43 Z"/><path d="M28 44 L32 58 L36 44 L34 45 L32 52 L30 45 Z"/><path d="M20 28 L11 32 L18 36 L13 42 L22 41 L19 48 L26 44 Z"/><path d="M44 28 L53 32 L46 36 L51 42 L42 41 L45 48 L38 44 Z"/></svg>`
-      },
-      {
-        "id": "zinogre",
-        "name": "Zinogre",
-        "title": "Thunder Wolf Wyvern",
-        "color": "#10b981",
-        "gradient": "radial-gradient(circle at 35% 30%, #d1fae5 0%, #10b981 45%, #064e3b 100%)",
-        "border": "#6ee7b7",
-        "glow": "rgba(16, 185, 129, 0.6)",
-        "textColor": "#a7f3d0",
-        "svg": `<svg viewBox="0 0 64 64" fill="currentColor"><path d="M24 5 L30 18 L26 20 L31 27 L25 28 L19 19 L21 14 L15 8 Z"/><path d="M40 5 L49 8 L43 14 L45 19 L39 28 L33 27 L38 20 L34 18 Z"/><path d="M32 8 L35 17 L32 21 L29 17 Z"/><path d="M25 25 L32 22 L39 25 L37 32 L32 29 L27 32 Z"/><path d="M27 30 L30 29 L28 33 Z"/><path d="M37 30 L36 33 L34 29 Z"/><path d="M28 31 L32 29 L36 31 L35 43 L32 47 L29 43 Z"/><path d="M30 42 L32 39 L34 42 L32 45 Z"/><path d="M28 44 L32 55 L36 44 L34 45 L32 50 L30 45 Z"/><path d="M19 26 L12 30 L18 33 L11 38 L20 40 L14 47 L24 45 Z"/><path d="M45 26 L52 30 L46 33 L53 38 L44 40 L50 47 L40 45 Z"/><path d="M32 52 L34 58 L32 61 L30 58 Z"/></svg>`
-      },
-      {
-        "id": "magnamalo",
-        "name": "Magnamalo",
-        "title": "Wyvern of Malice",
-        "color": "#9333ea",
-        "gradient": "radial-gradient(circle at 35% 30%, #f3e8ff 0%, #9333ea 45%, #3b0764 100%)",
-        "border": "#d8b4fe",
-        "glow": "rgba(147, 51, 234, 0.6)",
-        "textColor": "#e9d5ff",
-        "svg": `<svg viewBox="0 0 64 64" fill="currentColor"><path d="M28 6 C24 10 17 12 7 10 C8 16 14 20 25 21 L27 18 Z"/><path d="M36 6 C40 10 47 12 57 10 C56 16 50 20 39 21 L37 18 Z"/><path d="M32 3 L35 14 L32 18 L29 14 Z"/><path d="M24 22 L32 18 L40 22 L38 31 L32 28 L26 31 Z"/><path d="M26 29 L30 28 L28 32 Z"/><path d="M38 29 L36 32 L34 28 Z"/><path d="M27 30 L32 28 L37 30 L36 42 L32 46 L28 42 Z"/><path d="M26 40 L24 49 L28 44 Z"/><path d="M38 40 L40 49 L36 44 Z"/><path d="M29 43 L32 53 L35 43 Z"/><path d="M19 24 L10 28 L17 33 L12 40 L21 41 L17 48 L25 45 Z"/><path d="M45 24 L54 28 L47 33 L52 40 L43 41 L47 48 L39 45 Z"/><path d="M32 50 L34 57 L32 60 L30 57 Z"/></svg>`
-      },
-      {
-        "id": "lalabarina",
-        "name": "Lala Barina",
-        "title": "Thorny Rose Wyvern",
-        "color": "#f43f5e",
-        "gradient": "radial-gradient(circle at 35% 30%, #ffe4e6 0%, #f43f5e 45%, #881337 100%)",
-        "border": "#fda4af",
-        "glow": "rgba(244, 63, 94, 0.6)",
-        "textColor": "#fecdd3",
-        "svg": `<svg viewBox="0 0 64 64" fill="currentColor"><path d="M32 2 L35 12 L32 16 L29 12 Z"/><path d="M26 6 L30 15 L25 17 L21 10 Z"/><path d="M38 6 L43 10 L39 17 L34 15 Z"/><path d="M17 12 L24 19 L19 21 L13 16 Z"/><path d="M47 12 L51 16 L45 21 L40 19 Z"/><path d="M24 23 L32 19 L40 23 L39 31 L32 28 L25 31 Z"/><circle cx="28" cy="27" r="1.8"/><circle cx="36" cy="27" r="1.8"/><circle cx="32" cy="25" r="1.3"/><circle cx="32" cy="30" r="1.3"/><path d="M26 31 L32 30 L30 45 L25 47 L27 38 Z"/><path d="M38 31 L37 38 L39 47 L34 45 L32 30 Z"/><path d="M30 44 L32 56 L34 44 L32 47 Z"/><path d="M18 25 L8 28 L15 34 L9 42 L19 41 L15 50 L24 45 Z"/><path d="M46 25 L56 28 L49 34 L55 42 L45 41 L49 50 L40 45 Z"/></svg>`
-      },
-      {
-        "id": "nargacuga",
-        "name": "Nargacuga",
-        "title": "The Swift Shadow",
-        "color": "#6366f1",
-        "gradient": "radial-gradient(circle at 35% 30%, #e0e7ff 0%, #6366f1 45%, #1e1b4b 100%)",
-        "border": "#a5b4fc",
-        "glow": "rgba(99, 102, 241, 0.6)",
-        "textColor": "#c7d2fe",
-        "svg": `<svg viewBox="0 0 64 64" fill="currentColor"><path d="M22 6 L27 18 L23 19 L18 10 Z"/><path d="M42 6 L46 10 L41 19 L37 18 Z"/><path d="M32 9 L35 17 L32 20 L29 17 Z"/><path d="M23 21 L32 17 L41 21 L39 29 L32 26 L25 29 Z"/><path d="M16 26 L27 27 L25 31 L12 28 Z"/><path d="M48 26 L52 28 L39 31 L37 27 Z"/><path d="M26 28 L30 27 L28 31 Z"/><path d="M38 28 L36 31 L34 27 Z"/><path d="M28 29 L32 28 L36 29 L35 41 L32 47 L29 41 Z"/><path d="M29 42 L32 53 L35 42 L33 43 L32 48 L31 43 Z"/><path d="M20 28 L13 34 L19 37 L14 44 L23 43 L18 51 L26 47 Z"/><path d="M44 28 L51 34 L45 37 L50 44 L41 43 L46 51 L38 47 Z"/></svg>`
-      },
-      {
-        "id": "gore_magala",
-        "name": "Gore Magala",
-        "title": "The Eclipse Wyvern",
-        "color": "#64748b",
-        "gradient": "radial-gradient(circle at 35% 30%, #e2e8f0 0%, #475569 45%, #0f172a 100%)",
-        "border": "#cbd5e1",
-        "glow": "rgba(168, 85, 247, 0.55)",
-        "textColor": "#e2e8f0",
-        "svg": `<svg viewBox="0 0 64 64" fill="currentColor"><path d="M26 5 C22 10 16 13 6 12 C8 18 15 21 24 23 L26 20 Z"/><path d="M38 5 C42 10 48 13 58 12 C56 18 49 21 40 23 L38 20 Z"/><path d="M32 2 L35 13 L32 17 L29 13 Z"/><path d="M24 21 L32 17 L40 21 L38 31 L32 27 L26 31 Z"/><path d="M28 27 L32 26 L36 27 L32 29 Z"/><path d="M27 30 L32 28 L37 30 L35 43 L32 49 L29 43 Z"/><path d="M28 44 L32 56 L36 44 L34 45 L32 51 L30 45 Z"/><path d="M18 24 L9 29 L16 34 L10 42 L20 42 L16 50 L24 46 Z"/><path d="M46 24 L55 29 L48 34 L54 42 L44 42 L48 50 L40 46 Z"/><path d="M32 53 L34 60 L32 63 L30 60 Z"/></svg>`
-      }
-    ];
+  {
+    "id": "reydau",
+    "name": "Rey Dau",
+    "title": "Apex of Windward Plains",
+    "color": "#f59e0b",
+    "gradient": "radial-gradient(circle at 35% 30%, #fef3c7 0%, #f59e0b 45%, #92400e 100%)",
+    "border": "#fde68a",
+    "glow": "rgba(245, 158, 11, 0.6)",
+    "textColor": "#fef08a",
+    "svg": "<svg viewBox=\"0 0 64 64\" fill=\"currentColor\">\n  <!-- Rey Dau: MHWilds MHwiki Icon (Railgun Tuning-Fork Horns) -->\n  <path d=\"M18 4 L23 16 L20 18 L24 25 L20 26 L16 20 L18 16 L13 8 Z\"/>\n  <path d=\"M20 2 L23 10 L21 11 L18 4 Z\"/>\n  <path d=\"M13 10 L16 18 L13 19 L10 12 Z\"/>\n  <path d=\"M46 4 L51 8 L46 16 L48 20 L44 26 L40 25 L44 18 L41 16 Z\"/>\n  <path d=\"M44 2 L46 4 L43 11 L41 10 Z\"/>\n  <path d=\"M51 10 L54 12 L51 19 L48 18 Z\"/>\n  <path d=\"M32 2 L35 10 L32 14 L29 10 Z\"/>\n  <path d=\"M32 15 L35 21 L32 24 L29 21 Z\"/>\n  <path d=\"M20 26 L32 22 L44 26 L42 31 L32 28 L22 31 Z\"/>\n  <path d=\"M22 32 L28 31 L25 35 Z\"/>\n  <path d=\"M42 32 L39 35 L36 31 Z\"/>\n  <path d=\"M25 32 L32 29 L39 32 L37 42 L32 47 L27 42 Z\"/>\n  <path d=\"M25 44 L32 58 L39 44 L35 45 L32 51 L29 45 Z\"/>\n  <path d=\"M17 28 L10 34 L17 36 L12 42 L20 41 L16 48 L24 45 Z\"/>\n  <path d=\"M47 28 L54 34 L47 36 L52 42 L44 41 L48 48 L40 45 Z\"/>\n  <path d=\"M32 53 L34 60 L32 63 L30 60 Z\"/>\n</svg>"
+  },
+  {
+    "id": "arkveld",
+    "name": "Arkveld",
+    "title": "The White Wraith",
+    "color": "#06b6d4",
+    "gradient": "radial-gradient(circle at 35% 30%, #cffafe 0%, #06b6d4 45%, #155e75 100%)",
+    "border": "#a5f3fc",
+    "glow": "rgba(6, 182, 212, 0.6)",
+    "textColor": "#a5f3fc",
+    "svg": "<svg viewBox=\"0 0 64 64\" fill=\"currentColor\">\n  <!-- Arkveld: MHWilds MHwiki Icon (Swept Horns & Chain-Whip Tendrils) -->\n  <path d=\"M29 16 C24 10 16 4 6 6 C4 12 10 18 20 22 L24 21 Z\"/>\n  <path d=\"M23 22 C16 18 8 16 3 22 C7 26 15 26 23 25 Z\"/>\n  <path d=\"M35 16 C40 10 48 4 58 6 C60 12 54 18 44 22 L40 21 Z\"/>\n  <path d=\"M41 22 C48 18 56 16 61 22 C57 26 49 26 41 25 Z\"/>\n  <path d=\"M32 8 L35 18 L32 21 L29 18 Z\"/>\n  <path d=\"M24 24 L32 20 L40 24 L39 32 L32 29 L25 32 Z\"/>\n  <path d=\"M26 31 L30 30 L28 34 Z\"/>\n  <path d=\"M38 31 L34 30 L36 34 Z\"/>\n  <path d=\"M27 32 L32 30 L37 32 L36 42 L32 48 L28 42 Z\"/>\n  <path d=\"M27 43 L32 53 L37 43 L34 44 L32 49 L30 44 Z\"/>\n  <path d=\"M13 24 C8 30 6 38 10 44 L13 42 C10 37 11 31 14 26 Z\"/>\n  <path d=\"M9 42 C6 48 8 54 14 58 L16 55 C11 52 10 47 12 43 Z\"/>\n  <path d=\"M14 55 L18 61 L20 57 L17 54 Z\"/>\n  <path d=\"M51 24 C56 30 58 38 54 44 L51 42 C54 37 53 31 50 26 Z\"/>\n  <path d=\"M55 42 C58 48 56 54 50 58 L48 55 C53 52 54 47 52 43 Z\"/>\n  <path d=\"M50 55 L46 61 L44 57 L47 54 Z\"/>\n  <path d=\"M25 47 L22 53 L26 51 L24 57 L29 52 Z\"/>\n  <path d=\"M39 47 L42 53 L38 51 L40 57 L35 52 Z\"/>\n</svg>"
+  },
+  {
+    "id": "rathalos",
+    "name": "Rathalos",
+    "title": "King of the Skies",
+    "color": "#ef4444",
+    "gradient": "radial-gradient(circle at 35% 30%, #fee2e2 0%, #ef4444 45%, #7f1d1d 100%)",
+    "border": "#fca5a5",
+    "glow": "rgba(239, 68, 68, 0.6)",
+    "textColor": "#fecaca",
+    "svg": "<svg viewBox=\"0 0 64 64\" fill=\"currentColor\">\n  <!-- Rathalos: MHwiki Classic Left-facing Roaring Profile -->\n  <path d=\"M38 8 L54 11 L44 17 L58 19 L46 25 L56 30 L42 32 Z\"/>\n  <path d=\"M32 12 C24 12 18 16 12 24 L20 28 C22 23 26 20 32 18 Z\"/>\n  <path d=\"M14 24 L6 27 L4 31 L18 34 L26 31 Z\"/>\n  <path d=\"M9 31 L12 34 L15 31 L18 34 L21 31 Z\"/>\n  <path d=\"M26 21 L33 21 L29 26 Z\"/>\n  <path d=\"M19 38 L9 40 L4 44 L16 43 L22 40 Z\"/>\n  <path d=\"M12 42 L6 53 L16 46 Z\"/>\n  <path d=\"M22 41 L20 48 L32 46 L28 41 Z\"/>\n  <path d=\"M32 46 L30 55 L42 50 L38 44 Z\"/>\n  <path d=\"M34 23 L46 25 L38 31 L48 35 L36 38 Z\"/>\n</svg>"
+  },
+  {
+    "id": "zinogre",
+    "name": "Zinogre",
+    "title": "Thunder Wolf Wyvern",
+    "color": "#10b981",
+    "gradient": "radial-gradient(circle at 35% 30%, #d1fae5 0%, #10b981 45%, #064e3b 100%)",
+    "border": "#6ee7b7",
+    "glow": "rgba(16, 185, 129, 0.6)",
+    "textColor": "#a7f3d0",
+    "svg": "<svg viewBox=\"0 0 64 64\" fill=\"currentColor\">\n  <!-- Zinogre: MHwiki Upward Howling Wolf Wyvern Profile -->\n  <path d=\"M26 12 L38 5 L34 11 L48 6 L42 14 L55 10 L46 20 L58 17 L44 26 Z\"/>\n  <path d=\"M21 16 L29 18 L24 23 L31 23 L26 28 Z\"/>\n  <path d=\"M18 22 L8 18 L6 22 L15 29 L23 29 Z\"/>\n  <path d=\"M12 25 L8 22 L14 29 Z\"/>\n  <path d=\"M13 32 L7 37 L14 36 L19 33 Z\"/>\n  <path d=\"M10 34 L7 37 L12 37 Z\"/>\n  <circle cx=\"23\" cy=\"22\" r=\"2\"/>\n  <path d=\"M22 33 L15 42 L25 39 L19 49 L29 45 L23 55 L35 50 Z\"/>\n  <path d=\"M33 30 L40 38 L34 41 L44 47 L36 50 L46 56 L38 58 Z\"/>\n  <path d=\"M42 27 L51 34 L45 37 L54 43 L46 46 Z\"/>\n</svg>"
+  },
+  {
+    "id": "magnamalo",
+    "name": "Magnamalo",
+    "title": "Wyvern of Malice",
+    "color": "#9333ea",
+    "gradient": "radial-gradient(circle at 35% 30%, #f3e8ff 0%, #9333ea 45%, #3b0764 100%)",
+    "border": "#d8b4fe",
+    "glow": "rgba(147, 51, 234, 0.6)",
+    "textColor": "#e9d5ff",
+    "svg": "<svg viewBox=\"0 0 64 64\" fill=\"currentColor\">\n  <!-- Magnamalo: MHwiki Kabuto Scythe Horns & Tiger Wyvern Fangs -->\n  <path d=\"M27 6 C23 10 15 12 5 10 C7 16 13 20 24 21 L26 18 Z\"/>\n  <path d=\"M37 6 C41 10 49 12 59 10 C57 16 51 20 40 21 L38 18 Z\"/>\n  <path d=\"M32 3 L35 14 L32 18 L29 14 Z\"/>\n  <path d=\"M23 22 L32 18 L41 22 L39 31 L32 28 L25 31 Z\"/>\n  <path d=\"M25 29 L29 28 L27 32 Z\"/>\n  <path d=\"M39 29 L37 32 L35 28 Z\"/>\n  <path d=\"M27 30 L32 28 L38 30 L37 42 L32 46 L27 42 Z\"/>\n  <path d=\"M25 40 L23 50 L27 44 Z\"/>\n  <path d=\"M39 40 L41 50 L37 44 Z\"/>\n  <path d=\"M28 43 L32 54 L36 43 Z\"/>\n  <path d=\"M18 24 L9 28 L16 33 L11 40 L20 41 L16 48 L24 45 Z\"/>\n  <path d=\"M46 24 L55 28 L48 33 L53 40 L44 41 L48 48 L40 45 Z\"/>\n  <path d=\"M32 50 L34 57 L32 60 L30 57 Z\"/>\n</svg>"
+  },
+  {
+    "id": "lalabarina",
+    "name": "Lala Barina",
+    "title": "Thorny Rose Wyvern",
+    "color": "#f43f5e",
+    "gradient": "radial-gradient(circle at 35% 30%, #ffe4e6 0%, #f43f5e 45%, #881337 100%)",
+    "border": "#fda4af",
+    "glow": "rgba(244, 63, 94, 0.6)",
+    "textColor": "#fecdd3",
+    "svg": "<svg viewBox=\"0 0 64 64\" fill=\"currentColor\">\n  <!-- Lala Barina: MHWilds MHwiki Spider Wyvern & Blooming Thorny Rose -->\n  <path d=\"M32 2 L35 12 L32 16 L29 12 Z\"/>\n  <path d=\"M25 6 L30 15 L24 17 L20 10 Z\"/>\n  <path d=\"M39 6 L44 10 L40 17 L34 15 Z\"/>\n  <path d=\"M16 12 L23 19 L18 21 L12 16 Z\"/>\n  <path d=\"M48 12 L52 16 L46 21 L41 19 Z\"/>\n  <path d=\"M23 23 L32 19 L41 23 L40 31 L32 28 L24 31 Z\"/>\n  <circle cx=\"27\" cy=\"27\" r=\"1.8\"/>\n  <circle cx=\"37\" cy=\"27\" r=\"1.8\"/>\n  <circle cx=\"32\" cy=\"25\" r=\"1.3\"/>\n  <circle cx=\"32\" cy=\"30\" r=\"1.3\"/>\n  <path d=\"M25 31 L32 30 L29 45 L24 47 L26 38 Z\"/>\n  <path d=\"M39 31 L38 38 L40 47 L35 45 L32 30 Z\"/>\n  <path d=\"M29 44 L32 56 L35 44 L32 47 Z\"/>\n  <path d=\"M17 25 L7 28 L14 34 L8 42 L18 41 L14 50 L23 45 Z\"/>\n  <path d=\"M47 25 L57 28 L50 34 L56 42 L46 41 L50 50 L41 45 Z\"/>\n</svg>"
+  },
+  {
+    "id": "nargacuga",
+    "name": "Nargacuga",
+    "title": "The Swift Shadow",
+    "color": "#6366f1",
+    "gradient": "radial-gradient(circle at 35% 30%, #e0e7ff 0%, #6366f1 45%, #1e1b4b 100%)",
+    "border": "#a5b4fc",
+    "glow": "rgba(99, 102, 241, 0.6)",
+    "textColor": "#c7d2fe",
+    "svg": "<svg viewBox=\"0 0 64 64\" fill=\"currentColor\">\n  <!-- Nargacuga: MHwiki Left-facing Panther-Wyvern with Iconic Eye Streak -->\n  <path d=\"M38 7 L49 9 L42 16 L53 18 L43 23 L51 28 L40 28 Z\"/>\n  <path d=\"M30 14 C22 14 16 18 10 24 L18 27 C20 22 24 19 30 18 Z\"/>\n  <path d=\"M12 24 L4 28 L6 33 L18 34 L25 31 Z\"/>\n  <path d=\"M17 37 L9 39 L7 43 L18 42 L22 39 Z\"/>\n  <path d=\"M14 26 L23 24 L38 22 L56 16 L44 26 L26 28 Z\"/>\n  <circle cx=\"21\" cy=\"27\" r=\"2\"/>\n  <path d=\"M20 42 L18 49 L28 46 L24 41 Z\"/>\n  <path d=\"M28 45 L27 54 L38 49 L34 43 Z\"/>\n  <path d=\"M37 47 L39 57 L48 50 L44 44 Z\"/>\n</svg>"
+  },
+  {
+    "id": "gore_magala",
+    "name": "Gore Magala",
+    "title": "The Eclipse Wyvern",
+    "color": "#64748b",
+    "gradient": "radial-gradient(circle at 35% 30%, #e2e8f0 0%, #475569 45%, #0f172a 100%)",
+    "border": "#cbd5e1",
+    "glow": "rgba(168, 85, 247, 0.55)",
+    "textColor": "#e2e8f0",
+    "svg": "<svg viewBox=\"0 0 64 64\" fill=\"currentColor\">\n  <!-- Gore Magala: MHwiki Frenzy Sensor Antennas & Eyeless Visage -->\n  <path d=\"M25 5 C21 10 15 13 6 12 C8 18 15 21 24 23 L25 20 Z\"/>\n  <path d=\"M39 5 C43 10 49 13 59 12 C57 18 50 21 41 23 L39 20 Z\"/>\n  <path d=\"M32 2 L35 13 L32 17 L29 13 Z\"/>\n  <path d=\"M24 21 L32 17 L40 21 L38 31 L32 27 L26 31 Z\"/>\n  <path d=\"M28 27 L32 26 L36 27 L32 29 Z\"/>\n  <path d=\"M27 30 L32 28 L37 30 L35 43 L32 49 L29 43 Z\"/>\n  <path d=\"M28 44 L32 56 L36 44 L34 45 L32 51 L30 45 Z\"/>\n  <path d=\"M18 24 L9 29 L16 34 L10 42 L20 42 L16 50 L24 46 Z\"/>\n  <path d=\"M46 24 L55 29 L48 34 L54 42 L44 42 L48 50 L40 46 Z\"/>\n  <path d=\"M32 53 L34 60 L32 63 L30 60 Z\"/>\n</svg>"
+  }
+];
 
     let p1MonsterIndex = 0; // Default: Rey Dau
     let p2MonsterIndex = 1; // Default: Arkveld
@@ -788,7 +788,6 @@
 
     let scores = { p1: 0, p2: 0, draws: 0 };
 
-    // Load saved settings
     try {
       const savedScores = localStorage.getItem('mhw_connect4_scores');
       if (savedScores) scores = JSON.parse(savedScores);
@@ -800,7 +799,6 @@
       console.warn("Storage restricted", e);
     }
 
-    // Procedural Audio Engine (Web Audio API)
     let audioCtx = null;
 
     function initAudio() {
@@ -884,7 +882,6 @@
       btn.innerText = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
     }
 
-    // Apply Player Monster Themes to CSS Variables & Cards
     function applyPlayerThemes() {
       const m1 = MONSTERS[p1MonsterIndex];
       const m2 = MONSTERS[p2MonsterIndex];
@@ -1175,7 +1172,6 @@
       } catch (e) {}
     }
 
-    // Touch Monster Selection Drawer
     function openMonsterPicker(playerNum) {
       activeSelectingPlayer = playerNum;
       const modal = document.getElementById('rosterModal');
