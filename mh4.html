@@ -3,24 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Monster Hunter Wilds: Forbidden Lands Connect 4</title>
+  <title>Monster Hunter Wilds: Apex Turf War Connect 4</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-main: #0e1116;
-      --bg-card: rgba(24, 28, 36, 0.88);
+      --bg-card: rgba(24, 28, 36, 0.9);
       --border-bronze: #8c6d3b;
       --bronze-bright: #d4af37;
-      --bronze-dark: #4a3818;
-      --hunter-gold: #f59e0b;
-      --hunter-glow: rgba(245, 158, 11, 0.5);
+      --reydau-gold: #f59e0b;
+      --reydau-glow: rgba(245, 158, 11, 0.6);
       --arkveld-teal: #06b6d4;
-      --arkveld-glow: rgba(6, 182, 212, 0.55);
-      --slot-empty: #1a1e26;
+      --arkveld-glow: rgba(6, 182, 212, 0.6);
+      --slot-empty: #191d26;
       --slot-border: #28303d;
-      --grid-board: #151a23;
     }
 
     * {
@@ -33,9 +31,9 @@
     body {
       background-color: var(--bg-main);
       background-image: 
-        radial-gradient(circle at 50% 20%, rgba(30, 41, 59, 0.6) 0%, transparent 70%),
-        radial-gradient(circle at 10% 80%, rgba(140, 109, 59, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 15%, rgba(30, 41, 59, 0.65) 0%, transparent 70%),
+        radial-gradient(circle at 12% 85%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 88% 85%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
         linear-gradient(to bottom, #090b0e, #11151c);
       color: #e2e8f0;
       font-family: 'Nunito', system-ui, -apple-system, sans-serif;
@@ -112,41 +110,40 @@
     }
 
     .player-card.p1.active {
-      border-color: var(--hunter-gold);
-      box-shadow: 0 0 18px var(--hunter-glow);
+      border-color: var(--reydau-gold);
+      box-shadow: 0 0 20px var(--reydau-glow);
     }
 
     .player-card.p2.active {
       border-color: var(--arkveld-teal);
-      box-shadow: 0 0 18px var(--arkveld-glow);
+      box-shadow: 0 0 20px var(--arkveld-glow);
     }
 
     .avatar {
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      border: 2px solid rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
     }
 
     .p1 .avatar {
-      background: radial-gradient(circle, #f59e0b 0%, #b45309 85%);
-      box-shadow: 0 0 10px var(--hunter-glow);
+      background: radial-gradient(circle at 35% 30%, #fef3c7 0%, #f59e0b 50%, #92400e 100%);
+      box-shadow: 0 0 12px var(--reydau-glow);
     }
 
     .p2 .avatar {
-      background: radial-gradient(circle, #06b6d4 0%, #0e7490 85%);
-      box-shadow: 0 0 10px var(--arkveld-glow);
+      background: radial-gradient(circle at 35% 30%, #cffafe 0%, #06b6d4 50%, #155e75 100%);
+      box-shadow: 0 0 12px var(--arkveld-glow);
     }
 
     .avatar svg {
-      width: 24px;
-      height: 24px;
-      fill: #ffffff;
-      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.8));
     }
 
     .player-info {
@@ -154,9 +151,20 @@
       min-width: 0;
     }
 
+    .player-title {
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: -1px;
+    }
+
+    .p1 .player-title { color: #f59e0b; }
+    .p2 .player-title { color: #22d3ee; }
+
     .player-name {
       font-family: 'Cinzel', serif;
-      font-size: 0.95rem;
+      font-size: 1rem;
       font-weight: 700;
       white-space: nowrap;
       overflow: hidden;
@@ -172,7 +180,7 @@
       color: var(--bronze-bright);
     }
 
-    .p1 .player-name { color: #fde68a; }
+    .p1 .player-name { color: #fef08a; }
     .p2 .player-name { color: #a5f3fc; }
 
     .score-display {
@@ -182,7 +190,7 @@
     }
 
     .score-num {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: #ffffff;
       margin-left: 2px;
@@ -190,7 +198,7 @@
 
     .turn-indicator {
       text-align: center;
-      padding: 5px 12px;
+      padding: 6px 12px;
       font-family: 'Cinzel', serif;
       font-size: 0.85rem;
       letter-spacing: 0.1em;
@@ -199,8 +207,8 @@
       color: #e2e8f0;
       border: 1px solid var(--border-bronze);
       border-radius: 4px;
-      background: rgba(14, 17, 22, 0.9);
-      min-width: 140px;
+      background: rgba(14, 17, 22, 0.95);
+      min-width: 150px;
     }
 
     .drop-guide-container {
@@ -210,7 +218,7 @@
       grid-template-columns: repeat(7, 1fr);
       gap: 8px;
       padding: 0 10px;
-      height: 36px;
+      height: 38px;
       margin-bottom: 4px;
     }
 
@@ -222,8 +230,8 @@
     }
 
     .ghost-token {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       opacity: 0;
       transition: opacity 0.15s ease, transform 0.15s ease;
@@ -238,12 +246,12 @@
 
     .ghost-p1 {
       background: radial-gradient(circle at 35% 35%, #fbbf24, #b45309);
-      box-shadow: 0 0 12px var(--hunter-glow);
+      box-shadow: 0 0 14px var(--reydau-glow);
     }
 
     .ghost-p2 {
       background: radial-gradient(circle at 35% 35%, #22d3ee, #0891b2);
-      box-shadow: 0 0 12px var(--arkveld-glow);
+      box-shadow: 0 0 14px var(--arkveld-glow);
     }
 
     .board-frame {
@@ -252,7 +260,7 @@
       border-radius: 14px;
       padding: 12px;
       box-shadow: 
-        0 12px 35px rgba(0, 0, 0, 0.75),
+        0 14px 40px rgba(0, 0, 0, 0.8),
         inset 0 2px 4px rgba(255, 255, 255, 0.08),
         inset 0 -3px 8px rgba(0, 0, 0, 0.9);
       position: relative;
@@ -298,26 +306,24 @@
       align-items: center;
       justify-content: center;
       box-shadow: 
-        inset 0 2px 4px rgba(255, 255, 255, 0.4),
-        0 4px 10px rgba(0, 0, 0, 0.65);
+        inset 0 2px 5px rgba(255, 255, 255, 0.45),
+        0 4px 10px rgba(0, 0, 0, 0.7);
     }
 
     .token svg {
-      width: 55%;
-      height: 55%;
-      fill: #ffffff;
-      opacity: 0.92;
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.7));
+      width: 72%;
+      height: 72%;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
     }
 
     .token-p1 {
       background: radial-gradient(circle at 35% 30%, #fef3c7 0%, #f59e0b 45%, #92400e 100%);
-      border: 1px solid #fde68a;
+      border: 1.5px solid #fde68a;
     }
 
     .token-p2 {
       background: radial-gradient(circle at 35% 30%, #cffafe 0%, #06b6d4 45%, #155e75 100%);
-      border: 1px solid #a5f3fc;
+      border: 1.5px solid #a5f3fc;
     }
 
     @keyframes dropIn {
@@ -345,11 +351,11 @@
     @keyframes winPulse {
       0%, 100% {
         transform: scale(1);
-        box-shadow: 0 0 15px #ffd700, inset 0 0 8px #fff;
+        box-shadow: 0 0 16px #ffd700, inset 0 0 8px #fff;
       }
       50% {
         transform: scale(1.08);
-        box-shadow: 0 0 26px #ffedd5, inset 0 0 14px #fff;
+        box-shadow: 0 0 28px #ffedd5, inset 0 0 14px #fff;
       }
     }
 
@@ -423,7 +429,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(8, 10, 14, 0.75);
+      background: rgba(8, 10, 14, 0.8);
       backdrop-filter: blur(4px);
       display: flex;
       align-items: center;
@@ -445,7 +451,7 @@
       border-radius: 12px;
       padding: 24px 28px;
       text-align: center;
-      max-width: 420px;
+      max-width: 440px;
       width: 90%;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 24px rgba(212, 175, 55, 0.25);
       transform: scale(0.92);
@@ -458,21 +464,21 @@
 
     .quest-header {
       font-family: 'Cinzel', serif;
-      font-size: 1.6rem;
+      font-size: 1.55rem;
       font-weight: 900;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       margin-bottom: 8px;
     }
 
-    .quest-complete {
+    .quest-reydau {
       color: #fbbf24;
-      text-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
+      text-shadow: 0 0 18px rgba(251, 191, 36, 0.7);
     }
 
-    .quest-failed {
+    .quest-arkveld {
       color: #22d3ee;
-      text-shadow: 0 0 16px rgba(34, 211, 238, 0.6);
+      text-shadow: 0 0 18px rgba(34, 211, 238, 0.7);
     }
 
     .quest-draw {
@@ -483,7 +489,7 @@
       font-size: 0.92rem;
       color: #cbd5e1;
       margin-bottom: 20px;
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
     .modal-btn-row {
@@ -492,7 +498,7 @@
       justify-content: center;
     }
 
-    @media (max-width: 500px) {
+    @media (max-width: 520px) {
       .dashboard {
         flex-direction: column;
       }
@@ -513,12 +519,12 @@
 <body>
 
   <header>
-    <div class="subtitle">Forbidden Lands Expedition</div>
-    <h1>Connect 4: Wilds Encounter</h1>
+    <div class="subtitle">Forbidden Lands: Apex Turf War</div>
+    <h1>Connect 4: Monster Encounter</h1>
     <div class="badge-bar">
       <span>✦ Local Hotseat ✦</span>
-      <span>Same Couch Hunt</span>
-      <span>✦ Best of Series ✦</span>
+      <span>Apex Wyvern Clash</span>
+      <span>✦ Same Couch Duel ✦</span>
     </div>
   </header>
 
@@ -526,29 +532,54 @@
   <section class="dashboard">
     <div class="player-card p1 active" id="cardP1" onclick="editPlayerName(1)">
       <div class="avatar">
-        <!-- Hunter Great Sword / Crest SVG -->
-        <svg viewBox="0 0 24 24">
-          <path d="M6.92 5h-2v2l5.79 5.79-1.42 1.41 1.42 1.42 1.41-1.42 4.09 4.09V20h2.29l-4.09-4.09 1.41-1.42-1.41-1.41-1.42 1.41L6.92 5zm11.79 0h-2.29v2.29l-4.09 4.09 1.41 1.41 1.42-1.41 1.41 1.41-1.41 1.42 4.09 4.09H21v-2.29l-4.09-4.09 1.41-1.42-1.41-1.41 1.41-1.42L21 6.83V5h-2.29zM12 2L9.5 4.5 12 7l2.5-2.5L12 2z"/>
+        <!-- Rey Dau: Crowned railgun thunder horns & fierce apex wyvern head -->
+        <svg viewBox="0 0 100 100">
+          <path d="M50 18 L55 30 L63 33 L57 41 L50 38 L43 41 L37 33 L45 30 Z" fill="#fff"/>
+          <path d="M44 28 L34 5 L28 7 L36 24 L24 12 L19 16 L31 32 L20 28 L17 34 L29 44 L39 39 Z" fill="#fff"/>
+          <path d="M56 28 L66 5 L72 7 L64 24 L76 12 L81 16 L69 32 L80 28 L83 34 L71 44 L61 39 Z" fill="#fff"/>
+          <path d="M50 3 L53 14 L49 15 L52 23 L48 23 L51 14 L47 13 Z" fill="#fef08a"/>
+          <path d="M36 45 L50 51 L64 45 L59 55 L50 59 L41 55 Z" fill="#fff"/>
+          <polygon points="41,49 46,50 43,53" fill="#78350f"/>
+          <polygon points="59,49 54,50 57,53" fill="#78350f"/>
+          <path d="M50 61 L62 57 L68 67 L50 93 L32 67 L38 57 Z" fill="#fff"/>
+          <path d="M30 52 L19 61 L31 65 L25 73 L37 70 Z" fill="#fff"/>
+          <path d="M70 52 L81 61 L69 65 L75 73 L63 70 Z" fill="#fff"/>
+          <path d="M42 67 L50 72 L58 67 L50 83 Z" fill="#92400e"/>
         </svg>
       </div>
       <div class="player-info">
-        <div class="player-name" id="nameP1" title="Click to change name">Guild Hunter</div>
-        <div class="score-display">Hunts Won: <span class="score-num" id="scoreP1">0</span></div>
+        <div class="player-title">Apex of Windward Plains</div>
+        <div class="player-name" id="nameP1" title="Click to change name">Rey Dau</div>
+        <div class="score-display">Dominance: <span class="score-num" id="scoreP1">0</span></div>
       </div>
     </div>
 
-    <div class="turn-indicator" id="turnIndicator">Hunter's Move</div>
+    <div class="turn-indicator" id="turnIndicator">Rey Dau's Strike</div>
 
     <div class="player-card p2" id="cardP2" onclick="editPlayerName(2)">
       <div class="avatar">
-        <!-- Arkveld / Apex Dragon Crest SVG -->
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2L9 7l-5 1 3.5 3.5L6 17l6-3 6 3-1.5-5.5L20 8l-5-1-3-5zm0 4.2L13.8 8h3.3l-2.4 2.1.9 3.2-2.6-1.5-2.6 1.5.9-3.2L8.9 8h3.3L12 6.2zM4 19h16v2H4z"/>
+        <!-- Arkveld: White Wraith - Swept recurved horns and whip-chain bladed tendrils -->
+        <svg viewBox="0 0 100 100">
+          <path d="M50 16 L58 30 L54 42 L50 38 L46 42 L42 30 Z" fill="#fff"/>
+          <path d="M44 28 C33 16 18 10 10 16 C12 24 22 30 35 36 Z" fill="#fff"/>
+          <path d="M37 36 C27 30 13 30 7 38 C13 42 25 42 37 44 Z" fill="#fff"/>
+          <path d="M56 28 C67 16 82 10 90 16 C88 24 78 30 65 36 Z" fill="#fff"/>
+          <path d="M63 36 C73 30 87 30 93 38 C87 42 75 42 63 44 Z" fill="#fff"/>
+          <path d="M50 40 L61 46 L57 58 L50 54 L43 58 L39 46 Z" fill="#fff"/>
+          <polygon points="43,47 48,48 45,51" fill="#0e7490"/>
+          <polygon points="57,47 52,48 55,51" fill="#0e7490"/>
+          <path d="M43 58 L50 55 L57 58 L50 80 Z" fill="#fff"/>
+          <path d="M21 46 C15 58 13 72 23 86 C25 80 23 68 31 62 L25 60 Z" fill="#fff"/>
+          <path d="M79 46 C85 58 87 72 77 86 C75 80 77 68 69 62 L75 60 Z" fill="#fff"/>
+          <path d="M25 82 L35 92 L33 80 Z" fill="#a5f3fc"/>
+          <path d="M75 82 L65 92 L67 80 Z" fill="#a5f3fc"/>
+          <path d="M50 82 L46 95 L50 91 L54 95 Z" fill="#a5f3fc"/>
         </svg>
       </div>
       <div class="player-info">
+        <div class="player-title">The White Wraith</div>
         <div class="player-name" id="nameP2" title="Click to change name">Arkveld</div>
-        <div class="score-display">Repelled: <span class="score-num" id="scoreP2">0</span></div>
+        <div class="score-display">Dominance: <span class="score-num" id="scoreP2">0</span></div>
       </div>
     </div>
   </section>
@@ -567,9 +598,9 @@
       ↺ Undo Move
     </button>
     <button class="btn" id="btnRestart" onclick="resetRound()" title="Start a new round (R)">
-      ⚔ New Quest
+      ⚔ New Turf War
     </button>
-    <button class="btn" id="btnResetScores" onclick="resetScoreboard()" title="Reset hunt records">
+    <button class="btn" id="btnResetScores" onclick="resetScoreboard()" title="Reset dominance records">
       ⌫ Reset Scores
     </button>
     <button class="btn" id="btnSound" onclick="toggleSound()" title="Toggle sounds (M)">
@@ -581,13 +612,13 @@
     Couch Controls: <kbd>1</kbd>–<kbd>7</kbd> to drop | <kbd>←</kbd> / <kbd>→</kbd> or <kbd>A</kbd> / <kbd>D</kbd> select column | <kbd>Space</kbd> or <kbd>Enter</kbd> drop | <kbd>U</kbd> undo | <kbd>R</kbd> reset
   </div>
 
-  <!-- Quest Outcome Modal -->
+  <!-- Turf War Outcome Modal -->
   <div class="modal-backdrop" id="questModal">
     <div class="quest-card">
-      <div class="quest-header" id="modalHeader">Quest Complete</div>
-      <div class="quest-desc" id="modalDesc">The Target has been hunted successfully!</div>
+      <div class="quest-header" id="modalHeader">Turf War Victory</div>
+      <div class="quest-desc" id="modalDesc">An Apex Monster has conquered the battlefield!</div>
       <div class="modal-btn-row">
-        <button class="btn" onclick="closeModalAndReset()">⚔ Start Next Quest</button>
+        <button class="btn" onclick="closeModalAndReset()">⚔ Next Turf War</button>
         <button class="btn" onclick="closeModalOnly()">Review Battlefield</button>
       </div>
     </div>
@@ -597,7 +628,7 @@
     const ROWS = 6;
     const COLS = 7;
     let board = [];
-    let currentPlayer = 1; // 1 = Hunter (Gold), 2 = Arkveld (Teal)
+    let currentPlayer = 1; // 1 = Rey Dau (Orange/Gold), 2 = Arkveld (Teal/Blue)
     let moveHistory = [];
     let isGameOver = false;
     let isAnimating = false;
@@ -605,12 +636,12 @@
     let soundEnabled = true;
 
     let scores = { p1: 0, p2: 0, draws: 0 };
-    let playerNames = { p1: "Guild Hunter", p2: "Arkveld" };
+    let playerNames = { p1: "Rey Dau", p2: "Arkveld" };
 
     try {
-      const savedScores = localStorage.getItem('mhw_connect4_scores');
+      const savedScores = localStorage.getItem('mhw_turfwar_scores');
       if (savedScores) scores = JSON.parse(savedScores);
-      const savedNames = localStorage.getItem('mhw_connect4_names');
+      const savedNames = localStorage.getItem('mhw_turfwar_names');
       if (savedNames) playerNames = JSON.parse(savedNames);
     } catch (e) {
       console.warn("Storage access restricted", e);
@@ -629,58 +660,89 @@
       }
     }
 
-    function playSound(type) {
+    function playSound(type, player = 1) {
       if (!soundEnabled) return;
       try {
         initAudio();
         const now = audioCtx.currentTime;
 
         if (type === 'drop') {
-          const osc1 = audioCtx.createOscillator();
-          const osc2 = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
+          if (player === 1) {
+            // Rey Dau Thunder Impact: Crackling electric discharge + deep rumble
+            const osc = audioCtx.createOscillator();
+            const noiseOsc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
 
-          osc1.type = 'sawtooth';
-          osc1.frequency.setValueAtTime(320, now);
-          osc1.frequency.exponentialRampToValueAtTime(70, now + 0.18);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(360, now);
+            osc.frequency.exponentialRampToValueAtTime(55, now + 0.24);
 
-          osc2.type = 'triangle';
-          osc2.frequency.setValueAtTime(140, now);
-          osc2.frequency.exponentialRampToValueAtTime(40, now + 0.22);
+            noiseOsc.type = 'square';
+            noiseOsc.frequency.setValueAtTime(800, now);
+            noiseOsc.frequency.exponentialRampToValueAtTime(110, now + 0.12);
 
-          gain.gain.setValueAtTime(0.35, now);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+            gain.gain.setValueAtTime(0.35, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
 
-          osc1.connect(gain);
-          osc2.connect(gain);
-          gain.connect(audioCtx.destination);
+            osc.connect(gain);
+            noiseOsc.connect(gain);
+            gain.connect(audioCtx.destination);
 
-          osc1.start(now);
-          osc2.start(now);
-          osc1.stop(now + 0.22);
-          osc2.stop(now + 0.22);
+            osc.start(now);
+            noiseOsc.start(now);
+            osc.stop(now + 0.24);
+            noiseOsc.stop(now + 0.14);
+          } else {
+            // Arkveld Chained Blade Whip Slash: Metallic resonance + razor slice
+            const osc1 = audioCtx.createOscillator();
+            const osc2 = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc1.type = 'triangle';
+            osc1.frequency.setValueAtTime(620, now);
+            osc1.frequency.exponentialRampToValueAtTime(180, now + 0.2);
+
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(880, now);
+            osc2.frequency.exponentialRampToValueAtTime(220, now + 0.15);
+
+            gain.gain.setValueAtTime(0.3, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+
+            osc1.connect(gain);
+            osc2.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc1.start(now);
+            osc2.start(now);
+            osc1.stop(now + 0.2);
+            osc2.stop(now + 0.15);
+          }
         } else if (type === 'win') {
-          const freqs = [440, 554.37, 659.25, 880];
+          const freqs = player === 1 
+            ? [392.00, 493.88, 587.33, 783.99]  // G Major (Rey Dau thunderous fanfare)
+            : [440.00, 523.25, 659.25, 880.00]; // A Minor (Arkveld spectral fanfare)
+
           freqs.forEach((freq, idx) => {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+            osc.type = player === 1 ? 'sawtooth' : 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.09);
 
-            gain.gain.setValueAtTime(0, now + idx * 0.08);
-            gain.gain.linearRampToValueAtTime(0.18, now + idx * 0.08 + 0.04);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+            gain.gain.setValueAtTime(0, now + idx * 0.09);
+            gain.gain.linearRampToValueAtTime(0.18, now + idx * 0.09 + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.95);
 
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-            osc.start(now + idx * 0.08);
-            osc.stop(now + 0.95);
+            osc.start(now + idx * 0.09);
+            osc.stop(now + 1.0);
           });
         } else if (type === 'undo') {
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(240, now);
+          osc.frequency.setValueAtTime(260, now);
           osc.frequency.linearRampToValueAtTime(180, now + 0.1);
           gain.gain.setValueAtTime(0.15, now);
           gain.gain.linearRampToValueAtTime(0.001, now + 0.1);
@@ -700,14 +762,40 @@
       btn.innerText = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
     }
 
-    const hunterIconSvg = `
-      <svg viewBox="0 0 24 24">
-        <path d="M6.92 5h-2v2l5.79 5.79-1.42 1.41 1.42 1.42 1.41-1.42 4.09 4.09V20h2.29l-4.09-4.09 1.41-1.42-1.41-1.41-1.42 1.41L6.92 5zm11.79 0h-2.29v2.29l-4.09 4.09 1.41 1.41 1.42-1.41 1.41 1.41-1.41 1.42 4.09 4.09H21v-2.29l-4.09-4.09 1.41-1.42-1.41-1.41 1.41-1.42L21 6.83V5h-2.29zM12 2L9.5 4.5 12 7l2.5-2.5L12 2z"/>
+    // High-Detail Monster Vector SVGs
+    const reyDauLogoSvg = `
+      <svg viewBox="0 0 100 100">
+        <!-- Rey Dau: Crowned railgun thunder horns & fierce apex wyvern head -->
+        <path d="M50 18 L55 30 L63 33 L57 41 L50 38 L43 41 L37 33 L45 30 Z" fill="#fff"/>
+        <path d="M44 28 L34 5 L28 7 L36 24 L24 12 L19 16 L31 32 L20 28 L17 34 L29 44 L39 39 Z" fill="#fff"/>
+        <path d="M56 28 L66 5 L72 7 L64 24 L76 12 L81 16 L69 32 L80 28 L83 34 L71 44 L61 39 Z" fill="#fff"/>
+        <path d="M50 3 L53 14 L49 15 L52 23 L48 23 L51 14 L47 13 Z" fill="#fef08a"/>
+        <path d="M36 45 L50 51 L64 45 L59 55 L50 59 L41 55 Z" fill="#fff"/>
+        <polygon points="41,49 46,50 43,53" fill="#78350f"/>
+        <polygon points="59,49 54,50 57,53" fill="#78350f"/>
+        <path d="M50 61 L62 57 L68 67 L50 93 L32 67 L38 57 Z" fill="#fff"/>
+        <path d="M30 52 L19 61 L31 65 L25 73 L37 70 Z" fill="#fff"/>
+        <path d="M70 52 L81 61 L69 65 L75 73 L63 70 Z" fill="#fff"/>
+        <path d="M42 67 L50 72 L58 67 L50 83 Z" fill="#92400e"/>
       </svg>`;
 
-    const arkveldIconSvg = `
-      <svg viewBox="0 0 24 24">
-        <path d="M12 2L9 7l-5 1 3.5 3.5L6 17l6-3 6 3-1.5-5.5L20 8l-5-1-3-5zm0 4.2L13.8 8h3.3l-2.4 2.1.9 3.2-2.6-1.5-2.6 1.5.9-3.2L8.9 8h3.3L12 6.2zM4 19h16v2H4z"/>
+    const arkveldLogoSvg = `
+      <svg viewBox="0 0 100 100">
+        <!-- Arkveld: White Wraith - Swept recurved horns and whip-chain bladed tendrils -->
+        <path d="M50 16 L58 30 L54 42 L50 38 L46 42 L42 30 Z" fill="#fff"/>
+        <path d="M44 28 C33 16 18 10 10 16 C12 24 22 30 35 36 Z" fill="#fff"/>
+        <path d="M37 36 C27 30 13 30 7 38 C13 42 25 42 37 44 Z" fill="#fff"/>
+        <path d="M56 28 C67 16 82 10 90 16 C88 24 78 30 65 36 Z" fill="#fff"/>
+        <path d="M63 36 C73 30 87 30 93 38 C87 42 75 42 63 44 Z" fill="#fff"/>
+        <path d="M50 40 L61 46 L57 58 L50 54 L43 58 L39 46 Z" fill="#fff"/>
+        <polygon points="43,47 48,48 45,51" fill="#0e7490"/>
+        <polygon points="57,47 52,48 55,51" fill="#0e7490"/>
+        <path d="M43 58 L50 55 L57 58 L50 80 Z" fill="#fff"/>
+        <path d="M21 46 C15 58 13 72 23 86 C25 80 23 68 31 62 L25 60 Z" fill="#fff"/>
+        <path d="M79 46 C85 58 87 72 77 86 C75 80 77 68 69 62 L75 60 Z" fill="#fff"/>
+        <path d="M25 82 L35 92 L33 80 Z" fill="#a5f3fc"/>
+        <path d="M75 82 L65 92 L67 80 Z" fill="#a5f3fc"/>
+        <path d="M50 82 L46 95 L50 91 L54 95 Z" fill="#a5f3fc"/>
       </svg>`;
 
     function initGame() {
@@ -790,14 +878,14 @@
       const cell = document.querySelector(`.cell[data-row="${targetRow}"][data-col="${col}"]`);
       const token = document.createElement('div');
       token.className = `token ${currentPlayer === 1 ? 'token-p1' : 'token-p2'} falling`;
-      token.innerHTML = currentPlayer === 1 ? hunterIconSvg : arkveldIconSvg;
+      token.innerHTML = currentPlayer === 1 ? reyDauLogoSvg : arkveldLogoSvg;
 
       const cellHeight = cell.getBoundingClientRect().height || 54;
       const dropDistance = -((targetRow + 1) * (cellHeight + 8) + 30);
       token.style.setProperty('--drop-from', `${dropDistance}px`);
 
       cell.appendChild(token);
-      playSound('drop');
+      playSound('drop', currentPlayer);
 
       setTimeout(() => {
         token.classList.remove('falling');
@@ -853,7 +941,7 @@
 
     function handleWin(winCells, winner) {
       isGameOver = true;
-      playSound('win');
+      playSound('win', winner);
 
       winCells.forEach(({ r, c }) => {
         const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
@@ -873,16 +961,16 @@
       const desc = document.getElementById('modalDesc');
 
       if (winner === 1) {
-        header.className = "quest-header quest-complete";
-        header.innerText = "QUEST COMPLETE";
-        desc.innerText = `${playerNames.p1} landed 4 consecutive Focus Strikes! The apex wyvern has been driven off!`;
+        header.className = "quest-header quest-reydau";
+        header.innerText = "REY DAU DOMINATES!";
+        desc.innerText = `${playerNames.p1} aligned 4 thunder weakpoints! A blinding lightning railgun blast claims dominion over the Forbidden Lands!`;
       } else {
-        header.className = "quest-header quest-failed";
-        header.innerText = "EXPEDITION OVERRUN";
-        desc.innerText = `${playerNames.p2} established complete dominance over the plains! The hunters must regroup!`;
+        header.className = "quest-header quest-arkveld";
+        header.innerText = "ARKVELD TRIUMPHS!";
+        desc.innerText = `${playerNames.p2} struck with 4 chained tendrils! The White Wraith envelops the plains in ruthless ruin!`;
       }
 
-      document.getElementById('turnIndicator').innerText = `${winner === 1 ? playerNames.p1 : playerNames.p2} Wins!`;
+      document.getElementById('turnIndicator').innerText = `${winner === 1 ? playerNames.p1 : playerNames.p2} Victorious!`;
 
       setTimeout(() => {
         modal.classList.add('active');
@@ -899,9 +987,9 @@
       const desc = document.getElementById('modalDesc');
 
       header.className = "quest-header quest-draw";
-      header.innerText = "STALEMATE ENCOUNTER";
-      desc.innerText = "The board has been locked! Neither side could establish four-in-a-row.";
-      document.getElementById('turnIndicator').innerText = "Draw!";
+      header.innerText = "STALEMATE CLASH";
+      desc.innerText = "Neither Apex could break the deadlock! Both beasts retreat into the sandstorm to clash another day.";
+      document.getElementById('turnIndicator').innerText = "Stalemate!";
 
       setTimeout(() => {
         modal.classList.add('active');
@@ -954,7 +1042,7 @@
     }
 
     function resetScoreboard() {
-      if (confirm("Reset hunt win records for both players?")) {
+      if (confirm("Reset dominance records for both monsters?")) {
         scores = { p1: 0, p2: 0, draws: 0 };
         saveScores();
         document.getElementById('scoreP1').innerText = 0;
@@ -964,19 +1052,19 @@
 
     function saveScores() {
       try {
-        localStorage.setItem('mhw_connect4_scores', JSON.stringify(scores));
+        localStorage.setItem('mhw_turfwar_scores', JSON.stringify(scores));
       } catch (e) {}
     }
 
     function editPlayerName(playerNum) {
       const current = playerNum === 1 ? playerNames.p1 : playerNames.p2;
-      const promptTitle = playerNum === 1 ? "Enter Player 1 (Hunter) Name:" : "Enter Player 2 (Monster) Name:";
+      const promptTitle = playerNum === 1 ? "Enter Player 1 (Orange Monster) Name:" : "Enter Player 2 (Blue Monster) Name:";
       const newName = prompt(promptTitle, current);
       if (newName && newName.trim()) {
         if (playerNum === 1) playerNames.p1 = newName.trim().slice(0, 16);
         else playerNames.p2 = newName.trim().slice(0, 16);
         try {
-          localStorage.setItem('mhw_connect4_names', JSON.stringify(playerNames));
+          localStorage.setItem('mhw_turfwar_names', JSON.stringify(playerNames));
         } catch (e) {}
         document.getElementById('nameP1').innerText = playerNames.p1;
         document.getElementById('nameP2').innerText = playerNames.p2;
@@ -999,6 +1087,12 @@
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           closeModalAndReset();
+        }
+        return;
+      }
+
+      const num = parseInt(e.key);
+      if (num >= 1Reset();
         }
         return;
       }
