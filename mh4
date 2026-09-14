@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monster Hunter Wilds: Forbidden Lands Connect 4</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0e1116;
+      --bg-card: rgba(24, 28, 36, 0.88);
+      --border-bronze: #8c6d3b;
+      --bronze-bright: #d4af37;
+      --bronze-dark: #4a3818;
+      --hunter-gold: #f59e0b;
+      --hunter-glow: rgba(245, 158, 11, 0.5);
+      --arkveld-teal: #06b6d4;
+      --arkveld-glow: rgba(6, 182, 212, 0.55);
+      --slot-empty: #1a1e26;
+      --slot-border: #28303d;
+      --grid-board: #151a23;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(30, 41, 59, 0.6) 0%, transparent 70%),
+        radial-gradient(circle at 10% 80%, rgba(140, 109, 59, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+        linear-gradient(to bottom, #090b0e, #11151c);
+      color: #e2e8f0;
+      font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px 12px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.3em;
+      color: var(--bronze-bright);
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-weight: 900;
+      font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+      letter-spacing: 0.08em;
+      background: linear-gradient(180deg, #fff 0%, #cbd5e1 45%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.8);
+      margin: 2px 0 6px 0;
+    }
+
+    .badge-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-family: 'Cinzel', serif;
+    }
+
+    .dashboard {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 680px;
+      margin-bottom: 14px;
+      gap: 10px;
+    }
+
+    .player-card {
+      flex: 1;
+      background: var(--bg-card);
+      border: 2px solid var(--border-bronze);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+    }
+
+    .player-card.active {
+      transform: translateY(-2px);
+    }
+
+    .player-card.p1.active {
+      border-color: var(--hunter-gold);
+      box-shadow: 0 0 18px var(--hunter-glow);
+    }
+
+    .player-card.p2.active {
+      border-color: var(--arkveld-teal);
+      box-shadow: 0 0 18px var(--arkveld-glow);
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .p1 .avatar {
+      background: radial-gradient(circle, #f59e0b 0%, #b45309 85%);
+      box-shadow: 0 0 10px var(--hunter-glow);
+    }
+
+    .p2 .avatar {
+      background: radial-gradient(circle, #06b6d4 0%, #0e7490 85%);
+      box-shadow: 0 0 10px var(--arkveld-glow);
+    }
+
+    .avatar svg {
+      width: 24px;
+      height: 24px;
+      fill: #ffffff;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6));
+    }
+
+    .player-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .player-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .player-name:hover::after {
+      content: '✎';
+      font-size: 0.7rem;
+      color: var(--bronze-bright);
+    }
+
+    .p1 .player-name { color: #fde68a; }
+    .p2 .player-name { color: #a5f3fc; }
+
+    .score-display {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .score-num {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-left: 2px;
+    }
+
+    .turn-indicator {
+      text-align: center;
+      padding: 5px 12px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #e2e8f0;
+      border: 1px solid var(--border-bronze);
+      border-radius: 4px;
+      background: rgba(14, 17, 22, 0.9);
+      min-width: 140px;
+    }
+
+    .drop-guide-container {
+      width: 100%;
+      max-width: 580px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      padding: 0 10px;
+      height: 36px;
+      margin-bottom: 4px;
+    }
+
+    .drop-guide-slot {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .ghost-token {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      transform: translateY(-4px);
+    }
+
+    .drop-guide-slot:hover .ghost-token,
+    .drop-guide-slot.keyboard-focus .ghost-token {
+      opacity: 0.85;
+      transform: translateY(0);
+    }
+
+    .ghost-p1 {
+      background: radial-gradient(circle at 35% 35%, #fbbf24, #b45309);
+      box-shadow: 0 0 12px var(--hunter-glow);
+    }
+
+    .ghost-p2 {
+      background: radial-gradient(circle at 35% 35%, #22d3ee, #0891b2);
+      box-shadow: 0 0 12px var(--arkveld-glow);
+    }
+
+    .board-frame {
+      background: linear-gradient(145deg, #222936, #12161f);
+      border: 3px solid var(--border-bronze);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: 
+        0 12px 35px rgba(0, 0, 0, 0.75),
+        inset 0 2px 4px rgba(255, 255, 255, 0.08),
+        inset 0 -3px 8px rgba(0, 0, 0, 0.9);
+      position: relative;
+      max-width: 580px;
+      width: 100%;
+    }
+
+    .board-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      gap: 8px;
+      background: #0b0e14;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #2d3748;
+    }
+
+    .cell {
+      aspect-ratio: 1 / 1;
+      background: var(--slot-empty);
+      border-radius: 50%;
+      border: 2px solid var(--slot-border);
+      box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.85);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .board-frame:hover .cell {
+      border-color: #3b4759;
+    }
+
+    .token {
+      width: 92%;
+      height: 92%;
+      border-radius: 50%;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.4),
+        0 4px 10px rgba(0, 0, 0, 0.65);
+    }
+
+    .token svg {
+      width: 55%;
+      height: 55%;
+      fill: #ffffff;
+      opacity: 0.92;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.7));
+    }
+
+    .token-p1 {
+      background: radial-gradient(circle at 35% 30%, #fef3c7 0%, #f59e0b 45%, #92400e 100%);
+      border: 1px solid #fde68a;
+    }
+
+    .token-p2 {
+      background: radial-gradient(circle at 35% 30%, #cffafe 0%, #06b6d4 45%, #155e75 100%);
+      border: 1px solid #a5f3fc;
+    }
+
+    @keyframes dropIn {
+      0% {
+        transform: translateY(var(--drop-from));
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+      }
+      70% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      85% {
+        transform: translateY(-12px);
+        animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    .token.falling {
+      animation: dropIn 0.42s forwards;
+    }
+
+    @keyframes winPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 15px #ffd700, inset 0 0 8px #fff;
+      }
+      50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 26px #ffedd5, inset 0 0 14px #fff;
+      }
+    }
+
+    .token.winning {
+      animation: winPulse 1.2s infinite ease-in-out !important;
+      z-index: 5;
+      border: 2px solid #ffffff;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      max-width: 580px;
+      width: 100%;
+    }
+
+    .btn {
+      background: linear-gradient(180deg, #2b3545 0%, #171d26 100%);
+      color: #e2e8f0;
+      border: 1px solid var(--border-bronze);
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn:hover:not(:disabled) {
+      background: linear-gradient(180deg, #374459 0%, #1e2530 100%);
+      border-color: var(--bronze-bright);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    .keyboard-hint {
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: #64748b;
+      text-align: center;
+      letter-spacing: 0.03em;
+    }
+
+    .keyboard-hint kbd {
+      background: #1e2530;
+      border: 1px solid #334155;
+      border-radius: 3px;
+      padding: 1px 4px;
+      color: #cbd5e1;
+      font-family: monospace;
+      font-size: 0.75rem;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(8, 10, 14, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .quest-card {
+      background: linear-gradient(180deg, #1b222d 0%, #0d1117 100%);
+      border: 2px solid var(--border-bronze);
+      border-radius: 12px;
+      padding: 24px 28px;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 24px rgba(212, 175, 55, 0.25);
+      transform: scale(0.92);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-backdrop.active .quest-card {
+      transform: scale(1);
+    }
+
+    .quest-header {
+      font-family: 'Cinzel', serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .quest-complete {
+      color: #fbbf24;
+      text-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
+    }
+
+    .quest-failed {
+      color: #22d3ee;
+      text-shadow: 0 0 16px rgba(34, 211, 238, 0.6);
+    }
+
+    .quest-draw {
+      color: #94a3b8;
+    }
+
+    .quest-desc {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .modal-btn-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    @media (max-width: 500px) {
+      .dashboard {
+        flex-direction: column;
+      }
+      .turn-indicator {
+        order: -1;
+        width: 100%;
+      }
+      .board-frame {
+        padding: 8px;
+      }
+      .board-grid {
+        gap: 5px;
+        padding: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="subtitle">Forbidden Lands Expedition</div>
+    <h1>Connect 4: Wilds Encounter</h1>
+    <div class="badge-bar">
+      <span>✦ Local Hotseat ✦</span>
+      <span>Same Couch Hunt</span>
+      <span>✦ Best of Series ✦</span>
+    </div>
+  </header>
+
+  <!-- Player Status Cards & Scoreboard -->
+  <section class="dashboard">
+    <div class="player-card p1 active" id="cardP1" onclick="editPlayerName(1)">
+      <div class="avatar">
+        <!-- Hunter Great Sword / Crest SVG -->
+        <svg viewBox="0 0 24 24">
+          <path d="M6.92 5h-2v2l5.79 5.79-1.42 1.41 1.42 1.42 1.41-1.42 4.09 4.09V20h2.29l-4.09-4.09 1.41-1.42-1.41-1.41-1.42 1.41L6.92 5zm11.79 0h-2.29v2.29l-4.09 4.09 1.41 1.41 1.42-1.41 1.41 1.41-1.41 1.42 4.09 4.09H21v-2.29l-4.09-4.09 1.41-1.42-1.41-1.41 1.41-1.42L21 6.83V5h-2.29zM12 2L9.5 4.5 12 7l2.5-2.5L12 2z"/>
+        </svg>
+      </div>
+      <div class="player-info">
+        <div class="player-name" id="nameP1" title="Click to change name">Guild Hunter</div>
+        <div class="score-display">Hunts Won: <span class="score-num" id="scoreP1">0</span></div>
+      </div>
+    </div>
+
+    <div class="turn-indicator" id="turnIndicator">Hunter's Move</div>
+
+    <div class="player-card p2" id="cardP2" onclick="editPlayerName(2)">
+      <div class="avatar">
+        <!-- Arkveld / Apex Dragon Crest SVG -->
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L9 7l-5 1 3.5 3.5L6 17l6-3 6 3-1.5-5.5L20 8l-5-1-3-5zm0 4.2L13.8 8h3.3l-2.4 2.1.9 3.2-2.6-1.5-2.6 1.5.9-3.2L8.9 8h3.3L12 6.2zM4 19h16v2H4z"/>
+        </svg>
+      </div>
+      <div class="player-info">
+        <div class="player-name" id="nameP2" title="Click to change name">Arkveld</div>
+        <div class="score-display">Repelled: <span class="score-num" id="scoreP2">0</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ghost Preview Row -->
+  <div class="drop-guide-container" id="dropGuides"></div>
+
+  <!-- Game Board -->
+  <main class="board-frame">
+    <div class="board-grid" id="boardGrid"></div>
+  </main>
+
+  <!-- Controls -->
+  <footer class="controls">
+    <button class="btn" id="btnUndo" onclick="undoMove()" title="Undo last drop (U)">
+      ↺ Undo Move
+    </button>
+    <button class="btn" id="btnRestart" onclick="resetRound()" title="Start a new round (R)">
+      ⚔ New Quest
+    </button>
+    <button class="btn" id="btnResetScores" onclick="resetScoreboard()" title="Reset hunt records">
+      ⌫ Reset Scores
+    </button>
+    <button class="btn" id="btnSound" onclick="toggleSound()" title="Toggle sounds (M)">
+      🔊 Sound: ON
+    </button>
+  </footer>
+
+  <div class="keyboard-hint">
+    Couch Controls: <kbd>1</kbd>–<kbd>7</kbd> to drop | <kbd>←</kbd> / <kbd>→</kbd> or <kbd>A</kbd> / <kbd>D</kbd> select column | <kbd>Space</kbd> or <kbd>Enter</kbd> drop | <kbd>U</kbd> undo | <kbd>R</kbd> reset
+  </div>
+
+  <!-- Quest Outcome Modal -->
+  <div class="modal-backdrop" id="questModal">
+    <div class="quest-card">
+      <div class="quest-header" id="modalHeader">Quest Complete</div>
+      <div class="quest-desc" id="modalDesc">The Target has been hunted successfully!</div>
+      <div class="modal-btn-row">
+        <button class="btn" onclick="closeModalAndReset()">⚔ Start Next Quest</button>
+        <button class="btn" onclick="closeModalOnly()">Review Battlefield</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ROWS = 6;
+    const COLS = 7;
+    let board = [];
+    let currentPlayer = 1; // 1 = Hunter (Gold), 2 = Arkveld (Teal)
+    let moveHistory = [];
+    let isGameOver = false;
+    let isAnimating = false;
+    let keyboardCol = 3;
+    let soundEnabled = true;
+
+    let scores = { p1: 0, p2: 0, draws: 0 };
+    let playerNames = { p1: "Guild Hunter", p2: "Arkveld" };
+
+    try {
+      const savedScores = localStorage.getItem('mhw_connect4_scores');
+      if (savedScores) scores = JSON.parse(savedScores);
+      const savedNames = localStorage.getItem('mhw_connect4_names');
+      if (savedNames) playerNames = JSON.parse(savedNames);
+    } catch (e) {
+      console.warn("Storage access restricted", e);
+    }
+
+    // Procedural Audio Engine (Web Audio API)
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSound(type) {
+      if (!soundEnabled) return;
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+
+        if (type === 'drop') {
+          const osc1 = audioCtx.createOscillator();
+          const osc2 = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc1.type = 'sawtooth';
+          osc1.frequency.setValueAtTime(320, now);
+          osc1.frequency.exponentialRampToValueAtTime(70, now + 0.18);
+
+          osc2.type = 'triangle';
+          osc2.frequency.setValueAtTime(140, now);
+          osc2.frequency.exponentialRampToValueAtTime(40, now + 0.22);
+
+          gain.gain.setValueAtTime(0.35, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+          osc1.connect(gain);
+          osc2.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc1.start(now);
+          osc2.start(now);
+          osc1.stop(now + 0.22);
+          osc2.stop(now + 0.22);
+        } else if (type === 'win') {
+          const freqs = [440, 554.37, 659.25, 880];
+          freqs.forEach((freq, idx) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+            gain.gain.setValueAtTime(0, now + idx * 0.08);
+            gain.gain.linearRampToValueAtTime(0.18, now + idx * 0.08 + 0.04);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + idx * 0.08);
+            osc.stop(now + 0.95);
+          });
+        } else if (type === 'undo') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(240, now);
+          osc.frequency.linearRampToValueAtTime(180, now + 0.1);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0.001, now + 0.1);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.1);
+        }
+      } catch (err) {
+        console.warn("Audio unavailable:", err);
+      }
+    }
+
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById('btnSound');
+      btn.innerText = soundEnabled ? "🔊 Sound: ON" : "🔇 Sound: OFF";
+    }
+
+    const hunterIconSvg = `
+      <svg viewBox="0 0 24 24">
+        <path d="M6.92 5h-2v2l5.79 5.79-1.42 1.41 1.42 1.42 1.41-1.42 4.09 4.09V20h2.29l-4.09-4.09 1.41-1.42-1.41-1.41-1.42 1.41L6.92 5zm11.79 0h-2.29v2.29l-4.09 4.09 1.41 1.41 1.42-1.41 1.41 1.41-1.41 1.42 4.09 4.09H21v-2.29l-4.09-4.09 1.41-1.42-1.41-1.41 1.41-1.42L21 6.83V5h-2.29zM12 2L9.5 4.5 12 7l2.5-2.5L12 2z"/>
+      </svg>`;
+
+    const arkveldIconSvg = `
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2L9 7l-5 1 3.5 3.5L6 17l6-3 6 3-1.5-5.5L20 8l-5-1-3-5zm0 4.2L13.8 8h3.3l-2.4 2.1.9 3.2-2.6-1.5-2.6 1.5.9-3.2L8.9 8h3.3L12 6.2zM4 19h16v2H4z"/>
+      </svg>`;
+
+    function initGame() {
+      board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+      moveHistory = [];
+      isGameOver = false;
+      isAnimating = false;
+      currentPlayer = 1;
+
+      document.getElementById('nameP1').innerText = playerNames.p1;
+      document.getElementById('nameP2').innerText = playerNames.p2;
+      document.getElementById('scoreP1').innerText = scores.p1;
+      document.getElementById('scoreP2').innerText = scores.p2;
+
+      renderBoard();
+      renderDropGuides();
+      updateTurnIndicator();
+    }
+
+    function renderDropGuides() {
+      const guideContainer = document.getElementById('dropGuides');
+      guideContainer.innerHTML = '';
+      for (let c = 0; c < COLS; c++) {
+        const guide = document.createElement('div');
+        guide.className = 'drop-guide-slot';
+        guide.dataset.col = c;
+        guide.innerHTML = `<div class="ghost-token ${currentPlayer === 1 ? 'ghost-p1' : 'ghost-p2'}"></div>`;
+        guide.onclick = () => handleColSelect(c);
+        guideContainer.appendChild(guide);
+      }
+      updateKeyboardGuide();
+    }
+
+    function renderBoard() {
+      const grid = document.getElementById('boardGrid');
+      grid.innerHTML = '';
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          cell.onclick = () => handleColSelect(c);
+          grid.appendChild(cell);
+        }
+      }
+    }
+
+    function updateKeyboardGuide() {
+      const guides = document.querySelectorAll('.drop-guide-slot');
+      guides.forEach((g, idx) => {
+        g.classList.toggle('keyboard-focus', idx === keyboardCol);
+        const ghost = g.querySelector('.ghost-token');
+        if (ghost) {
+          ghost.className = `ghost-token ${currentPlayer === 1 ? 'ghost-p1' : 'ghost-p2'}`;
+        }
+      });
+    }
+
+    function handleColSelect(col) {
+      if (isGameOver || isAnimating) return;
+      dropInColumn(col);
+    }
+
+    function dropInColumn(col) {
+      let targetRow = -1;
+      for (let r = ROWS - 1; r >= 0; r--) {
+        if (board[r][col] === 0) {
+          targetRow = r;
+          break;
+        }
+      }
+
+      if (targetRow === -1) return;
+
+      isAnimating = true;
+      board[targetRow][col] = currentPlayer;
+      moveHistory.push({ row: targetRow, col: col, player: currentPlayer });
+
+      const cell = document.querySelector(`.cell[data-row="${targetRow}"][data-col="${col}"]`);
+      const token = document.createElement('div');
+      token.className = `token ${currentPlayer === 1 ? 'token-p1' : 'token-p2'} falling`;
+      token.innerHTML = currentPlayer === 1 ? hunterIconSvg : arkveldIconSvg;
+
+      const cellHeight = cell.getBoundingClientRect().height || 54;
+      const dropDistance = -((targetRow + 1) * (cellHeight + 8) + 30);
+      token.style.setProperty('--drop-from', `${dropDistance}px`);
+
+      cell.appendChild(token);
+      playSound('drop');
+
+      setTimeout(() => {
+        token.classList.remove('falling');
+        isAnimating = false;
+
+        const winCells = checkWin(targetRow, col, currentPlayer);
+        if (winCells) {
+          handleWin(winCells, currentPlayer);
+        } else if (isBoardFull()) {
+          handleDraw();
+        } else {
+          currentPlayer = currentPlayer === 1 ? 2 : 1;
+          updateTurnIndicator();
+          updateKeyboardGuide();
+        }
+      }, 420);
+    }
+
+    function checkWin(r, c, player) {
+      const directions = [
+        { dr: 0, dc: 1 },
+        { dr: 1, dc: 0 },
+        { dr: 1, dc: 1 },
+        { dr: 1, dc: -1 }
+      ];
+
+      for (const { dr, dc } of directions) {
+        let matched = [{ r, c }];
+        for (let i = 1; i < 4; i++) {
+          let nr = r + dr * i;
+          let nc = c + dc * i;
+          if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && board[nr][nc] === player) {
+            matched.push({ r: nr, c: nc });
+          } else break;
+        }
+        for (let i = 1; i < 4; i++) {
+          let nr = r - dr * i;
+          let nc = c - dc * i;
+          if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && board[nr][nc] === player) {
+            matched.push({ r: nr, c: nc });
+          } else break;
+        }
+        if (matched.length >= 4) {
+          return matched;
+        }
+      }
+      return null;
+    }
+
+    function isBoardFull() {
+      return board[0].every(cell => cell !== 0);
+    }
+
+    function handleWin(winCells, winner) {
+      isGameOver = true;
+      playSound('win');
+
+      winCells.forEach(({ r, c }) => {
+        const cell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+        const tok = cell?.querySelector('.token');
+        if (tok) tok.classList.add('winning');
+      });
+
+      if (winner === 1) scores.p1++;
+      else scores.p2++;
+      saveScores();
+
+      document.getElementById('scoreP1').innerText = scores.p1;
+      document.getElementById('scoreP2').innerText = scores.p2;
+
+      const modal = document.getElementById('questModal');
+      const header = document.getElementById('modalHeader');
+      const desc = document.getElementById('modalDesc');
+
+      if (winner === 1) {
+        header.className = "quest-header quest-complete";
+        header.innerText = "QUEST COMPLETE";
+        desc.innerText = `${playerNames.p1} landed 4 consecutive Focus Strikes! The apex wyvern has been driven off!`;
+      } else {
+        header.className = "quest-header quest-failed";
+        header.innerText = "EXPEDITION OVERRUN";
+        desc.innerText = `${playerNames.p2} established complete dominance over the plains! The hunters must regroup!`;
+      }
+
+      document.getElementById('turnIndicator').innerText = `${winner === 1 ? playerNames.p1 : playerNames.p2} Wins!`;
+
+      setTimeout(() => {
+        modal.classList.add('active');
+      }, 700);
+    }
+
+    function handleDraw() {
+      isGameOver = true;
+      scores.draws++;
+      saveScores();
+
+      const modal = document.getElementById('questModal');
+      const header = document.getElementById('modalHeader');
+      const desc = document.getElementById('modalDesc');
+
+      header.className = "quest-header quest-draw";
+      header.innerText = "STALEMATE ENCOUNTER";
+      desc.innerText = "The board has been locked! Neither side could establish four-in-a-row.";
+      document.getElementById('turnIndicator').innerText = "Draw!";
+
+      setTimeout(() => {
+        modal.classList.add('active');
+      }, 600);
+    }
+
+    function updateTurnIndicator() {
+      const ind = document.getElementById('turnIndicator');
+      const cardP1 = document.getElementById('cardP1');
+      const cardP2 = document.getElementById('cardP2');
+
+      if (currentPlayer === 1) {
+        ind.innerText = `${playerNames.p1}'s Turn`;
+        cardP1.classList.add('active');
+        cardP2.classList.remove('active');
+      } else {
+        ind.innerText = `${playerNames.p2}'s Turn`;
+        cardP2.classList.add('active');
+        cardP1.classList.remove('active');
+      }
+    }
+
+    function undoMove() {
+      if (isAnimating || moveHistory.length === 0) return;
+      const lastMove = moveHistory.pop();
+      board[lastMove.row][lastMove.col] = 0;
+
+      const cell = document.querySelector(`.cell[data-row="${lastMove.row}"][data-col="${lastMove.col}"]`);
+      if (cell) cell.innerHTML = '';
+
+      if (isGameOver) {
+        isGameOver = false;
+        document.querySelectorAll('.token.winning').forEach(t => t.classList.remove('winning'));
+        if (lastMove.player === 1) scores.p1 = Math.max(0, scores.p1 - 1);
+        else scores.p2 = Math.max(0, scores.p2 - 1);
+        saveScores();
+        document.getElementById('scoreP1').innerText = scores.p1;
+        document.getElementById('scoreP2').innerText = scores.p2;
+      }
+
+      currentPlayer = lastMove.player;
+      playSound('undo');
+      updateTurnIndicator();
+      updateKeyboardGuide();
+    }
+
+    function resetRound() {
+      closeModalOnly();
+      initGame();
+    }
+
+    function resetScoreboard() {
+      if (confirm("Reset hunt win records for both players?")) {
+        scores = { p1: 0, p2: 0, draws: 0 };
+        saveScores();
+        document.getElementById('scoreP1').innerText = 0;
+        document.getElementById('scoreP2').innerText = 0;
+      }
+    }
+
+    function saveScores() {
+      try {
+        localStorage.setItem('mhw_connect4_scores', JSON.stringify(scores));
+      } catch (e) {}
+    }
+
+    function editPlayerName(playerNum) {
+      const current = playerNum === 1 ? playerNames.p1 : playerNames.p2;
+      const promptTitle = playerNum === 1 ? "Enter Player 1 (Hunter) Name:" : "Enter Player 2 (Monster) Name:";
+      const newName = prompt(promptTitle, current);
+      if (newName && newName.trim()) {
+        if (playerNum === 1) playerNames.p1 = newName.trim().slice(0, 16);
+        else playerNames.p2 = newName.trim().slice(0, 16);
+        try {
+          localStorage.setItem('mhw_connect4_names', JSON.stringify(playerNames));
+        } catch (e) {}
+        document.getElementById('nameP1').innerText = playerNames.p1;
+        document.getElementById('nameP2').innerText = playerNames.p2;
+        updateTurnIndicator();
+      }
+    }
+
+    function closeModalOnly() {
+      document.getElementById('questModal').classList.remove('active');
+    }
+
+    function closeModalAndReset() {
+      closeModalOnly();
+      resetRound();
+    }
+
+    window.addEventListener('keydown', (e) => {
+      const modalActive = document.getElementById('questModal').classList.contains('active');
+      if (modalActive) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          closeModalAndReset();
+        }
+        return;
+      }
+
+      const num = parseInt(e.key);
+      if (num >= 1 && num <= 7) {
+        keyboardCol = num - 1;
+        updateKeyboardGuide();
+        handleColSelect(keyboardCol);
+        return;
+      }
+
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        keyboardCol = (keyboardCol - 1 + COLS) % COLS;
+        updateKeyboardGuide();
+      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        keyboardCol = (keyboardCol + 1) % COLS;
+        updateKeyboardGuide();
+      } else if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleColSelect(keyboardCol);
+      } else if (e.key === 'u' || e.key === 'U') {
+        undoMove();
+      } else if (e.key === 'r' || e.key === 'R') {
+        resetRound();
+      } else if (e.key === 'm' || e.key === 'M') {
+        toggleSound();
+      }
+    });
+
+    window.onload = () => {
+      initGame();
+    };
+  </script>
+</body>
+</html>
