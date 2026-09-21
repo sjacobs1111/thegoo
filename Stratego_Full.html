@@ -1,9 +1,13 @@
+
+Stratego_Peeking_Edition.html
+
+100%
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Classic Stratego — Full 10×10 (40 Pieces)</title>
+  <title>Stratego — Always-Active Peeking Edition</title>
   <style>
     :root {
       --bg: #12151d;
@@ -24,12 +28,14 @@
       --gold-light: #f6e05e;
       --green: #38a169;
       --red: #e53e3e;
+      --peek-glow: rgba(246, 224, 94, 0.45);
     }
 
     * {
       box-sizing: border-box;
       user-select: none;
       -webkit-user-select: none;
+      -webkit-touch-callout: none;
       -webkit-tap-highlight-color: transparent;
       margin: 0;
       padding: 0;
@@ -59,7 +65,7 @@
       border-bottom: 1px solid var(--card-border);
     }
 
-    .brand-title {
+    .brand-box h1 {
       font-size: 1.1rem;
       font-weight: 800;
       letter-spacing: 1px;
@@ -67,7 +73,7 @@
       color: var(--gold-light);
     }
 
-    .brand-sub {
+    .brand-box .subtitle {
       font-size: 0.68rem;
       color: var(--text-muted);
       font-weight: 500;
@@ -103,16 +109,19 @@
       font-size: 0.8rem;
     }
 
-    .player-pill {
-      padding: 3px 10px;
+    .turn-badge {
+      padding: 4px 10px;
       border-radius: 12px;
       font-weight: 700;
       font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
-    .player-pill.p1 { background: var(--p1-dark); color: var(--p1-accent); border: 1px solid var(--p1-blue); }
-    .player-pill.p2 { background: var(--p2-dark); color: var(--p2-accent); border: 1px solid var(--p2-red); }
+    .turn-badge.p1 { background: var(--p1-dark); color: var(--p1-accent); border: 1px solid var(--p1-blue); }
+    .turn-badge.p2 { background: var(--p2-dark); color: var(--p2-accent); border: 1px solid var(--p2-red); }
 
-    .status-note {
+    .status-msg {
       color: var(--text-muted);
       font-size: 0.78rem;
       font-weight: 500;
@@ -122,7 +131,7 @@
       text-overflow: ellipsis;
     }
 
-    /* Intel Banner */
+    /* Last Move Intel Banner */
     .intel-bar {
       width: 100%;
       max-width: 480px;
@@ -137,7 +146,7 @@
     }
     .intel-bar.hidden { display: none; }
 
-    /* 10x10 Board */
+    /* Board Area */
     main {
       width: 100%;
       max-width: 480px;
@@ -158,10 +167,18 @@
       border-radius: 8px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.7);
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      grid-template-rows: repeat(10, 1fr);
       gap: 1.5px;
       padding: 2px;
+    }
+
+    .board-frame.grid-10 {
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+    }
+
+    .board-frame.grid-8 {
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
     }
 
     .cell {
@@ -175,7 +192,7 @@
     }
     .cell.dark { background: #19202c; }
 
-    .cell.setup-zone {
+    .cell.setup-valid {
       box-shadow: inset 0 0 0 1.2px rgba(214, 158, 46, 0.65);
       background: #293444 !important;
     }
@@ -187,8 +204,8 @@
 
     .cell.move-target::after {
       content: "";
-      width: 30%;
-      height: 30%;
+      width: 32%;
+      height: 32%;
       background: var(--green);
       border-radius: 50%;
       box-shadow: 0 0 6px var(--green);
@@ -227,6 +244,7 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.5);
       border: 1px solid rgba(255,255,255,0.25);
       position: relative;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
 
     .piece.p1 {
@@ -241,16 +259,35 @@
       border-color: #feb2b2;
     }
 
-    .piece.hidden-back {
-      background: linear-gradient(145deg, #4a5568, #2d3748) !important;
-      border-color: #718096 !important;
+    /* CONCEALED BACK: Default state for all pieces on the Always-Active board */
+    .piece.concealed {
+      background: linear-gradient(145deg, #374151, #1f2937) !important;
+      border-color: #6b7280 !important;
+    }
+    .piece.concealed.p1 {
+      border-color: #3b82f6 !important;
+      box-shadow: inset 0 0 4px rgba(59, 130, 246, 0.4);
+    }
+    .piece.concealed.p2 {
+      border-color: #ef4444 !important;
+      box-shadow: inset 0 0 4px rgba(239, 68, 68, 0.4);
     }
 
-    .piece.hidden-back .rank-num {
-      font-size: 0.95rem;
-      color: #e2e8f0;
+    .piece.concealed .rank-num {
+      font-size: 0.85rem;
+      color: #9ca3af;
     }
-    .piece.hidden-back .rank-lbl { display: none; }
+    .piece.concealed .rank-lbl { display: none; }
+
+    /* PEEKED / REVEALED STATE */
+    .piece.peeked {
+      transform: scale(1.08);
+      box-shadow: 0 0 10px var(--gold-light), 0 4px 8px rgba(0,0,0,0.7);
+      border-color: var(--gold-light) !important;
+      z-index: 10;
+    }
+    .piece.peeked.p1 { background: linear-gradient(145deg, #3182ce, #1a365d) !important; }
+    .piece.peeked.p2 { background: linear-gradient(145deg, #e53e3e, #742a2a) !important; }
 
     .rank-num {
       font-size: 0.95rem;
@@ -267,7 +304,57 @@
       opacity: 0.9;
     }
 
-    /* Setup Armory */
+    /* Peeking & Touch Bar (Bottom Controls) */
+    .peek-bar {
+      width: 100%;
+      max-width: 480px;
+      padding: 8px;
+      display: flex;
+      gap: 8px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      margin-top: 6px;
+    }
+
+    .peek-btn {
+      flex: 2;
+      padding: 12px 14px;
+      background: linear-gradient(145deg, #d69e2e, #b7791f);
+      color: #1a202c;
+      border: none;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .peek-btn:active, .peek-btn.holding {
+      background: var(--gold-light);
+      transform: scale(0.98);
+      box-shadow: 0 0 14px var(--gold);
+    }
+
+    .end-turn-btn {
+      flex: 1;
+      padding: 12px;
+      background: #2d3748;
+      color: var(--text);
+      border: 1px solid #4a5568;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+    .end-turn-btn:active { background: #4a5568; }
+
+    /* Armory / Deployment Drawer */
     .setup-box {
       width: 100%;
       max-width: 480px;
@@ -285,7 +372,6 @@
       margin-bottom: 6px;
       font-size: 0.78rem;
     }
-
     .setup-title { font-weight: 700; color: var(--gold-light); }
 
     .armory-grid {
@@ -305,13 +391,11 @@
       cursor: pointer;
       position: relative;
     }
-
     .armory-card.selected {
       border-color: var(--gold-light);
       background: #3b4759;
       box-shadow: 0 0 6px var(--gold);
     }
-
     .armory-card.depleted { opacity: 0.3; cursor: not-allowed; }
 
     .armory-card .pill {
@@ -379,7 +463,7 @@
     .btn-green { background: var(--green); color: white; }
     .btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
-    /* Casualties Panel */
+    /* Casualties */
     .intel-box {
       width: 100%;
       max-width: 480px;
@@ -409,7 +493,7 @@
     .chip.p2 { color: var(--p2-accent); border-color: var(--p2-red); }
 
     /* Modals */
-    .modal-curtain {
+    .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(10, 14, 20, 0.94);
@@ -422,9 +506,9 @@
       padding: 24px;
       text-align: center;
     }
-    .modal-curtain.hidden { display: none; }
+    .modal-overlay.hidden { display: none; }
 
-    .curtain-card {
+    .modal-card {
       background: var(--card-bg);
       border: 2px solid var(--card-border);
       border-radius: 12px;
@@ -433,35 +517,17 @@
       max-width: 380px;
       box-shadow: 0 12px 35px rgba(0,0,0,0.7);
     }
+    .modal-card h2 { font-size: 1.3rem; color: var(--gold-light); margin-bottom: 10px; }
+    .modal-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 22px; }
 
-    .curtain-card h2 {
-      font-size: 1.3rem;
-      color: var(--gold-light);
-      margin-bottom: 10px;
-    }
-
-    .curtain-card p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.45;
-      margin-bottom: 22px;
-    }
-
-    /* Battle Clash */
+    /* Combat Clash Modal */
     .battle-arena {
       display: flex;
       justify-content: space-around;
       align-items: center;
       margin-bottom: 16px;
     }
-
-    .combat-unit {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 95px;
-    }
-
+    .combat-unit { display: flex; flex-direction: column; align-items: center; width: 95px; }
     .combat-piece {
       width: 62px;
       height: 62px;
@@ -474,9 +540,7 @@
       margin-bottom: 6px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
-
     .versus-badge { font-size: 1.3rem; font-weight: 900; color: #fc8181; }
-
     .battle-resolution {
       font-size: 0.92rem;
       font-weight: 700;
@@ -488,7 +552,6 @@
       border: 1px solid #2d3748;
     }
 
-    /* Reference Dialog */
     .guide-scroll {
       max-height: 68vh;
       overflow-y: auto;
@@ -505,12 +568,12 @@
   <!-- Header -->
   <header>
     <div class="brand-box">
-      <div class="brand-title">Stratego Classic</div>
-      <div class="brand-sub">Full 10×10 • 40 Pieces per Army • Pass & Play</div>
+      <div class="brand-title">Stratego: Peeking Mode</div>
+      <div class="brand-sub">Always-Active Board • Tap & Hold to Peek</div>
     </div>
     <div class="header-actions">
       <button id="soundToggleBtn" class="nav-btn">🔊</button>
-      <button id="namesBtn" class="nav-btn">👥 Players</button>
+      <button id="variantToggleBtn" class="nav-btn">⚔️ 10×10</button>
       <button id="ranksGuideBtn" class="nav-btn">📖 Ranks</button>
       <button id="resetMatchBtn" class="nav-btn">🔄 Reset</button>
     </div>
@@ -518,20 +581,26 @@
 
   <!-- Status Bar -->
   <div class="status-bar">
-    <div id="playerBadge" class="player-pill p1">Steve (Blue)</div>
-    <div id="statusInstruction" class="status-note">Deploy your 40 pieces</div>
+    <div id="playerBadge" class="turn-badge p1">Steve's Turn</div>
+    <div id="statusInstruction" class="status-msg">Press & hold pieces to peek • Tap to move</div>
   </div>
 
-  <!-- Intel Banner -->
+  <!-- Intel Bar (Last Move) -->
   <div id="intelBar" class="intel-bar hidden">
     <span id="intelText">Last turn: Move completed</span>
   </div>
 
-  <!-- Board Area -->
+  <!-- Main Board -->
   <main>
-    <div id="board" class="board-frame"></div>
+    <div id="board" class="board-frame grid-10"></div>
 
-    <!-- Deployment Tray (Visible during Setup) -->
+    <!-- Active Gameplay Peeking Bar (During Match) -->
+    <div id="gameplayBar" class="peek-bar" style="display: none;">
+      <button id="holdPeekBtn" class="peek-btn">👁️ Hold to Peek My Army</button>
+      <button id="endTurnManualBtn" class="end-turn-btn">Pass Turn</button>
+    </div>
+
+    <!-- Deployment Setup Controls (During Setup) -->
     <div id="setupBox" class="setup-box">
       <div class="setup-top">
         <span id="setupProgress" class="setup-title">Deploy Army: (0/40 placed)</span>
@@ -540,11 +609,11 @@
 
       <div id="armoryGrid" class="armory-grid"></div>
 
-      <!-- Presets for fast setup -->
+      <!-- Formation Presets -->
       <div class="preset-row">
-        <button id="presetBlitzBtn" class="preset-btn">⚡ Blitz Formation</button>
-        <button id="presetFortressBtn" class="preset-btn">🏰 Corner Fortress</button>
-        <button id="presetBastionBtn" class="preset-btn">🛡️ Center Bastion</button>
+        <button id="presetBlitzBtn" class="preset-btn">⚡ Blitz</button>
+        <button id="presetFortressBtn" class="preset-btn">🏰 Fortress</button>
+        <button id="presetBastionBtn" class="preset-btn">🛡️ Bastion</button>
         <button id="presetShuffleBtn" class="preset-btn">🎲 Randomize</button>
       </div>
 
@@ -554,7 +623,7 @@
       </div>
     </div>
 
-    <!-- Graveyard & Casualties (Visible during match) -->
+    <!-- Graveyard / Casualties (During Match) -->
     <div id="intelBox" class="intel-box" style="display: none;">
       <div class="intel-line">
         <span class="intel-tag" id="p1GraveLabel">Steve Lost:</span>
@@ -567,19 +636,19 @@
     </div>
   </main>
 
-  <!-- Turn Transition Curtain Overlay -->
-  <div id="curtainModal" class="modal-curtain">
-    <div class="curtain-card">
-      <div id="curtainIcon" style="font-size: 2.6rem; margin-bottom: 12px;">🛡️</div>
-      <h2 id="curtainHeading">Pass Phone to Steve</h2>
-      <p id="curtainSub">Ensure Gill cannot see the screen before tapping reveal.</p>
-      <button id="revealTurnBtn" class="btn btn-gold" style="width: 100%; padding: 14px; font-size: 1rem;">I Have the Phone — Reveal</button>
+  <!-- Setup Handover Modal (Only shown once between Player 1 & 2 setup) -->
+  <div id="setupHandoverModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div style="font-size: 2.6rem; margin-bottom: 12px;">🛡️</div>
+      <h2 id="setupHandoverTitle">Player 1 Deployment Ready</h2>
+      <p id="setupHandoverSub">Hand the phone to Player 2 to set up their army.</p>
+      <button id="setupHandoverBtn" class="btn btn-gold" style="width: 100%; padding: 14px; font-size: 1rem;">Start Player 2 Setup</button>
     </div>
   </div>
 
   <!-- Battle Clash Reveal Modal -->
-  <div id="battleModal" class="modal-curtain hidden">
-    <div class="curtain-card">
+  <div id="battleModal" class="modal-overlay hidden">
+    <div class="modal-card">
       <h2>⚔️ Combat Clash!</h2>
       <div class="battle-arena">
         <div class="combat-unit">
@@ -604,52 +673,35 @@
   </div>
 
   <!-- Ranks & Rules Dialog -->
-  <div id="ranksModal" class="modal-curtain hidden">
-    <div class="curtain-card" style="max-height: 85vh;">
-      <h2>Classic US Ranks (Full 40 Pieces)</h2>
+  <div id="ranksModal" class="modal-overlay hidden">
+    <div class="modal-card" style="max-height: 85vh;">
+      <h2>Always-Active Board with Peeking</h2>
       <div class="guide-scroll">
-        <p>Lower number = higher rank (1 is highest, 9 is lowest).</p>
-
-        <h3>Official 40-Piece Roster</h3>
+        <h3>How Peeking Works</h3>
+        <p>The board stays visible to both players at all times! All pieces normally show concealed shield backs (🔵 Blue and 🔴 Red).</p>
         <ul>
-          <li><strong>1 — Marshal (1x)</strong>: Defeats 2–9 & Spy. Loses to Spy (if Spy attacks first) and Bombs.</li>
-          <li><strong>2 — General (1x)</strong>: Defeats 3–9 & Spy. Loses to 1 and Bombs.</li>
-          <li><strong>3 — Colonel (2x)</strong>: Defeats 4–9 & Spy. Loses to 1, 2, and Bombs.</li>
-          <li><strong>4 — Major (3x)</strong>: Defeats 5–9 & Spy. Loses to 1–3, and Bombs.</li>
-          <li><strong>5 — Captain (4x)</strong>: Defeats 6–9 & Spy.</li>
-          <li><strong>6 — Lieutenant (4x)</strong>: Defeats 7–9 & Spy.</li>
-          <li><strong>7 — Sergeant (4x)</strong>: Defeats 8, 9 & Spy.</li>
-          <li><strong>8 — Miner (5x)</strong>: Defeats 9 & Spy. <strong>DEFUSES BOMBS!</strong></li>
-          <li><strong>9 — Scout (8x)</strong>: Can move any number of open orthogonal squares in a straight line!</li>
-          <li><strong>S — Spy (1x)</strong>: Defeats the Marshal (1) ONLY if the Spy attacks first! Loses to all pieces if attacked.</li>
-          <li><strong>B — Bomb (6x)</strong>: Immobile. Blows up any attacker except a Miner.</li>
-          <li><strong>F — Flag (1x)</strong>: Immobile. Capture the enemy Flag to WIN!</li>
+          <li><strong>Peek an Individual Piece</strong>: Press and hold any of your own pieces on the board to sneak a peek at its rank!</li>
+          <li><strong>Select & Move</strong>: Tap your piece to select it and see valid move dots. Tap a target square to move or attack.</li>
+          <li><strong>Hold to Peek All</strong>: Press and hold the golden <strong>👁️ Hold to Peek My Army</strong> button at the bottom to illuminate all of your pieces at once. Release to instantly conceal them again!</li>
         </ul>
 
-        <h3>Movement & Board Rules</h3>
+        <h3>Classic US Ranks (1 is Highest, 9 is Lowest)</h3>
         <ul>
-          <li><strong>Lakes</strong>: Two 2×2 water areas in rows 4–5 (cols 2–3 and 6–7) cannot be entered or jumped over.</li>
-          <li><strong>Equal Ranks</strong>: When pieces of the same rank attack, BOTH are eliminated.</li>
-          <li><strong>Couch Pass & Play</strong>: Board auto-rotates 180° so the active player always commands from the bottom.</li>
+          <li><strong>1 — Marshal</strong>: Defeats 2–9 & Spy. Loses to Bombs and to the Spy (if Spy attacks first).</li>
+          <li><strong>2 — General</strong>: Defeats 3–9 & Spy.</li>
+          <li><strong>3 — Colonel</strong>: Defeats 4–9 & Spy.</li>
+          <li><strong>4 — Major</strong>: Defeats 5–9 & Spy.</li>
+          <li><strong>5 — Captain</strong>: Defeats 6–9 & Spy.</li>
+          <li><strong>6 — Lieutenant</strong>: Defeats 7–9 & Spy.</li>
+          <li><strong>7 — Sergeant</strong>: Defeats 8, 9 & Spy.</li>
+          <li><strong>8 — Miner</strong>: Defeats 9 & Spy. <strong>DEFUSES BOMBS!</strong></li>
+          <li><strong>9 — Scout</strong>: Sprints any open distance in a straight line.</li>
+          <li><strong>S — Spy</strong>: Defeats Marshal (1) ONLY if Spy attacks first. Loses to all pieces if attacked.</li>
+          <li><strong>B — Bomb</strong>: Immobile. Destroys any attacker except a Miner.</li>
+          <li><strong>F — Flag</strong>: Immobile. Capture to WIN!</li>
         </ul>
       </div>
-      <button id="closeRanksBtn" class="btn btn-dark" style="margin-top: 14px; width: 100%;">Close</button>
-    </div>
-  </div>
-
-  <!-- Player Names Modal -->
-  <div id="namesModal" class="modal-curtain hidden">
-    <div class="curtain-card" style="max-width: 320px;">
-      <h2>Player Names</h2>
-      <div style="margin-bottom: 12px; text-align: left;">
-        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Player 1 (Blue):</label>
-        <input type="text" id="p1Input" value="Steve" maxlength="15" style="width: 100%; padding: 10px; background: #12151d; border: 1px solid #4a5568; border-radius: 6px; color: white;">
-      </div>
-      <div style="margin-bottom: 14px; text-align: left;">
-        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Player 2 (Red):</label>
-        <input type="text" id="p2Input" value="Gill" maxlength="15" style="width: 100%; padding: 10px; background: #12151d; border: 1px solid #4a5568; border-radius: 6px; color: white;">
-      </div>
-      <button id="saveNamesBtn" class="btn btn-gold" style="width: 100%;">Save Names</button>
+      <button id="closeRanksBtn" class="btn btn-dark" style="margin-top: 14px; width: 100%;">Got It</button>
     </div>
   </div>
 
@@ -686,6 +738,13 @@
           gain.gain.linearRampToValueAtTime(0.01, t + 0.08);
           osc.start(t);
           osc.stop(t + 0.08);
+        } else if (fx === 'peek') {
+          osc.frequency.setValueAtTime(440, t);
+          osc.frequency.linearRampToValueAtTime(580, t + 0.06);
+          gain.gain.setValueAtTime(0.08, t);
+          gain.gain.linearRampToValueAtTime(0.01, t + 0.06);
+          osc.start(t);
+          osc.stop(t + 0.06);
         } else if (fx === 'clash') {
           osc.type = 'sawtooth';
           osc.frequency.setValueAtTime(200, t);
@@ -723,9 +782,8 @@
       } catch (e) {}
     }
 
-    /* --- OFFICIAL 40-PIECE CLASSIC US ROSTER --- */
-    const TOTAL_PIECES = 40;
-    const ROSTER = [
+    /* --- ROSTERS: 10x10 (40 pieces) & 8x8 (12 pieces) --- */
+    const ROSTER_10 = [
       { rank: '1', name: 'Marshal', strength: 1, count: 1 },
       { rank: '2', name: 'General', strength: 2, count: 1 },
       { rank: '3', name: 'Colonel', strength: 3, count: 2 },
@@ -740,18 +798,27 @@
       { rank: 'F', name: 'Flag', strength: -2, count: 1 }
     ];
 
-    // Standard 10x10 Lakes: Rows 4 & 5, Cols 2,3 and Cols 6,7
-    function isLake(r, c) {
-      return (r === 4 || r === 5) && ((c === 2 || c === 3) || (c === 6 || c === 7));
-    }
+    const ROSTER_8 = [
+      { rank: '1', name: 'Marshal', strength: 1, count: 1 },
+      { rank: '2', name: 'General', strength: 2, count: 1 },
+      { rank: '5', name: 'Captain', strength: 5, count: 1 },
+      { rank: '6', name: 'Lieutenant', strength: 6, count: 1 },
+      { rank: '7', name: 'Sergeant', strength: 7, count: 1 },
+      { rank: '8', name: 'Miner', strength: 8, count: 2 },
+      { rank: '9', name: 'Scout', strength: 9, count: 2 },
+      { rank: 'S', name: 'Spy', strength: 0, count: 1 },
+      { rank: 'B', name: 'Bomb', strength: -1, count: 2 },
+      { rank: 'F', name: 'Flag', strength: -2, count: 1 }
+    ];
 
-    /* --- APPLICATION STATE --- */
+    /* --- GAME STATE --- */
     const GAME = {
+      boardSize: 10,     // 10 or 8
       p1Name: 'Steve',
       p2Name: 'Gill',
       phase: 'SETUP_P1', // SETUP_P1, SETUP_P2, PLAYING, GAME_OVER
       activePlayer: 1,   // 1 (Blue) or 2 (Red)
-      board: Array(10).fill(null).map(() => Array(10).fill(null)),
+      board: [],
       selectedCell: null,
       selectedTrayRank: null,
       validMoves: [],
@@ -760,13 +827,30 @@
       p1Counts: {},
       p2Counts: {},
       lastMove: null,
-      curtainCallback: null
+      isPeekingAll: false,
+      peekedCell: null   // Single cell being held down
     };
+
+    function getRoster() {
+      return (GAME.boardSize === 10) ? ROSTER_10 : ROSTER_8;
+    }
+
+    function getTotalPieces() {
+      return (GAME.boardSize === 10) ? 40 : 12;
+    }
+
+    function isLake(r, c) {
+      if (GAME.boardSize === 10) {
+        return (r === 4 || r === 5) && ((c === 2 || c === 3) || (c === 6 || c === 7));
+      } else {
+        return (r === 3 || r === 4) && ((c === 1 || c === 2) || (c === 5 || c === 6));
+      }
+    }
 
     function resetCounts() {
       GAME.p1Counts = {};
       GAME.p2Counts = {};
-      ROSTER.forEach(item => {
+      getRoster().forEach(item => {
         GAME.p1Counts[item.rank] = item.count;
         GAME.p2Counts[item.rank] = item.count;
       });
@@ -781,6 +865,9 @@
     const setupBox = document.getElementById('setupBox');
     const setupProgress = document.getElementById('setupProgress');
     const armoryGrid = document.getElementById('armoryGrid');
+    const gameplayBar = document.getElementById('gameplayBar');
+    const holdPeekBtn = document.getElementById('holdPeekBtn');
+    const endTurnManualBtn = document.getElementById('endTurnManualBtn');
     const presetBlitzBtn = document.getElementById('presetBlitzBtn');
     const presetFortressBtn = document.getElementById('presetFortressBtn');
     const presetBastionBtn = document.getElementById('presetBastionBtn');
@@ -792,10 +879,10 @@
     const p2GraveLabel = document.getElementById('p2GraveLabel');
     const p1Graveyard = document.getElementById('p1Graveyard');
     const p2Graveyard = document.getElementById('p2Graveyard');
-    const curtainModal = document.getElementById('curtainModal');
-    const curtainHeading = document.getElementById('curtainHeading');
-    const curtainSub = document.getElementById('curtainSub');
-    const revealTurnBtn = document.getElementById('revealTurnBtn');
+    const setupHandoverModal = document.getElementById('setupHandoverModal');
+    const setupHandoverTitle = document.getElementById('setupHandoverTitle');
+    const setupHandoverSub = document.getElementById('setupHandoverSub');
+    const setupHandoverBtn = document.getElementById('setupHandoverBtn');
     const battleModal = document.getElementById('battleModal');
     const attackerPiece = document.getElementById('attackerPiece');
     const defenderPiece = document.getElementById('defenderPiece');
@@ -810,72 +897,51 @@
     const ranksGuideBtn = document.getElementById('ranksGuideBtn');
     const ranksModal = document.getElementById('ranksModal');
     const closeRanksBtn = document.getElementById('closeRanksBtn');
-    const namesBtn = document.getElementById('namesBtn');
-    const namesModal = document.getElementById('namesModal');
-    const p1Input = document.getElementById('p1Input');
-    const p2Input = document.getElementById('p2Input');
-    const saveNamesBtn = document.getElementById('saveNamesBtn');
     const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const variantToggleBtn = document.getElementById('variantToggleBtn');
     const resetMatchBtn = document.getElementById('resetMatchBtn');
 
     /* --- INITIALIZATION --- */
-    function initGame() {
+    function initMatch() {
+      const N = GAME.boardSize;
       GAME.phase = 'SETUP_P1';
       GAME.activePlayer = 1;
-      GAME.board = Array(10).fill(null).map(() => Array(10).fill(null));
+      GAME.board = Array(N).fill(null).map(() => Array(N).fill(null));
       GAME.selectedCell = null;
       GAME.selectedTrayRank = null;
       GAME.validMoves = [];
       GAME.p1Lost = [];
       GAME.p2Lost = [];
       GAME.lastMove = null;
+      GAME.isPeekingAll = false;
+      GAME.peekedCell = null;
       resetCounts();
 
+      boardEl.className = `board-frame grid-${N}`;
       setupBox.style.display = 'block';
+      gameplayBar.style.display = 'none';
       intelBox.style.display = 'none';
       intelBar.classList.add('hidden');
 
-      showCurtain(
-        `Pass Phone to ${GAME.p1Name}`,
-        `Player 1 (Blue): Take the phone to deploy your 40 pieces secretly in rows 6–9.`,
-        1,
-        () => {
-          renderArmory();
-          renderBoard();
-          updateStatus();
-        }
-      );
+      renderArmory();
+      renderBoard();
+      updateStatus();
     }
 
-    /* --- CURTAIN TRANSITION --- */
-    function showCurtain(title, subtitle, playerNum, onReveal) {
-      curtainHeading.textContent = title;
-      curtainSub.textContent = subtitle;
-      revealTurnBtn.textContent = 'I Have the Phone — Reveal';
-      curtainModal.classList.remove('hidden');
-      GAME.curtainCallback = onReveal;
-    }
-
-    revealTurnBtn.addEventListener('click', () => {
-      playAudio('click');
-      curtainModal.classList.add('hidden');
-      if (GAME.curtainCallback) {
-        const cb = GAME.curtainCallback;
-        GAME.curtainCallback = null;
-        cb();
-      }
-    });
-
-    /* --- 10x10 BOARD RENDERING --- */
+    /* --- BOARD RENDERING (ALWAYS-ACTIVE WITH PEEKING) --- */
     function renderBoard() {
       boardEl.innerHTML = '';
-      // Flip 180° when Player 2 is active so both players play from the bottom
+      const N = GAME.boardSize;
+
+      // In Always-Active Couch mode, the board can either keep steady or flip.
+      // Keeping P1 at bottom and P2 at top (or flipping per active player):
+      // When flipped, active player's army is always closest to them!
       const flip = (GAME.activePlayer === 2);
 
-      for (let rIdx = 0; rIdx < 10; rIdx++) {
-        for (let cIdx = 0; cIdx < 10; cIdx++) {
-          const r = flip ? (9 - rIdx) : rIdx;
-          const c = flip ? (9 - cIdx) : cIdx;
+      for (let rIdx = 0; rIdx < N; rIdx++) {
+        for (let cIdx = 0; cIdx < N; cIdx++) {
+          const r = flip ? (N - 1 - rIdx) : rIdx;
+          const c = flip ? (N - 1 - cIdx) : cIdx;
 
           const cell = document.createElement('div');
           cell.className = 'cell ' + ((r + c) % 2 === 1 ? 'dark' : '');
@@ -883,13 +949,11 @@
           if (isLake(r, c)) {
             cell.classList.add('lake');
           } else {
-            // Setup zone highlights:
-            // P1 setup is rows 6–9; P2 setup is rows 0–3
-            if (GAME.phase === 'SETUP_P1' && (r >= 6 && r <= 9)) {
-              cell.classList.add('setup-zone');
-            } else if (GAME.phase === 'SETUP_P2' && (r >= 0 && r <= 3)) {
-              cell.classList.add('setup-zone');
-            }
+            // Setup zone highlights
+            const isP1Zone = (N === 10) ? (r >= 6) : (r >= 6);
+            const isP2Zone = (N === 10) ? (r <= 3) : (r <= 1);
+            if (GAME.phase === 'SETUP_P1' && isP1Zone) cell.classList.add('setup-valid');
+            if (GAME.phase === 'SETUP_P2' && isP2Zone) cell.classList.add('setup-valid');
 
             // Move targets
             if (GAME.validMoves.some(m => m.r === r && m.c === c)) {
@@ -918,16 +982,35 @@
               const pEl = document.createElement('div');
               pEl.className = 'piece ' + (piece.player === 1 ? 'p1' : 'p2');
 
-              // FOG OF WAR: Opponent pieces are masked
-              if (piece.player !== GAME.activePlayer) {
-                pEl.classList.add('hidden-back');
+              // DETERMINING PEEK / REVEAL STATE:
+              // In SETUP: current deployer's pieces are always visible to them.
+              // In PLAYING: All pieces are CONCEALED by default!
+              // A piece is PEEKED if:
+              // 1. GAME.isPeekingAll is true AND piece belongs to activePlayer
+              // 2. OR piece is GAME.selectedCell AND piece belongs to activePlayer
+              // 3. OR piece is GAME.peekedCell (touch & hold) AND piece belongs to activePlayer
+              let isRevealed = false;
+              if (GAME.phase === 'SETUP_P1' && piece.player === 1) isRevealed = true;
+              else if (GAME.phase === 'SETUP_P2' && piece.player === 2) isRevealed = true;
+              else if (GAME.phase === 'PLAYING' && piece.player === GAME.activePlayer) {
+                if (GAME.isPeekingAll) isRevealed = true;
+                if (GAME.selectedCell && GAME.selectedCell.r === r && GAME.selectedCell.c === c) isRevealed = true;
+                if (GAME.peekedCell && GAME.peekedCell.r === r && GAME.peekedCell.c === c) isRevealed = true;
+              }
+
+              if (!isRevealed) {
+                pEl.classList.add('concealed');
                 pEl.innerHTML = `<span class="rank-num">🛡️</span>`;
               } else {
+                pEl.classList.add('peeked');
                 pEl.innerHTML = `
                   <span class="rank-num">${piece.rank}</span>
                   <span class="rank-lbl">${piece.name}</span>
                 `;
               }
+
+              // TOUCH & HOLD PEEK LISTENERS
+              attachPeekEvents(pEl, r, c, piece);
               cell.appendChild(pEl);
             }
 
@@ -939,17 +1022,75 @@
       }
     }
 
-    /* --- SETUP & ARMORY LOGIC --- */
+    /* --- PEEK EVENT HANDLERS --- */
+    function attachPeekEvents(el, r, c, piece) {
+      if (GAME.phase !== 'PLAYING') return;
+      if (piece.player !== GAME.activePlayer) return;
+
+      // Mouse and Touch peek-and-hold
+      let pressTimer = null;
+
+      function startPeek(e) {
+        pressTimer = setTimeout(() => {
+          GAME.peekedCell = { r, c };
+          playAudio('peek');
+          renderBoard();
+        }, 120); // Quick 120ms press triggers peek
+      }
+
+      function endPeek(e) {
+        clearTimeout(pressTimer);
+        if (GAME.peekedCell && GAME.peekedCell.r === r && GAME.peekedCell.c === c) {
+          GAME.peekedCell = null;
+          renderBoard();
+        }
+      }
+
+      el.addEventListener('touchstart', startPeek, { passive: true });
+      el.addEventListener('touchend', endPeek);
+      el.addEventListener('touchcancel', endPeek);
+      el.addEventListener('mousedown', startPeek);
+      el.addEventListener('mouseup', endPeek);
+      el.addEventListener('mouseleave', endPeek);
+    }
+
+    /* --- "HOLD TO PEEK ALL" BUTTON --- */
+    function setPeekingAll(isPeeking) {
+      if (GAME.phase !== 'PLAYING') return;
+      GAME.isPeekingAll = isPeeking;
+      if (isPeeking) {
+        holdPeekBtn.classList.add('holding');
+        playAudio('peek');
+      } else {
+        holdPeekBtn.classList.remove('holding');
+      }
+      renderBoard();
+    }
+
+    holdPeekBtn.addEventListener('mousedown', () => setPeekingAll(true));
+    holdPeekBtn.addEventListener('mouseup', () => setPeekingAll(false));
+    holdPeekBtn.addEventListener('mouseleave', () => setPeekingAll(false));
+    holdPeekBtn.addEventListener('touchstart', (e) => { e.preventDefault(); setPeekingAll(true); });
+    holdPeekBtn.addEventListener('touchend', (e) => { e.preventDefault(); setPeekingAll(false); });
+    holdPeekBtn.addEventListener('touchcancel', (e) => { e.preventDefault(); setPeekingAll(false); });
+
+    endTurnManualBtn.addEventListener('click', () => {
+      playAudio('click');
+      passTurn();
+    });
+
+    /* --- SETUP & DEPLOYMENT --- */
     function renderArmory() {
       armoryGrid.innerHTML = '';
       const counts = (GAME.activePlayer === 1) ? GAME.p1Counts : GAME.p2Counts;
-      const placed = TOTAL_PIECES - Object.values(counts).reduce((a, b) => a + b, 0);
+      const total = getTotalPieces();
+      const placed = total - Object.values(counts).reduce((a, b) => a + b, 0);
 
       const activeName = (GAME.activePlayer === 1) ? GAME.p1Name : GAME.p2Name;
-      setupProgress.textContent = `${activeName}'s Army: (${placed}/${TOTAL_PIECES} deployed)`;
-      confirmDeploymentBtn.disabled = (placed !== TOTAL_PIECES);
+      setupProgress.textContent = `${activeName}'s Army: (${placed}/${total} deployed)`;
+      confirmDeploymentBtn.disabled = (placed !== total);
 
-      ROSTER.forEach(item => {
+      getRoster().forEach(item => {
         const remaining = counts[item.rank] || 0;
         const card = document.createElement('div');
         card.className = 'armory-card' +
@@ -988,7 +1129,8 @@
 
     function handleSetupTap(r, c) {
       const isP1 = (GAME.phase === 'SETUP_P1');
-      const inHomeRows = isP1 ? (r >= 6 && r <= 9) : (r >= 0 && r <= 3);
+      const N = GAME.boardSize;
+      const inHomeRows = isP1 ? (r >= (N === 10 ? 6 : 6)) : (r <= (N === 10 ? 3 : 1));
       if (!inHomeRows) return;
 
       const counts = isP1 ? GAME.p1Counts : GAME.p2Counts;
@@ -996,7 +1138,7 @@
 
       // 1. Placing from tray onto empty square
       if (GAME.selectedTrayRank && !currentPiece) {
-        const meta = ROSTER.find(x => x.rank === GAME.selectedTrayRank);
+        const meta = getRoster().find(x => x.rank === GAME.selectedTrayRank);
         GAME.board[r][c] = {
           rank: meta.rank,
           name: meta.name,
@@ -1020,7 +1162,7 @@
         } else {
           counts[currentPiece.rank]++;
           const oldRank = currentPiece.rank;
-          const meta = ROSTER.find(x => x.rank === GAME.selectedTrayRank);
+          const meta = getRoster().find(x => x.rank === GAME.selectedTrayRank);
           GAME.board[r][c] = {
             rank: meta.rank,
             name: meta.name,
@@ -1039,14 +1181,12 @@
       // 3. Board-to-board piece swapping when tray is not selected
       if (!GAME.selectedTrayRank && currentPiece && currentPiece.player === (isP1 ? 1 : 2)) {
         if (!GAME.selectedCell) {
-          // Select piece for swap
           playAudio('click');
           GAME.selectedCell = { r, c };
           renderBoard();
           statusInstruction.textContent = `Selected ${currentPiece.name} (${currentPiece.rank}). Tap another piece to swap.`;
           return;
         } else {
-          // Second piece tapped: Swap positions on board!
           playAudio('slide');
           const p1 = GAME.board[GAME.selectedCell.r][GAME.selectedCell.c];
           const p2 = GAME.board[r][c];
@@ -1059,7 +1199,7 @@
         }
       }
 
-      // 4. Tap empty square with selected board piece: Move piece to empty square
+      // 4. Move selected piece to empty setup square
       if (!GAME.selectedTrayRank && GAME.selectedCell && !currentPiece) {
         playAudio('slide');
         GAME.board[r][c] = GAME.board[GAME.selectedCell.r][GAME.selectedCell.c];
@@ -1070,14 +1210,15 @@
       }
     }
 
-    /* --- FORMATION PRESETS FOR 40 PIECES --- */
+    /* --- FORMATION PRESETS --- */
     function clearSetupRows() {
       const isP1 = (GAME.phase === 'SETUP_P1');
-      const rows = isP1 ? [6, 7, 8, 9] : [0, 1, 2, 3];
+      const N = GAME.boardSize;
+      const rows = isP1 ? (N === 10 ? [6,7,8,9] : [6,7]) : (N === 10 ? [0,1,2,3] : [0,1]);
       const counts = isP1 ? GAME.p1Counts : GAME.p2Counts;
 
       for (let r of rows) {
-        for (let c = 0; c < 10; c++) {
+        for (let c = 0; c < N; c++) {
           if (GAME.board[r][c]) {
             counts[GAME.board[r][c].rank]++;
             GAME.board[r][c] = null;
@@ -1092,11 +1233,11 @@
       playAudio('slide');
       clearSetupRows();
       const isP1 = (GAME.phase === 'SETUP_P1');
+      const N = GAME.boardSize;
       const counts = isP1 ? GAME.p1Counts : GAME.p2Counts;
 
-      // Build full 40 piece army array
       let pool = [];
-      ROSTER.forEach(item => {
+      getRoster().forEach(item => {
         for (let i = 0; i < item.count; i++) {
           pool.push({
             rank: item.rank,
@@ -1107,14 +1248,11 @@
         }
       });
 
-      // Target home rows: For P1, row 9 is back row, row 6 is front row.
-      // For P2, row 0 is back row, row 3 is front row.
-      const backRow = isP1 ? 9 : 0;
-      const row2 = isP1 ? 8 : 1;
-      const row3 = isP1 ? 7 : 2;
-      const frontRow = isP1 ? 6 : 3;
+      const rows = isP1 ? (N === 10 ? [6,7,8,9] : [6,7]) : (N === 10 ? [0,1,2,3] : [0,1]);
+      const backRow = isP1 ? (N - 1) : 0;
+      const secondRow = isP1 ? (N - 2) : 1;
 
-      let layout = Array(10).fill(null).map(() => Array(10).fill(null));
+      let layout = Array(N).fill(null).map(() => Array(N).fill(null));
 
       function pull(rank) {
         const idx = pool.findIndex(p => p.rank === rank);
@@ -1122,71 +1260,42 @@
       }
 
       if (presetType === 'FORTRESS') {
-        // Flag in corner (col 0, back row), guarded by bombs
         layout[backRow][0] = pull('F');
         layout[backRow][1] = pull('B');
-        layout[row2][0] = pull('B');
-        layout[row2][1] = pull('B');
-
-        // Other bombs protecting back/mid
-        layout[backRow][9] = pull('B');
-        layout[row2][9] = pull('B');
-        layout[row3][5] = pull('B');
-
-        // Spy & Marshal near center
-        layout[row2][4] = pull('S');
-        layout[row3][4] = pull('1');
-        layout[row3][3] = pull('2');
-
-        // Scouts and Miners in front and 3rd rows
-        layout[frontRow][0] = pull('9');
-        layout[frontRow][1] = pull('9');
-        layout[frontRow][4] = pull('9');
-        layout[frontRow][5] = pull('9');
-        layout[frontRow][8] = pull('9');
-        layout[frontRow][9] = pull('9');
+        layout[secondRow][0] = pull('B');
+        layout[secondRow][1] = pull('B');
       } else if (presetType === 'BASTION') {
-        // Flag in center back row (col 4), flanked by bombs
-        layout[backRow][4] = pull('F');
-        layout[backRow][3] = pull('B');
-        layout[backRow][5] = pull('B');
-        layout[row2][4] = pull('B');
-        layout[row2][3] = pull('B');
-        layout[row2][5] = pull('B');
-        layout[row3][4] = pull('B');
-
-        // Marshal and General in 2nd row
-        layout[row2][2] = pull('1');
-        layout[row2][7] = pull('2');
-        layout[row3][2] = pull('S');
+        const mid = Math.floor(N / 2);
+        layout[backRow][mid] = pull('F');
+        layout[backRow][mid - 1] = pull('B');
+        layout[backRow][mid + 1] = pull('B');
+        layout[secondRow][mid] = pull('B');
       } else if (presetType === 'BLITZ') {
-        // Scouts & high officers aggressive in rows 6 & 7
-        layout[backRow][9] = pull('F');
-        layout[backRow][8] = pull('B');
-        layout[row2][9] = pull('B');
-        layout[row2][8] = pull('B');
+        layout[backRow][N - 1] = pull('F');
+        layout[backRow][N - 2] = pull('B');
+        layout[secondRow][N - 1] = pull('B');
+        const frontRow = isP1 ? (N === 10 ? 6 : 6) : (N === 10 ? 3 : 1);
         layout[frontRow][2] = pull('1');
-        layout[frontRow][7] = pull('2');
-        layout[row3][2] = pull('S');
+        layout[frontRow][N - 3] = pull('2');
       }
 
-      // Fill remaining empty spots randomly from remaining pool
+      // Random fill for remaining pieces
       pool.sort(() => Math.random() - 0.5);
-      const rows = isP1 ? [6, 7, 8, 9] : [0, 1, 2, 3];
       for (let r of rows) {
-        for (let c = 0; c < 10; c++) {
+        for (let c = 0; c < N; c++) {
           if (!layout[r][c] && pool.length > 0) {
             layout[r][c] = pool.pop();
           }
         }
       }
 
-      // Apply to actual board
       for (let r of rows) {
-        for (let c = 0; c < 10; c++) {
+        for (let c = 0; c < N; c++) {
           const piece = layout[r][c];
-          GAME.board[r][c] = piece;
-          counts[piece.rank]--;
+          if (piece) {
+            GAME.board[r][c] = piece;
+            counts[piece.rank]--;
+          }
         }
       }
 
@@ -1214,33 +1323,32 @@
         GAME.selectedTrayRank = null;
         GAME.selectedCell = null;
 
-        showCurtain(
-          `Pass Phone to ${GAME.p2Name}`,
-          `Steve is ready! Gill, take the phone to deploy your 40 red pieces in your home rows.`,
-          2,
-          () => {
-            renderArmory();
-            renderBoard();
-            updateStatus();
-          }
-        );
+        // One-time setup handover dialog
+        setupHandoverTitle.textContent = `${GAME.p1Name} Deployment Ready`;
+        setupHandoverSub.textContent = `Hand the phone to ${GAME.p2Name} to deploy his army.`;
+        setupHandoverBtn.textContent = `Start ${GAME.p2Name}'s Setup`;
+        setupHandoverModal.classList.remove('hidden');
+
+        setupHandoverBtn.onclick = () => {
+          playAudio('click');
+          setupHandoverModal.classList.add('hidden');
+          renderArmory();
+          renderBoard();
+          updateStatus();
+        };
       } else if (GAME.phase === 'SETUP_P2') {
+        // Both armies deployed! Transition to ALWAYS-ACTIVE PEEKING MODE!
         GAME.phase = 'PLAYING';
         GAME.activePlayer = 1;
         GAME.selectedCell = null;
         GAME.validMoves = [];
         setupBox.style.display = 'none';
+        gameplayBar.style.display = 'flex';
         intelBox.style.display = 'flex';
 
-        showCurtain(
-          `Armies Assembled — Start War!`,
-          `Hand the phone back to ${GAME.p1Name} to open the match.`,
-          1,
-          () => {
-            renderBoard();
-            updateStatus();
-          }
-        );
+        playAudio('victory');
+        renderBoard();
+        updateStatus();
       }
     });
 
@@ -1248,7 +1356,7 @@
     function handlePlayTap(r, c) {
       const piece = GAME.board[r][c];
 
-      // 1. Destination tap
+      // 1. Move or attack highlighted square
       if (GAME.selectedCell && GAME.validMoves.some(m => m.r === r && m.c === c)) {
         executeMove(GAME.selectedCell.r, GAME.selectedCell.c, r, c);
         return;
@@ -1269,35 +1377,35 @@
         GAME.selectedCell = { r, c };
         GAME.validMoves = computeMoves(r, c, piece);
         renderBoard();
-        statusInstruction.textContent = `${piece.name} (${piece.rank}) selected. Tap a destination.`;
+        statusInstruction.textContent = `Selected ${piece.name} (${piece.rank}). Tap destination to move.`;
         return;
       }
 
-      // 3. Clear
+      // 3. Clear selection
       GAME.selectedCell = null;
       GAME.validMoves = [];
       renderBoard();
-      statusInstruction.textContent = 'Select a piece to move';
+      statusInstruction.textContent = 'Hold peek button or tap piece to select';
     }
 
     function computeMoves(r, c, piece) {
       const moves = [];
-      const directions = [
+      const N = GAME.boardSize;
+      const dirs = [
         { dr: -1, dc: 0 },
         { dr: 1, dc: 0 },
         { dr: 0, dc: -1 },
         { dr: 0, dc: 1 }
       ];
 
-      // Scout (Rank 9) can charge any distance across open squares
-      const maxDistance = (piece.rank === '9') ? 9 : 1;
+      const maxDistance = (piece.rank === '9') ? (N - 1) : 1;
 
-      for (let d of directions) {
+      for (let d of dirs) {
         for (let dist = 1; dist <= maxDistance; dist++) {
           const nr = r + d.dr * dist;
           const nc = c + d.dc * dist;
 
-          if (nr < 0 || nr >= 10 || nc < 0 || nc >= 10) break;
+          if (nr < 0 || nr >= N || nc < 0 || nc >= N) break;
           if (isLake(nr, nc)) break;
 
           const target = GAME.board[nr][nc];
@@ -1305,7 +1413,7 @@
             moves.push({ r: nr, c: nc });
           } else {
             if (target.player !== piece.player) moves.push({ r: nr, c: nc });
-            break; // Blocked by any piece
+            break;
           }
         }
       }
@@ -1326,7 +1434,7 @@
         GAME.lastMove = { fromR, fromC, toR, toC, player: attacker.player, summary: `Player ${attacker.player} advanced to an open square.` };
         playAudio('slide');
         renderBoard();
-        finishTurn();
+        passTurn();
         return;
       }
 
@@ -1375,7 +1483,7 @@
         message = `⚔️ Both ${attacker.name}s (${attacker.rank}) clashed and eliminated each other!`;
         draw = true;
       }
-      // 5. Standard Hierarchy (Lower number wins: 1 > 2 > 3 > 4 > 5 > 6 > 7 > 8 > 9 > S)
+      // 5. Standard Rank Hierarchy (Lower number wins)
       else {
         if (attacker.rank === 'S') {
           message = `${defName}'s ${defender.name} (${defender.rank}) subdued the Spy!`;
@@ -1416,7 +1524,7 @@
         } else {
           const next = (GAME.activePlayer === 1) ? 2 : 1;
           if (!hasMoves(next)) celebrateWin(GAME.activePlayer);
-          else finishTurn();
+          else passTurn();
         }
       });
     }
@@ -1456,8 +1564,9 @@
     }
 
     function hasMoves(player) {
-      for (let r = 0; r < 10; r++) {
-        for (let c = 0; c < 10; c++) {
+      const N = GAME.boardSize;
+      for (let r = 0; r < N; r++) {
+        for (let c = 0; c < N; c++) {
           const p = GAME.board[r][c];
           if (p && p.player === player && p.rank !== 'B' && p.rank !== 'F') {
             if (computeMoves(r, c, p).length > 0) return true;
@@ -1467,50 +1576,43 @@
       return false;
     }
 
-    function finishTurn() {
+    /* --- PASS TURN (NO BLOCKING CURTAIN) --- */
+    function passTurn() {
       const next = (GAME.activePlayer === 1) ? 2 : 1;
       GAME.activePlayer = next;
-      const nextName = (next === 1) ? GAME.p1Name : GAME.p2Name;
+      GAME.selectedCell = null;
+      GAME.validMoves = [];
+      GAME.isPeekingAll = false;
+      GAME.peekedCell = null;
 
-      showCurtain(
-        `Pass Phone to ${nextName}`,
-        `Your turn is done. Hand the phone over so ${nextName} can plan their move.`,
-        next,
-        () => {
-          renderBoard();
-          updateStatus();
-          if (GAME.lastMove && GAME.lastMove.summary) {
-            intelText.textContent = `Last Turn: ${GAME.lastMove.summary}`;
-            intelBar.classList.remove('hidden');
-          }
-        }
-      );
+      renderBoard();
+      updateStatus();
+
+      if (GAME.lastMove && GAME.lastMove.summary) {
+        intelText.textContent = `Last Move: ${GAME.lastMove.summary}`;
+        intelBar.classList.remove('hidden');
+      }
     }
 
     function celebrateWin(winner) {
       GAME.phase = 'GAME_OVER';
       playAudio('victory');
       const winName = (winner === 1) ? GAME.p1Name : GAME.p2Name;
-      showCurtain(
-        `🏆 ${winName} Wins!`,
-        `A masterclass victory in the 40-piece campaign!`,
-        winner,
-        () => initGame()
-      );
-      revealTurnBtn.textContent = 'Play Again';
+      alert(`🏆 ${winName} Wins! A decisive victory on the battlefield!`);
+      initMatch();
     }
 
     function updateStatus() {
       const isP1 = (GAME.activePlayer === 1);
       const name = isP1 ? GAME.p1Name : GAME.p2Name;
 
-      playerBadge.className = 'player-pill ' + (isP1 ? 'p1' : 'p2');
-      playerBadge.textContent = `${name} (${isP1 ? 'Blue' : 'Red'})`;
+      playerBadge.className = 'turn-badge ' + (isP1 ? 'p1' : 'p2');
+      playerBadge.textContent = `${name}'s Turn`;
 
       if (GAME.phase === 'SETUP_P1' || GAME.phase === 'SETUP_P2') {
-        statusInstruction.textContent = 'Deploy your 40 pieces';
+        statusInstruction.textContent = `Deploy your ${getTotalPieces()} pieces`;
       } else if (GAME.phase === 'PLAYING') {
-        statusInstruction.textContent = 'Select a piece to move';
+        statusInstruction.textContent = 'Hold peek button or tap piece to select';
       }
     }
 
@@ -1523,31 +1625,23 @@
     ranksGuideBtn.addEventListener('click', () => ranksModal.classList.remove('hidden'));
     closeRanksBtn.addEventListener('click', () => ranksModal.classList.add('hidden'));
 
-    namesBtn.addEventListener('click', () => {
-      p1Input.value = GAME.p1Name;
-      p2Input.value = GAME.p2Name;
-      namesModal.classList.remove('hidden');
-    });
-
-    saveNamesBtn.addEventListener('click', () => {
-      GAME.p1Name = p1Input.value.trim() || 'Steve';
-      GAME.p2Name = p2Input.value.trim() || 'Gill';
-      namesModal.classList.add('hidden');
-      updateStatus();
-      refreshGraveyard();
-      renderArmory();
-    });
-
-    resetMatchBtn.addEventListener('click', () => {
-      if (confirm('Reset board and start a new campaign?')) {
-        initGame();
+    variantToggleBtn.addEventListener('click', () => {
+      if (confirm(`Switch to ${GAME.boardSize === 10 ? 'Quick 8×8 (12 pieces)' : 'Classic 10×10 (40 pieces)'}? This will restart the game.`)) {
+        GAME.boardSize = (GAME.boardSize === 10) ? 8 : 10;
+        variantToggleBtn.textContent = (GAME.boardSize === 10) ? '⚔️ 10×10' : '⚡ 8×8';
+        initMatch();
       }
     });
 
-    // Start on load
+    resetMatchBtn.addEventListener('click', () => {
+      if (confirm('Restart game and redeploy pieces?')) initMatch();
+    });
+
+    // Start on boot
     window.addEventListener('DOMContentLoaded', () => {
-      initGame();
+      initMatch();
     });
   </script>
 </body>
 </html>
+Displaying Stratego_Peeking_Edition.html.
