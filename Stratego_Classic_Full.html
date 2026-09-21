@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Classic Stratego — Full 10×10 (40 Pieces)</title>
+  <style>
+    :root {
+      --bg: #12151d;
+      --card-bg: #1a202c;
+      --card-border: #2d3748;
+      --text: #f7fafc;
+      --text-muted: #a0aec0;
+      --p1-blue: #2b6cb0;
+      --p1-dark: #1a365d;
+      --p1-accent: #63b3ed;
+      --p2-red: #c53030;
+      --p2-dark: #742a2a;
+      --p2-accent: #feb2b2;
+      --lake-water: #0984e3;
+      --lake-deep: #06528d;
+      --lake-border: #74b9ff;
+      --gold: #d69e2e;
+      --gold-light: #f6e05e;
+      --green: #38a169;
+      --red: #e53e3e;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      touch-action: manipulation;
+    }
+
+    /* Header */
+    header {
+      width: 100%;
+      max-width: 480px;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .brand-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+
+    .brand-sub {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .nav-btn {
+      background: #2d3748;
+      border: 1px solid #4a5568;
+      color: var(--text);
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .nav-btn:active { background: #4a5568; }
+
+    /* Status Bar */
+    .status-bar {
+      width: 100%;
+      max-width: 480px;
+      padding: 6px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #161c26;
+      border-bottom: 1px solid #232a35;
+      font-size: 0.8rem;
+    }
+
+    .player-pill {
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.78rem;
+    }
+    .player-pill.p1 { background: var(--p1-dark); color: var(--p1-accent); border: 1px solid var(--p1-blue); }
+    .player-pill.p2 { background: var(--p2-dark); color: var(--p2-accent); border: 1px solid var(--p2-red); }
+
+    .status-note {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 500;
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Intel Banner */
+    .intel-bar {
+      width: 100%;
+      max-width: 480px;
+      background: #1f2735;
+      border-bottom: 1px solid #2d3748;
+      padding: 5px 12px;
+      font-size: 0.72rem;
+      color: var(--gold-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .intel-bar.hidden { display: none; }
+
+    /* 10x10 Board */
+    main {
+      width: 100%;
+      max-width: 480px;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    .board-frame {
+      position: relative;
+      width: min(97vw, 440px);
+      height: min(97vw, 440px);
+      margin: 4px auto;
+      background: #0d1017;
+      border: 3px solid #2d3748;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      gap: 1.5px;
+      padding: 2px;
+    }
+
+    .cell {
+      position: relative;
+      background: #222936;
+      border-radius: 2.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .cell.dark { background: #19202c; }
+
+    .cell.setup-zone {
+      box-shadow: inset 0 0 0 1.2px rgba(214, 158, 46, 0.65);
+      background: #293444 !important;
+    }
+
+    .cell.selected {
+      background: rgba(214, 158, 46, 0.5) !important;
+      box-shadow: inset 0 0 0 2px var(--gold-light);
+    }
+
+    .cell.move-target::after {
+      content: "";
+      width: 30%;
+      height: 30%;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--green);
+    }
+
+    .cell.attack-target {
+      background: rgba(229, 62, 62, 0.5) !important;
+      box-shadow: inset 0 0 0 2px var(--red);
+    }
+
+    .cell.last-src { box-shadow: inset 0 0 0 1.5px rgba(99, 179, 237, 0.7); }
+    .cell.last-dst { box-shadow: inset 0 0 0 2px var(--gold-light); }
+
+    .cell.lake {
+      background: linear-gradient(135deg, var(--lake-deep), var(--lake-water)) !important;
+      cursor: not-allowed;
+      border: 1px solid var(--lake-border);
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.6);
+    }
+    .cell.lake::before {
+      content: "〰";
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    /* Pieces */
+    .piece {
+      width: 92%;
+      height: 92%;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.25);
+      position: relative;
+    }
+
+    .piece.p1 {
+      background: linear-gradient(145deg, #2b6cb0, #1a365d);
+      color: #ebf8ff;
+      border-color: #63b3ed;
+    }
+
+    .piece.p2 {
+      background: linear-gradient(145deg, #c53030, #742a2a);
+      color: #fff5f5;
+      border-color: #feb2b2;
+    }
+
+    .piece.hidden-back {
+      background: linear-gradient(145deg, #4a5568, #2d3748) !important;
+      border-color: #718096 !important;
+    }
+
+    .piece.hidden-back .rank-num {
+      font-size: 0.95rem;
+      color: #e2e8f0;
+    }
+    .piece.hidden-back .rank-lbl { display: none; }
+
+    .rank-num {
+      font-size: 0.95rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .rank-lbl {
+      font-size: 0.38rem;
+      letter-spacing: 0.2px;
+      text-transform: uppercase;
+      line-height: 1;
+      margin-top: 1px;
+      opacity: 0.9;
+    }
+
+    /* Setup Armory */
+    .setup-box {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 8px;
+      margin-top: 6px;
+    }
+
+    .setup-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 0.78rem;
+    }
+
+    .setup-title { font-weight: 700; color: var(--gold-light); }
+
+    .armory-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+    }
+
+    .armory-card {
+      background: #2d3748;
+      border: 1.5px solid #4a5568;
+      border-radius: 5px;
+      padding: 4px 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .armory-card.selected {
+      border-color: var(--gold-light);
+      background: #3b4759;
+      box-shadow: 0 0 6px var(--gold);
+    }
+
+    .armory-card.depleted { opacity: 0.3; cursor: not-allowed; }
+
+    .armory-card .pill {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--gold);
+      color: #1a202c;
+      font-size: 0.6rem;
+      font-weight: 800;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .armory-card .a-rank { font-size: 0.85rem; font-weight: 800; }
+    .armory-card .a-name { font-size: 0.45rem; text-transform: uppercase; color: var(--text-muted); }
+
+    .preset-row {
+      display: flex;
+      gap: 5px;
+      margin-top: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .preset-btn {
+      background: #242c38;
+      border: 1px solid #4a5568;
+      color: var(--text-muted);
+      border-radius: 4px;
+      padding: 5px 8px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .preset-btn:active { background: #4a5568; color: var(--text); }
+
+    .action-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 9px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+    .btn:active { filter: brightness(0.85); }
+    .btn-gold { background: var(--gold); color: #1a202c; }
+    .btn-dark { background: #2d3748; color: var(--text); border: 1px solid #4a5568; }
+    .btn-green { background: var(--green); color: white; }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* Casualties Panel */
+    .intel-box {
+      width: 100%;
+      max-width: 480px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.75rem;
+    }
+
+    .intel-line { display: flex; align-items: center; gap: 8px; }
+    .intel-tag { color: var(--text-muted); width: 80px; flex-shrink: 0; font-weight: 600; }
+    .grave-chips { display: flex; flex-wrap: wrap; gap: 3px; max-height: 50px; overflow-y: auto; }
+    .chip {
+      background: #242c38;
+      border: 1px solid #4a5568;
+      border-radius: 3px;
+      padding: 1px 4px;
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+    .chip.p1 { color: var(--p1-accent); border-color: var(--p1-blue); }
+    .chip.p2 { color: var(--p2-accent); border-color: var(--p2-red); }
+
+    /* Modals */
+    .modal-curtain {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10, 14, 20, 0.94);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .modal-curtain.hidden { display: none; }
+
+    .curtain-card {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 12px;
+      padding: 24px 20px;
+      width: 92%;
+      max-width: 380px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.7);
+    }
+
+    .curtain-card h2 {
+      font-size: 1.3rem;
+      color: var(--gold-light);
+      margin-bottom: 10px;
+    }
+
+    .curtain-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 22px;
+    }
+
+    /* Battle Clash */
+    .battle-arena {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .combat-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 95px;
+    }
+
+    .combat-piece {
+      width: 62px;
+      height: 62px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      margin-bottom: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .versus-badge { font-size: 1.3rem; font-weight: 900; color: #fc8181; }
+
+    .battle-resolution {
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding: 10px;
+      background: #12161f;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      line-height: 1.35;
+      border: 1px solid #2d3748;
+    }
+
+    /* Reference Dialog */
+    .guide-scroll {
+      max-height: 68vh;
+      overflow-y: auto;
+      text-align: left;
+      font-size: 0.82rem;
+      line-height: 1.45;
+    }
+    .guide-scroll h3 { color: var(--gold-light); margin: 10px 0 4px; }
+    .guide-scroll ul { margin-left: 18px; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand-box">
+      <div class="brand-title">Stratego Classic</div>
+      <div class="brand-sub">Full 10×10 • 40 Pieces per Army • Pass & Play</div>
+    </div>
+    <div class="header-actions">
+      <button id="soundToggleBtn" class="nav-btn">🔊</button>
+      <button id="namesBtn" class="nav-btn">👥 Players</button>
+      <button id="ranksGuideBtn" class="nav-btn">📖 Ranks</button>
+      <button id="resetMatchBtn" class="nav-btn">🔄 Reset</button>
+    </div>
+  </header>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div id="playerBadge" class="player-pill p1">Steve (Blue)</div>
+    <div id="statusInstruction" class="status-note">Deploy your 40 pieces</div>
+  </div>
+
+  <!-- Intel Banner -->
+  <div id="intelBar" class="intel-bar hidden">
+    <span id="intelText">Last turn: Move completed</span>
+  </div>
+
+  <!-- Board Area -->
+  <main>
+    <div id="board" class="board-frame"></div>
+
+    <!-- Deployment Tray (Visible during Setup) -->
+    <div id="setupBox" class="setup-box">
+      <div class="setup-top">
+        <span id="setupProgress" class="setup-title">Deploy Army: (0/40 placed)</span>
+        <span style="font-size: 0.7rem; color: var(--text-muted);">Tap 2 pieces to swap</span>
+      </div>
+
+      <div id="armoryGrid" class="armory-grid"></div>
+
+      <!-- Presets for fast setup -->
+      <div class="preset-row">
+        <button id="presetBlitzBtn" class="preset-btn">⚡ Blitz Formation</button>
+        <button id="presetFortressBtn" class="preset-btn">🏰 Corner Fortress</button>
+        <button id="presetBastionBtn" class="preset-btn">🛡️ Center Bastion</button>
+        <button id="presetShuffleBtn" class="preset-btn">🎲 Randomize</button>
+      </div>
+
+      <div class="action-row">
+        <button id="clearDeploymentBtn" class="btn btn-dark">Clear</button>
+        <button id="confirmDeploymentBtn" class="btn btn-green" disabled>Confirm Deployment</button>
+      </div>
+    </div>
+
+    <!-- Graveyard & Casualties (Visible during match) -->
+    <div id="intelBox" class="intel-box" style="display: none;">
+      <div class="intel-line">
+        <span class="intel-tag" id="p1GraveLabel">Steve Lost:</span>
+        <div id="p1Graveyard" class="grave-chips"></div>
+      </div>
+      <div class="intel-line">
+        <span class="intel-tag" id="p2GraveLabel">Gill Lost:</span>
+        <div id="p2Graveyard" class="grave-chips"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Turn Transition Curtain Overlay -->
+  <div id="curtainModal" class="modal-curtain">
+    <div class="curtain-card">
+      <div id="curtainIcon" style="font-size: 2.6rem; margin-bottom: 12px;">🛡️</div>
+      <h2 id="curtainHeading">Pass Phone to Steve</h2>
+      <p id="curtainSub">Ensure Gill cannot see the screen before tapping reveal.</p>
+      <button id="revealTurnBtn" class="btn btn-gold" style="width: 100%; padding: 14px; font-size: 1rem;">I Have the Phone — Reveal</button>
+    </div>
+  </div>
+
+  <!-- Battle Clash Reveal Modal -->
+  <div id="battleModal" class="modal-curtain hidden">
+    <div class="curtain-card">
+      <h2>⚔️ Combat Clash!</h2>
+      <div class="battle-arena">
+        <div class="combat-unit">
+          <div id="attackerPiece" class="combat-piece p1">
+            <span class="rank-num" id="attPieceRank">1</span>
+            <span class="rank-lbl" id="attPieceName">Marshal</span>
+          </div>
+          <span style="font-size: 0.72rem; color: var(--text-muted);" id="attPlayerRole">Attacker</span>
+        </div>
+        <div class="versus-badge">VS</div>
+        <div class="combat-unit">
+          <div id="defenderPiece" class="combat-piece p2">
+            <span class="rank-num" id="defPieceRank">?</span>
+            <span class="rank-lbl" id="defPieceName">Defender</span>
+          </div>
+          <span style="font-size: 0.72rem; color: var(--text-muted);" id="defPlayerRole">Defender</span>
+        </div>
+      </div>
+      <div id="battleSummary" class="battle-resolution">Attacker defeats Defender!</div>
+      <button id="closeBattleBtn" class="btn btn-gold" style="width: 100%; padding: 12px;">Continue</button>
+    </div>
+  </div>
+
+  <!-- Ranks & Rules Dialog -->
+  <div id="ranksModal" class="modal-curtain hidden">
+    <div class="curtain-card" style="max-height: 85vh;">
+      <h2>Classic US Ranks (Full 40 Pieces)</h2>
+      <div class="guide-scroll">
+        <p>Lower number = higher rank (1 is highest, 9 is lowest).</p>
+
+        <h3>Official 40-Piece Roster</h3>
+        <ul>
+          <li><strong>1 — Marshal (1x)</strong>: Defeats 2–9 & Spy. Loses to Spy (if Spy attacks first) and Bombs.</li>
+          <li><strong>2 — General (1x)</strong>: Defeats 3–9 & Spy. Loses to 1 and Bombs.</li>
+          <li><strong>3 — Colonel (2x)</strong>: Defeats 4–9 & Spy. Loses to 1, 2, and Bombs.</li>
+          <li><strong>4 — Major (3x)</strong>: Defeats 5–9 & Spy. Loses to 1–3, and Bombs.</li>
+          <li><strong>5 — Captain (4x)</strong>: Defeats 6–9 & Spy.</li>
+          <li><strong>6 — Lieutenant (4x)</strong>: Defeats 7–9 & Spy.</li>
+          <li><strong>7 — Sergeant (4x)</strong>: Defeats 8, 9 & Spy.</li>
+          <li><strong>8 — Miner (5x)</strong>: Defeats 9 & Spy. <strong>DEFUSES BOMBS!</strong></li>
+          <li><strong>9 — Scout (8x)</strong>: Can move any number of open orthogonal squares in a straight line!</li>
+          <li><strong>S — Spy (1x)</strong>: Defeats the Marshal (1) ONLY if the Spy attacks first! Loses to all pieces if attacked.</li>
+          <li><strong>B — Bomb (6x)</strong>: Immobile. Blows up any attacker except a Miner.</li>
+          <li><strong>F — Flag (1x)</strong>: Immobile. Capture the enemy Flag to WIN!</li>
+        </ul>
+
+        <h3>Movement & Board Rules</h3>
+        <ul>
+          <li><strong>Lakes</strong>: Two 2×2 water areas in rows 4–5 (cols 2–3 and 6–7) cannot be entered or jumped over.</li>
+          <li><strong>Equal Ranks</strong>: When pieces of the same rank attack, BOTH are eliminated.</li>
+          <li><strong>Couch Pass & Play</strong>: Board auto-rotates 180° so the active player always commands from the bottom.</li>
+        </ul>
+      </div>
+      <button id="closeRanksBtn" class="btn btn-dark" style="margin-top: 14px; width: 100%;">Close</button>
+    </div>
+  </div>
+
+  <!-- Player Names Modal -->
+  <div id="namesModal" class="modal-curtain hidden">
+    <div class="curtain-card" style="max-width: 320px;">
+      <h2>Player Names</h2>
+      <div style="margin-bottom: 12px; text-align: left;">
+        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Player 1 (Blue):</label>
+        <input type="text" id="p1Input" value="Steve" maxlength="15" style="width: 100%; padding: 10px; background: #12151d; border: 1px solid #4a5568; border-radius: 6px; color: white;">
+      </div>
+      <div style="margin-bottom: 14px; text-align: left;">
+        <label style="font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px;">Player 2 (Red):</label>
+        <input type="text" id="p2Input" value="Gill" maxlength="15" style="width: 100%; padding: 10px; background: #12151d; border: 1px solid #4a5568; border-radius: 6px; color: white;">
+      </div>
+      <button id="saveNamesBtn" class="btn btn-gold" style="width: 100%;">Save Names</button>
+    </div>
+  </div>
+
+  <script>
+    /* --- AUDIO ENGINE --- */
+    let audioCtx = null;
+    let isMuted = false;
+
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    function playAudio(fx) {
+      if (isMuted) return;
+      try {
+        initAudio();
+        const t = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (fx === 'click') {
+          osc.frequency.setValueAtTime(520, t);
+          osc.frequency.exponentialRampToValueAtTime(800, t + 0.04);
+          gain.gain.setValueAtTime(0.12, t);
+          gain.gain.linearRampToValueAtTime(0.01, t + 0.04);
+          osc.start(t);
+          osc.stop(t + 0.04);
+        } else if (fx === 'slide') {
+          osc.frequency.setValueAtTime(320, t);
+          osc.frequency.exponentialRampToValueAtTime(460, t + 0.08);
+          gain.gain.setValueAtTime(0.12, t);
+          gain.gain.linearRampToValueAtTime(0.01, t + 0.08);
+          osc.start(t);
+          osc.stop(t + 0.08);
+        } else if (fx === 'clash') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(200, t);
+          osc.frequency.exponentialRampToValueAtTime(70, t + 0.22);
+          gain.gain.setValueAtTime(0.25, t);
+          gain.gain.linearRampToValueAtTime(0.01, t + 0.22);
+          osc.start(t);
+          osc.stop(t + 0.22);
+        } else if (fx === 'explosion') {
+          const bufferSize = audioCtx.sampleRate * 0.4;
+          const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+          const noise = audioCtx.createBufferSource();
+          noise.buffer = buffer;
+          const ng = audioCtx.createGain();
+          ng.gain.setValueAtTime(0.4, t);
+          ng.gain.exponentialRampToValueAtTime(0.01, t + 0.4);
+          noise.connect(ng);
+          ng.connect(audioCtx.destination);
+          noise.start(t);
+        } else if (fx === 'victory') {
+          [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.frequency.setValueAtTime(f, t + i * 0.12);
+            g.gain.setValueAtTime(0.2, t + i * 0.12);
+            g.gain.linearRampToValueAtTime(0.01, t + i * 0.12 + 0.28);
+            o.start(t + i * 0.12);
+            o.stop(t + i * 0.12 + 0.28);
+          });
+        }
+      } catch (e) {}
+    }
+
+    /* --- OFFICIAL 40-PIECE CLASSIC US ROSTER --- */
+    const TOTAL_PIECES = 40;
+    const ROSTER = [
+      { rank: '1', name: 'Marshal', strength: 1, count: 1 },
+      { rank: '2', name: 'General', strength: 2, count: 1 },
+      { rank: '3', name: 'Colonel', strength: 3, count: 2 },
+      { rank: '4', name: 'Major', strength: 4, count: 3 },
+      { rank: '5', name: 'Captain', strength: 5, count: 4 },
+      { rank: '6', name: 'Lieutenant', strength: 6, count: 4 },
+      { rank: '7', name: 'Sergeant', strength: 7, count: 4 },
+      { rank: '8', name: 'Miner', strength: 8, count: 5 },
+      { rank: '9', name: 'Scout', strength: 9, count: 8 },
+      { rank: 'S', name: 'Spy', strength: 0, count: 1 },
+      { rank: 'B', name: 'Bomb', strength: -1, count: 6 },
+      { rank: 'F', name: 'Flag', strength: -2, count: 1 }
+    ];
+
+    // Standard 10x10 Lakes: Rows 4 & 5, Cols 2,3 and Cols 6,7
+    function isLake(r, c) {
+      return (r === 4 || r === 5) && ((c === 2 || c === 3) || (c === 6 || c === 7));
+    }
+
+    /* --- APPLICATION STATE --- */
+    const GAME = {
+      p1Name: 'Steve',
+      p2Name: 'Gill',
+      phase: 'SETUP_P1', // SETUP_P1, SETUP_P2, PLAYING, GAME_OVER
+      activePlayer: 1,   // 1 (Blue) or 2 (Red)
+      board: Array(10).fill(null).map(() => Array(10).fill(null)),
+      selectedCell: null,
+      selectedTrayRank: null,
+      validMoves: [],
+      p1Lost: [],
+      p2Lost: [],
+      p1Counts: {},
+      p2Counts: {},
+      lastMove: null,
+      curtainCallback: null
+    };
+
+    function resetCounts() {
+      GAME.p1Counts = {};
+      GAME.p2Counts = {};
+      ROSTER.forEach(item => {
+        GAME.p1Counts[item.rank] = item.count;
+        GAME.p2Counts[item.rank] = item.count;
+      });
+    }
+
+    /* --- DOM REFS --- */
+    const boardEl = document.getElementById('board');
+    const playerBadge = document.getElementById('playerBadge');
+    const statusInstruction = document.getElementById('statusInstruction');
+    const intelBar = document.getElementById('intelBar');
+    const intelText = document.getElementById('intelText');
+    const setupBox = document.getElementById('setupBox');
+    const setupProgress = document.getElementById('setupProgress');
+    const armoryGrid = document.getElementById('armoryGrid');
+    const presetBlitzBtn = document.getElementById('presetBlitzBtn');
+    const presetFortressBtn = document.getElementById('presetFortressBtn');
+    const presetBastionBtn = document.getElementById('presetBastionBtn');
+    const presetShuffleBtn = document.getElementById('presetShuffleBtn');
+    const clearDeploymentBtn = document.getElementById('clearDeploymentBtn');
+    const confirmDeploymentBtn = document.getElementById('confirmDeploymentBtn');
+    const intelBox = document.getElementById('intelBox');
+    const p1GraveLabel = document.getElementById('p1GraveLabel');
+    const p2GraveLabel = document.getElementById('p2GraveLabel');
+    const p1Graveyard = document.getElementById('p1Graveyard');
+    const p2Graveyard = document.getElementById('p2Graveyard');
+    const curtainModal = document.getElementById('curtainModal');
+    const curtainHeading = document.getElementById('curtainHeading');
+    const curtainSub = document.getElementById('curtainSub');
+    const revealTurnBtn = document.getElementById('revealTurnBtn');
+    const battleModal = document.getElementById('battleModal');
+    const attackerPiece = document.getElementById('attackerPiece');
+    const defenderPiece = document.getElementById('defenderPiece');
+    const attPieceRank = document.getElementById('attPieceRank');
+    const attPieceName = document.getElementById('attPieceName');
+    const defPieceRank = document.getElementById('defPieceRank');
+    const defPieceName = document.getElementById('defPieceName');
+    const attPlayerRole = document.getElementById('attPlayerRole');
+    const defPlayerRole = document.getElementById('defPlayerRole');
+    const battleSummary = document.getElementById('battleSummary');
+    const closeBattleBtn = document.getElementById('closeBattleBtn');
+    const ranksGuideBtn = document.getElementById('ranksGuideBtn');
+    const ranksModal = document.getElementById('ranksModal');
+    const closeRanksBtn = document.getElementById('closeRanksBtn');
+    const namesBtn = document.getElementById('namesBtn');
+    const namesModal = document.getElementById('namesModal');
+    const p1Input = document.getElementById('p1Input');
+    const p2Input = document.getElementById('p2Input');
+    const saveNamesBtn = document.getElementById('saveNamesBtn');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const resetMatchBtn = document.getElementById('resetMatchBtn');
+
+    /* --- INITIALIZATION --- */
+    function initGame() {
+      GAME.phase = 'SETUP_P1';
+      GAME.activePlayer = 1;
+      GAME.board = Array(10).fill(null).map(() => Array(10).fill(null));
+      GAME.selectedCell = null;
+      GAME.selectedTrayRank = null;
+      GAME.validMoves = [];
+      GAME.p1Lost = [];
+      GAME.p2Lost = [];
+      GAME.lastMove = null;
+      resetCounts();
+
+      setupBox.style.display = 'block';
+      intelBox.style.display = 'none';
+      intelBar.classList.add('hidden');
+
+      showCurtain(
+        `Pass Phone to ${GAME.p1Name}`,
+        `Player 1 (Blue): Take the phone to deploy your 40 pieces secretly in rows 6–9.`,
+        1,
+        () => {
+          renderArmory();
+          renderBoard();
+          updateStatus();
+        }
+      );
+    }
+
+    /* --- CURTAIN TRANSITION --- */
+    function showCurtain(title, subtitle, playerNum, onReveal) {
+      curtainHeading.textContent = title;
+      curtainSub.textContent = subtitle;
+      revealTurnBtn.textContent = 'I Have the Phone — Reveal';
+      curtainModal.classList.remove('hidden');
+      GAME.curtainCallback = onReveal;
+    }
+
+    revealTurnBtn.addEventListener('click', () => {
+      playAudio('click');
+      curtainModal.classList.add('hidden');
+      if (GAME.curtainCallback) {
+        const cb = GAME.curtainCallback;
+        GAME.curtainCallback = null;
+        cb();
+      }
+    });
+
+    /* --- 10x10 BOARD RENDERING --- */
+    function renderBoard() {
+      boardEl.innerHTML = '';
+      // Flip 180° when Player 2 is active so both players play from the bottom
+      const flip = (GAME.activePlayer === 2);
+
+      for (let rIdx = 0; rIdx < 10; rIdx++) {
+        for (let cIdx = 0; cIdx < 10; cIdx++) {
+          const r = flip ? (9 - rIdx) : rIdx;
+          const c = flip ? (9 - cIdx) : cIdx;
+
+          const cell = document.createElement('div');
+          cell.className = 'cell ' + ((r + c) % 2 === 1 ? 'dark' : '');
+
+          if (isLake(r, c)) {
+            cell.classList.add('lake');
+          } else {
+            // Setup zone highlights:
+            // P1 setup is rows 6–9; P2 setup is rows 0–3
+            if (GAME.phase === 'SETUP_P1' && (r >= 6 && r <= 9)) {
+              cell.classList.add('setup-zone');
+            } else if (GAME.phase === 'SETUP_P2' && (r >= 0 && r <= 3)) {
+              cell.classList.add('setup-zone');
+            }
+
+            // Move targets
+            if (GAME.validMoves.some(m => m.r === r && m.c === c)) {
+              const targetPiece = GAME.board[r][c];
+              if (targetPiece && targetPiece.player !== GAME.activePlayer) {
+                cell.classList.add('attack-target');
+              } else {
+                cell.classList.add('move-target');
+              }
+            }
+
+            // Selection
+            if (GAME.selectedCell && GAME.selectedCell.r === r && GAME.selectedCell.c === c) {
+              cell.classList.add('selected');
+            }
+
+            // Last move trails
+            if (GAME.lastMove) {
+              if (GAME.lastMove.fromR === r && GAME.lastMove.fromC === c) cell.classList.add('last-src');
+              if (GAME.lastMove.toR === r && GAME.lastMove.toC === c) cell.classList.add('last-dst');
+            }
+
+            // Piece in cell
+            const piece = GAME.board[r][c];
+            if (piece) {
+              const pEl = document.createElement('div');
+              pEl.className = 'piece ' + (piece.player === 1 ? 'p1' : 'p2');
+
+              // FOG OF WAR: Opponent pieces are masked
+              if (piece.player !== GAME.activePlayer) {
+                pEl.classList.add('hidden-back');
+                pEl.innerHTML = `<span class="rank-num">🛡️</span>`;
+              } else {
+                pEl.innerHTML = `
+                  <span class="rank-num">${piece.rank}</span>
+                  <span class="rank-lbl">${piece.name}</span>
+                `;
+              }
+              cell.appendChild(pEl);
+            }
+
+            cell.addEventListener('click', () => onCellTap(r, c));
+          }
+
+          boardEl.appendChild(cell);
+        }
+      }
+    }
+
+    /* --- SETUP & ARMORY LOGIC --- */
+    function renderArmory() {
+      armoryGrid.innerHTML = '';
+      const counts = (GAME.activePlayer === 1) ? GAME.p1Counts : GAME.p2Counts;
+      const placed = TOTAL_PIECES - Object.values(counts).reduce((a, b) => a + b, 0);
+
+      const activeName = (GAME.activePlayer === 1) ? GAME.p1Name : GAME.p2Name;
+      setupProgress.textContent = `${activeName}'s Army: (${placed}/${TOTAL_PIECES} deployed)`;
+      confirmDeploymentBtn.disabled = (placed !== TOTAL_PIECES);
+
+      ROSTER.forEach(item => {
+        const remaining = counts[item.rank] || 0;
+        const card = document.createElement('div');
+        card.className = 'armory-card' +
+          (GAME.selectedTrayRank === item.rank ? ' selected' : '') +
+          (remaining === 0 ? ' depleted' : '');
+
+        card.innerHTML = `
+          <div class="pill">${remaining}</div>
+          <div class="a-rank">${item.rank}</div>
+          <div class="a-name">${item.name}</div>
+        `;
+
+        card.addEventListener('click', () => {
+          if (remaining > 0) {
+            playAudio('click');
+            GAME.selectedTrayRank = (GAME.selectedTrayRank === item.rank) ? null : item.rank;
+            GAME.selectedCell = null;
+            renderArmory();
+            renderBoard();
+          }
+        });
+
+        armoryGrid.appendChild(card);
+      });
+    }
+
+    function onCellTap(r, c) {
+      if (isLake(r, c)) return;
+
+      if (GAME.phase === 'SETUP_P1' || GAME.phase === 'SETUP_P2') {
+        handleSetupTap(r, c);
+      } else if (GAME.phase === 'PLAYING') {
+        handlePlayTap(r, c);
+      }
+    }
+
+    function handleSetupTap(r, c) {
+      const isP1 = (GAME.phase === 'SETUP_P1');
+      const inHomeRows = isP1 ? (r >= 6 && r <= 9) : (r >= 0 && r <= 3);
+      if (!inHomeRows) return;
+
+      const counts = isP1 ? GAME.p1Counts : GAME.p2Counts;
+      const currentPiece = GAME.board[r][c];
+
+      // 1. Placing from tray onto empty square
+      if (GAME.selectedTrayRank && !currentPiece) {
+        const meta = ROSTER.find(x => x.rank === GAME.selectedTrayRank);
+        GAME.board[r][c] = {
+          rank: meta.rank,
+          name: meta.name,
+          strength: meta.strength,
+          player: isP1 ? 1 : 2
+        };
+        counts[GAME.selectedTrayRank]--;
+        playAudio('slide');
+
+        if (counts[GAME.selectedTrayRank] === 0) GAME.selectedTrayRank = null;
+        renderArmory();
+        renderBoard();
+        return;
+      }
+
+      // 2. Swapping tray selection with placed piece
+      if (GAME.selectedTrayRank && currentPiece && currentPiece.player === (isP1 ? 1 : 2)) {
+        if (currentPiece.rank === GAME.selectedTrayRank) {
+          counts[currentPiece.rank]++;
+          GAME.board[r][c] = null;
+        } else {
+          counts[currentPiece.rank]++;
+          const oldRank = currentPiece.rank;
+          const meta = ROSTER.find(x => x.rank === GAME.selectedTrayRank);
+          GAME.board[r][c] = {
+            rank: meta.rank,
+            name: meta.name,
+            strength: meta.strength,
+            player: isP1 ? 1 : 2
+          };
+          counts[GAME.selectedTrayRank]--;
+          GAME.selectedTrayRank = oldRank;
+        }
+        playAudio('slide');
+        renderArmory();
+        renderBoard();
+        return;
+      }
+
+      // 3. Board-to-board piece swapping when tray is not selected
+      if (!GAME.selectedTrayRank && currentPiece && currentPiece.player === (isP1 ? 1 : 2)) {
+        if (!GAME.selectedCell) {
+          // Select piece for swap
+          playAudio('click');
+          GAME.selectedCell = { r, c };
+          renderBoard();
+          statusInstruction.textContent = `Selected ${currentPiece.name} (${currentPiece.rank}). Tap another piece to swap.`;
+          return;
+        } else {
+          // Second piece tapped: Swap positions on board!
+          playAudio('slide');
+          const p1 = GAME.board[GAME.selectedCell.r][GAME.selectedCell.c];
+          const p2 = GAME.board[r][c];
+          GAME.board[r][c] = p1;
+          GAME.board[GAME.selectedCell.r][GAME.selectedCell.c] = p2;
+          GAME.selectedCell = null;
+          renderBoard();
+          statusInstruction.textContent = `Swapped ${p1.name} and ${p2.name}.`;
+          return;
+        }
+      }
+
+      // 4. Tap empty square with selected board piece: Move piece to empty square
+      if (!GAME.selectedTrayRank && GAME.selectedCell && !currentPiece) {
+        playAudio('slide');
+        GAME.board[r][c] = GAME.board[GAME.selectedCell.r][GAME.selectedCell.c];
+        GAME.board[GAME.selectedCell.r][GAME.selectedCell.c] = null;
+        GAME.selectedCell = null;
+        renderBoard();
+        return;
+      }
+    }
+
+    /* --- FORMATION PRESETS FOR 40 PIECES --- */
+    function clearSetupRows() {
+      const isP1 = (GAME.phase === 'SETUP_P1');
+      const rows = isP1 ? [6, 7, 8, 9] : [0, 1, 2, 3];
+      const counts = isP1 ? GAME.p1Counts : GAME.p2Counts;
+
+      for (let r of rows) {
+        for (let c = 0; c < 10; c++) {
+          if (GAME.board[r][c]) {
+            counts[GAME.board[r][c].rank]++;
+            GAME.board[r][c] = null;
+          }
+        }
+      }
+      GAME.selectedCell = null;
+      GAME.selectedTrayRank = null;
+    }
+
+    function applyFormation(presetType) {
+      playAudio('slide');
+      clearSetupRows();
+      const isP1 = (GAME.phase === 'SETUP_P1');
+      const counts = isP1 ? GAME.p1Counts : GAME.p2Counts;
+
+      // Build full 40 piece army array
+      let pool = [];
+      ROSTER.forEach(item => {
+        for (let i = 0; i < item.count; i++) {
+          pool.push({
+            rank: item.rank,
+            name: item.name,
+            strength: item.strength,
+            player: isP1 ? 1 : 2
+          });
+        }
+      });
+
+      // Target home rows: For P1, row 9 is back row, row 6 is front row.
+      // For P2, row 0 is back row, row 3 is front row.
+      const backRow = isP1 ? 9 : 0;
+      const row2 = isP1 ? 8 : 1;
+      const row3 = isP1 ? 7 : 2;
+      const frontRow = isP1 ? 6 : 3;
+
+      let layout = Array(10).fill(null).map(() => Array(10).fill(null));
+
+      function pull(rank) {
+        const idx = pool.findIndex(p => p.rank === rank);
+        return pool.splice(idx, 1)[0];
+      }
+
+      if (presetType === 'FORTRESS') {
+        // Flag in corner (col 0, back row), guarded by bombs
+        layout[backRow][0] = pull('F');
+        layout[backRow][1] = pull('B');
+        layout[row2][0] = pull('B');
+        layout[row2][1] = pull('B');
+
+        // Other bombs protecting back/mid
+        layout[backRow][9] = pull('B');
+        layout[row2][9] = pull('B');
+        layout[row3][5] = pull('B');
+
+        // Spy & Marshal near center
+        layout[row2][4] = pull('S');
+        layout[row3][4] = pull('1');
+        layout[row3][3] = pull('2');
+
+        // Scouts and Miners in front and 3rd rows
+        layout[frontRow][0] = pull('9');
+        layout[frontRow][1] = pull('9');
+        layout[frontRow][4] = pull('9');
+        layout[frontRow][5] = pull('9');
+        layout[frontRow][8] = pull('9');
+        layout[frontRow][9] = pull('9');
+      } else if (presetType === 'BASTION') {
+        // Flag in center back row (col 4), flanked by bombs
+        layout[backRow][4] = pull('F');
+        layout[backRow][3] = pull('B');
+        layout[backRow][5] = pull('B');
+        layout[row2][4] = pull('B');
+        layout[row2][3] = pull('B');
+        layout[row2][5] = pull('B');
+        layout[row3][4] = pull('B');
+
+        // Marshal and General in 2nd row
+        layout[row2][2] = pull('1');
+        layout[row2][7] = pull('2');
+        layout[row3][2] = pull('S');
+      } else if (presetType === 'BLITZ') {
+        // Scouts & high officers aggressive in rows 6 & 7
+        layout[backRow][9] = pull('F');
+        layout[backRow][8] = pull('B');
+        layout[row2][9] = pull('B');
+        layout[row2][8] = pull('B');
+        layout[frontRow][2] = pull('1');
+        layout[frontRow][7] = pull('2');
+        layout[row3][2] = pull('S');
+      }
+
+      // Fill remaining empty spots randomly from remaining pool
+      pool.sort(() => Math.random() - 0.5);
+      const rows = isP1 ? [6, 7, 8, 9] : [0, 1, 2, 3];
+      for (let r of rows) {
+        for (let c = 0; c < 10; c++) {
+          if (!layout[r][c] && pool.length > 0) {
+            layout[r][c] = pool.pop();
+          }
+        }
+      }
+
+      // Apply to actual board
+      for (let r of rows) {
+        for (let c = 0; c < 10; c++) {
+          const piece = layout[r][c];
+          GAME.board[r][c] = piece;
+          counts[piece.rank]--;
+        }
+      }
+
+      renderArmory();
+      renderBoard();
+    }
+
+    presetBlitzBtn.addEventListener('click', () => applyFormation('BLITZ'));
+    presetFortressBtn.addEventListener('click', () => applyFormation('FORTRESS'));
+    presetBastionBtn.addEventListener('click', () => applyFormation('BASTION'));
+    presetShuffleBtn.addEventListener('click', () => applyFormation('SHUFFLE'));
+
+    clearDeploymentBtn.addEventListener('click', () => {
+      playAudio('click');
+      clearSetupRows();
+      renderArmory();
+      renderBoard();
+    });
+
+    confirmDeploymentBtn.addEventListener('click', () => {
+      playAudio('click');
+      if (GAME.phase === 'SETUP_P1') {
+        GAME.phase = 'SETUP_P2';
+        GAME.activePlayer = 2;
+        GAME.selectedTrayRank = null;
+        GAME.selectedCell = null;
+
+        showCurtain(
+          `Pass Phone to ${GAME.p2Name}`,
+          `Steve is ready! Gill, take the phone to deploy your 40 red pieces in your home rows.`,
+          2,
+          () => {
+            renderArmory();
+            renderBoard();
+            updateStatus();
+          }
+        );
+      } else if (GAME.phase === 'SETUP_P2') {
+        GAME.phase = 'PLAYING';
+        GAME.activePlayer = 1;
+        GAME.selectedCell = null;
+        GAME.validMoves = [];
+        setupBox.style.display = 'none';
+        intelBox.style.display = 'flex';
+
+        showCurtain(
+          `Armies Assembled — Start War!`,
+          `Hand the phone back to ${GAME.p1Name} to open the match.`,
+          1,
+          () => {
+            renderBoard();
+            updateStatus();
+          }
+        );
+      }
+    });
+
+    /* --- GAMEPLAY MOVEMENT & ATTACK --- */
+    function handlePlayTap(r, c) {
+      const piece = GAME.board[r][c];
+
+      // 1. Destination tap
+      if (GAME.selectedCell && GAME.validMoves.some(m => m.r === r && m.c === c)) {
+        executeMove(GAME.selectedCell.r, GAME.selectedCell.c, r, c);
+        return;
+      }
+
+      // 2. Select friendly piece
+      if (piece && piece.player === GAME.activePlayer) {
+        if (piece.rank === 'B' || piece.rank === 'F') {
+          playAudio('click');
+          GAME.selectedCell = null;
+          GAME.validMoves = [];
+          renderBoard();
+          statusInstruction.textContent = `${piece.name} (${piece.rank}) cannot move!`;
+          return;
+        }
+
+        playAudio('click');
+        GAME.selectedCell = { r, c };
+        GAME.validMoves = computeMoves(r, c, piece);
+        renderBoard();
+        statusInstruction.textContent = `${piece.name} (${piece.rank}) selected. Tap a destination.`;
+        return;
+      }
+
+      // 3. Clear
+      GAME.selectedCell = null;
+      GAME.validMoves = [];
+      renderBoard();
+      statusInstruction.textContent = 'Select a piece to move';
+    }
+
+    function computeMoves(r, c, piece) {
+      const moves = [];
+      const directions = [
+        { dr: -1, dc: 0 },
+        { dr: 1, dc: 0 },
+        { dr: 0, dc: -1 },
+        { dr: 0, dc: 1 }
+      ];
+
+      // Scout (Rank 9) can charge any distance across open squares
+      const maxDistance = (piece.rank === '9') ? 9 : 1;
+
+      for (let d of directions) {
+        for (let dist = 1; dist <= maxDistance; dist++) {
+          const nr = r + d.dr * dist;
+          const nc = c + d.dc * dist;
+
+          if (nr < 0 || nr >= 10 || nc < 0 || nc >= 10) break;
+          if (isLake(nr, nc)) break;
+
+          const target = GAME.board[nr][nc];
+          if (!target) {
+            moves.push({ r: nr, c: nc });
+          } else {
+            if (target.player !== piece.player) moves.push({ r: nr, c: nc });
+            break; // Blocked by any piece
+          }
+        }
+      }
+      return moves;
+    }
+
+    function executeMove(fromR, fromC, toR, toC) {
+      const attacker = GAME.board[fromR][fromC];
+      const defender = GAME.board[toR][toC];
+
+      GAME.selectedCell = null;
+      GAME.validMoves = [];
+
+      // Move into empty space
+      if (!defender) {
+        GAME.board[toR][toC] = attacker;
+        GAME.board[fromR][fromC] = null;
+        GAME.lastMove = { fromR, fromC, toR, toC, player: attacker.player, summary: `Player ${attacker.player} advanced to an open square.` };
+        playAudio('slide');
+        renderBoard();
+        finishTurn();
+        return;
+      }
+
+      // Attack
+      resolveCombat(fromR, fromC, toR, toC, attacker, defender);
+    }
+
+    /* --- COMBAT RESOLUTION --- */
+    function resolveCombat(fromR, fromC, toR, toC, attacker, defender) {
+      let message = '';
+      let sound = 'clash';
+      let attackerWins = false;
+      let defenderWins = false;
+      let draw = false;
+      let matchWon = false;
+      let victor = null;
+
+      const attName = (attacker.player === 1) ? GAME.p1Name : GAME.p2Name;
+      const defName = (defender.player === 1) ? GAME.p1Name : GAME.p2Name;
+
+      // 1. Flag Captured
+      if (defender.rank === 'F') {
+        message = `🚩 THE FLAG IS CAPTURED! ${attName} wins the game!`;
+        attackerWins = true;
+        matchWon = true;
+        victor = attacker.player;
+      }
+      // 2. Bomb Hit
+      else if (defender.rank === 'B') {
+        if (attacker.rank === '8') {
+          message = `💣 Miner defused the Bomb safely!`;
+          attackerWins = true;
+        } else {
+          message = `💥 ${attacker.name} (${attacker.rank}) struck a Bomb and was destroyed!`;
+          defenderWins = true;
+          sound = 'explosion';
+        }
+      }
+      // 3. Spy vs Marshal
+      else if (attacker.rank === 'S' && defender.rank === '1') {
+        message = `🗡️ The Spy assassinated the Marshal!`;
+        attackerWins = true;
+      }
+      // 4. Equal Rank Tie
+      else if (attacker.rank === defender.rank) {
+        message = `⚔️ Both ${attacker.name}s (${attacker.rank}) clashed and eliminated each other!`;
+        draw = true;
+      }
+      // 5. Standard Hierarchy (Lower number wins: 1 > 2 > 3 > 4 > 5 > 6 > 7 > 8 > 9 > S)
+      else {
+        if (attacker.rank === 'S') {
+          message = `${defName}'s ${defender.name} (${defender.rank}) subdued the Spy!`;
+          defenderWins = true;
+        } else if (defender.rank === 'S') {
+          message = `${attName}'s ${attacker.name} (${attacker.rank}) defeated the Spy!`;
+          attackerWins = true;
+        } else if (attacker.strength < defender.strength) {
+          message = `${attName}'s ${attacker.name} (${attacker.rank}) defeated ${defender.name} (${defender.rank})!`;
+          attackerWins = true;
+        } else {
+          message = `${attName}'s ${attacker.name} (${attacker.rank}) was defeated by ${defender.name} (${defender.rank})!`;
+          defenderWins = true;
+        }
+      }
+
+      playAudio(sound);
+
+      if (attackerWins) {
+        GAME.board[toR][toC] = attacker;
+        GAME.board[fromR][fromC] = null;
+        recordCasualty(defender);
+      } else if (defenderWins) {
+        GAME.board[fromR][fromC] = null;
+        recordCasualty(attacker);
+      } else if (draw) {
+        GAME.board[fromR][fromC] = null;
+        GAME.board[toR][toC] = null;
+        recordCasualty(attacker);
+        recordCasualty(defender);
+      }
+
+      GAME.lastMove = { fromR, fromC, toR, toC, player: attacker.player, summary: message };
+
+      openClashPopup(attacker, defender, message, () => {
+        if (matchWon) {
+          celebrateWin(victor);
+        } else {
+          const next = (GAME.activePlayer === 1) ? 2 : 1;
+          if (!hasMoves(next)) celebrateWin(GAME.activePlayer);
+          else finishTurn();
+        }
+      });
+    }
+
+    function recordCasualty(piece) {
+      if (piece.player === 1) GAME.p1Lost.push(piece);
+      else GAME.p2Lost.push(piece);
+      refreshGraveyard();
+    }
+
+    function refreshGraveyard() {
+      p1GraveLabel.textContent = `${GAME.p1Name} Lost:`;
+      p2GraveLabel.textContent = `${GAME.p2Name} Lost:`;
+      p1Graveyard.innerHTML = GAME.p1Lost.map(p => `<span class="chip p1">${p.rank}</span>`).join('');
+      p2Graveyard.innerHTML = GAME.p2Lost.map(p => `<span class="chip p2">${p.rank}</span>`).join('');
+    }
+
+    function openClashPopup(att, def, text, onDone) {
+      attPieceRank.textContent = att.rank;
+      attPieceName.textContent = att.name;
+      attPlayerRole.textContent = `${att.player === 1 ? GAME.p1Name : GAME.p2Name} (Attacker)`;
+      attackerPiece.className = 'combat-piece ' + (att.player === 1 ? 'p1' : 'p2');
+
+      defPieceRank.textContent = def.rank;
+      defPieceName.textContent = def.name;
+      defPlayerRole.textContent = `${def.player === 1 ? GAME.p1Name : GAME.p2Name} (Defender)`;
+      defenderPiece.className = 'combat-piece ' + (def.player === 1 ? 'p1' : 'p2');
+
+      battleSummary.textContent = text;
+      battleModal.classList.remove('hidden');
+
+      closeBattleBtn.onclick = () => {
+        playAudio('click');
+        battleModal.classList.add('hidden');
+        onDone();
+      };
+    }
+
+    function hasMoves(player) {
+      for (let r = 0; r < 10; r++) {
+        for (let c = 0; c < 10; c++) {
+          const p = GAME.board[r][c];
+          if (p && p.player === player && p.rank !== 'B' && p.rank !== 'F') {
+            if (computeMoves(r, c, p).length > 0) return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function finishTurn() {
+      const next = (GAME.activePlayer === 1) ? 2 : 1;
+      GAME.activePlayer = next;
+      const nextName = (next === 1) ? GAME.p1Name : GAME.p2Name;
+
+      showCurtain(
+        `Pass Phone to ${nextName}`,
+        `Your turn is done. Hand the phone over so ${nextName} can plan their move.`,
+        next,
+        () => {
+          renderBoard();
+          updateStatus();
+          if (GAME.lastMove && GAME.lastMove.summary) {
+            intelText.textContent = `Last Turn: ${GAME.lastMove.summary}`;
+            intelBar.classList.remove('hidden');
+          }
+        }
+      );
+    }
+
+    function celebrateWin(winner) {
+      GAME.phase = 'GAME_OVER';
+      playAudio('victory');
+      const winName = (winner === 1) ? GAME.p1Name : GAME.p2Name;
+      showCurtain(
+        `🏆 ${winName} Wins!`,
+        `A masterclass victory in the 40-piece campaign!`,
+        winner,
+        () => initGame()
+      );
+      revealTurnBtn.textContent = 'Play Again';
+    }
+
+    function updateStatus() {
+      const isP1 = (GAME.activePlayer === 1);
+      const name = isP1 ? GAME.p1Name : GAME.p2Name;
+
+      playerBadge.className = 'player-pill ' + (isP1 ? 'p1' : 'p2');
+      playerBadge.textContent = `${name} (${isP1 ? 'Blue' : 'Red'})`;
+
+      if (GAME.phase === 'SETUP_P1' || GAME.phase === 'SETUP_P2') {
+        statusInstruction.textContent = 'Deploy your 40 pieces';
+      } else if (GAME.phase === 'PLAYING') {
+        statusInstruction.textContent = 'Select a piece to move';
+      }
+    }
+
+    /* --- CONTROLS & DIALOGS --- */
+    soundToggleBtn.addEventListener('click', () => {
+      isMuted = !isMuted;
+      soundToggleBtn.textContent = isMuted ? '🔇' : '🔊';
+    });
+
+    ranksGuideBtn.addEventListener('click', () => ranksModal.classList.remove('hidden'));
+    closeRanksBtn.addEventListener('click', () => ranksModal.classList.add('hidden'));
+
+    namesBtn.addEventListener('click', () => {
+      p1Input.value = GAME.p1Name;
+      p2Input.value = GAME.p2Name;
+      namesModal.classList.remove('hidden');
+    });
+
+    saveNamesBtn.addEventListener('click', () => {
+      GAME.p1Name = p1Input.value.trim() || 'Steve';
+      GAME.p2Name = p2Input.value.trim() || 'Gill';
+      namesModal.classList.add('hidden');
+      updateStatus();
+      refreshGraveyard();
+      renderArmory();
+    });
+
+    resetMatchBtn.addEventListener('click', () => {
+      if (confirm('Reset board and start a new campaign?')) {
+        initGame();
+      }
+    });
+
+    // Start on load
+    window.addEventListener('DOMContentLoaded', () => {
+      initGame();
+    });
+  </script>
+</body>
+</html>
