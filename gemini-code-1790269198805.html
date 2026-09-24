@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Kitty Canvas 🐾 Mobile Art Studio</title>
+  <style>
+    :root {
+      --bg-color: #fff6f8;
+      --bar-bg: #ffffff;
+      --accent: #ff7597;
+      --accent-hover: #ff527c;
+      --accent-soft: #ffe4ec;
+      --text: #4a3e4d;
+      --shadow: 0 4px 14px rgba(255, 117, 151, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      touch-action: manipulation;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg-color);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Comic Sans MS", cursive, sans-serif;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      flex: 0 0 auto;
+      background: var(--bar-bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      border-bottom: 2px solid var(--accent-soft);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--accent);
+    }
+
+    .brand span.paw {
+      font-size: 1.4rem;
+      animation: wiggle 2s infinite ease-in-out;
+      display: inline-block;
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-12deg); }
+      75% { transform: rotate(12deg); }
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-icon {
+      background: var(--accent-soft);
+      border: 1px solid rgba(255, 117, 151, 0.3);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-icon:active {
+      transform: scale(0.93);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* Canvas Area */
+    #canvas-container {
+      flex: 1 1 auto;
+      position: relative;
+      background: #ffffff;
+      margin: 8px;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      border: 3px solid var(--accent-soft);
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+    }
+
+    /* Bottom Controls */
+    footer {
+      flex: 0 0 auto;
+      background: var(--bar-bg);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-top: 2px solid var(--accent-soft);
+      box-shadow: 0 -3px 12px rgba(0,0,0,0.05);
+      z-index: 10;
+    }
+
+    .row-scroll {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .row-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tool-btn {
+      flex: 0 0 auto;
+      padding: 6px 12px;
+      border-radius: 14px;
+      background: #f7f7f9;
+      border: 2px solid #ede8ef;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tool-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 3px 8px rgba(255, 117, 151, 0.4);
+    }
+
+    .tool-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Swatches & Colors */
+    .color-swatch {
+      flex: 0 0 auto;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .color-swatch.active {
+      transform: scale(1.22);
+      border-color: #333333;
+    }
+
+    .color-picker-wrap {
+      flex: 0 0 auto;
+      position: relative;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .color-picker-wrap input[type="color"] {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      width: 60px;
+      height: 60px;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* Brush Size & Stamp Tray */
+    .size-btn {
+      flex: 0 0 auto;
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: #f5f3f7;
+      border: 2px solid #e5dfea;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+
+    .size-btn.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .stamp-item {
+      font-size: 1.4rem;
+      padding: 4px 8px;
+      border-radius: 12px;
+      background: #faf7fc;
+      border: 2px solid transparent;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .stamp-item.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      transform: scale(1.15);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <span class="paw">🐾</span>
+      <span>Kitty Canvas</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon" id="btn-undo" title="Undo">↩️ Undo</button>
+      <button class="btn-icon" id="btn-clear" title="Clear">🧹 Clear</button>
+      <button class="btn-icon" id="btn-save" title="Save Artwork" style="background: #e8f5e9; border-color: #a5d6a7; color: #1b5e20;">💾 Save</button>
+    </div>
+  </header>
+
+  <div id="canvas-container">
+    <canvas id="paintCanvas"></canvas>
+  </div>
+
+  <footer>
+    <div class="row-scroll">
+      <button class="tool-btn active" data-tool="brush">🖌️ Brush</button>
+      <button class="tool-btn" data-tool="rainbow">🌈 Rainbow</button>
+      <button class="tool-btn" data-tool="eraser">🧼 Eraser</button>
+      <button class="tool-btn" data-tool="stamp">🐱 Cat Stamps</button>
+
+      <div style="width: 1px; height: 22px; background: #ded7e3; margin: 0 4px;"></div>
+
+      <button class="size-btn" data-size="6" title="Thin">S</button>
+      <button class="size-btn active" data-size="14" title="Medium">M</button>
+      <button class="size-btn" data-size="28" title="Thick">L</button>
+      <button class="size-btn" data-size="48" title="Giant">XL</button>
+    </div>
+
+    <div class="row-scroll" id="options-row"></div>
+  </footer>
+
+  <script>
+    // Web Audio API kitten sound feedback
+    let audioCtx = null;
+    function playCatChirp(pitch = 580) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+
+        const now = audioCtx.currentTime;
+        osc.frequency.setValueAtTime(pitch, now);
+        osc.frequency.exponentialRampToValueAtTime(pitch * 1.35, now + 0.08);
+        osc.frequency.exponentialRampToValueAtTime(pitch * 0.95, now + 0.22);
+
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.23);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.24);
+      } catch (e) {}
+    }
+
+    const state = {
+      tool: 'brush',
+      color: '#ff5376',
+      size: 14,
+      stamp: '🐾',
+      rainbowHue: 0,
+      isDrawing: false,
+      lastX: 0,
+      lastY: 0
+    };
+
+    const catStamps = ['🐾', '🐱', '😸', '😻', '🧶', '🐟', '😺', '😽', '✨', '💖', '🌈'];
+
+    const container = document.getElementById('canvas-container');
+    const canvas = document.getElementById('paintCanvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+    const history = [];
+    const maxHistory = 15;
+
+    function saveState() {
+      if (history.length >= maxHistory) history.shift();
+      history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    }
+
+    function resizeCanvas() {
+      const rect = container.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      
+      let temp = null;
+      if (canvas.width > 0 && canvas.height > 0) {
+        temp = document.createElement('canvas');
+        temp.width = canvas.width;
+        temp.height = canvas.height;
+        temp.getContext('2d').drawImage(canvas, 0, 0);
+      }
+
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, rect.width, rect.height);
+
+      if (temp) {
+        ctx.drawImage(temp, 0, 0, rect.width, rect.height);
+      }
+      saveState();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('DOMContentLoaded', () => {
+      resizeCanvas();
+      renderOptionsRow();
+    });
+
+    function getPointerPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      canvas.setPointerCapture(e.pointerId);
+      const pos = getPointerPos(e);
+      state.isDrawing = true;
+      state.lastX = pos.x;
+      state.lastY = pos.y;
+
+      if (state.tool === 'stamp') {
+        drawStamp(pos.x, pos.y);
+        playCatChirp(680);
+        saveState();
+      } else {
+        drawLine(pos.x, pos.y, pos.x, pos.y);
+      }
+    });
+
+    canvas.addEventListener('pointermove', (e) => {
+      if (!state.isDrawing) return;
+      e.preventDefault();
+      const pos = getPointerPos(e);
+
+      if (state.tool === 'stamp') {
+        const dist = Math.hypot(pos.x - state.lastX, pos.y - state.lastY);
+        if (dist > state.size * 2) {
+          drawStamp(pos.x, pos.y);
+          state.lastX = pos.x;
+          state.lastY = pos.y;
+        }
+      } else {
+        drawLine(state.lastX, state.lastY, pos.x, pos.y);
+        state.lastX = pos.x;
+        state.lastY = pos.y;
+      }
+    });
+
+    function endDrawing(e) {
+      if (!state.isDrawing) return;
+      state.isDrawing = false;
+      if (state.tool !== 'stamp') {
+        saveState();
+      }
+    }
+
+    canvas.addEventListener('pointerup', endDrawing);
+    canvas.addEventListener('pointercancel', endDrawing);
+
+    function drawLine(x1, y1, x2, y2) {
+      ctx.beginPath();
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = state.size;
+
+      if (state.tool === 'eraser') {
+        ctx.strokeStyle = '#ffffff';
+      } else if (state.tool === 'rainbow') {
+        state.rainbowHue = (state.rainbowHue + 4) % 360;
+        ctx.strokeStyle = `hsl(${state.rainbowHue}, 90%, 60%)`;
+      } else {
+        ctx.strokeStyle = state.color;
+      }
+
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
+    function drawStamp(x, y) {
+      ctx.save();
+      ctx.font = `${Math.max(24, state.size * 2)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(state.stamp, x, y);
+      ctx.restore();
+    }
+
+    document.getElementById('btn-undo').addEventListener('click', () => {
+      if (history.length > 1) {
+        history.pop();
+        const prevState = history[history.length - 1];
+        ctx.putImageData(prevState, 0, 0);
+        playCatChirp(480);
+      }
+    });
+
+    document.getElementById('btn-clear').addEventListener('click', () => {
+      const rect = container.getBoundingClientRect();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, rect.width, rect.height);
+      saveState();
+      playCatChirp(380);
+    });
+
+    document.getElementById('btn-save').addEventListener('click', () => {
+      playCatChirp(720);
+      const link = document.createElement('a');
+      link.download = `kitty-canvas-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+
+    const toolBtns = document.querySelectorAll('.tool-btn');
+    const optionsRow = document.getElementById('options-row');
+
+    function renderOptionsRow() {
+      optionsRow.innerHTML = '';
+      if (state.tool === 'stamp') {
+        catStamps.forEach((emoji) => {
+          const el = document.createElement('div');
+          el.className = `stamp-item ${state.stamp === emoji ? 'active' : ''}`;
+          el.textContent = emoji;
+          el.onclick = () => {
+            document.querySelectorAll('.stamp-item').forEach(s => s.classList.remove('active'));
+            el.classList.add('active');
+            state.stamp = emoji;
+            playCatChirp(620);
+          };
+          optionsRow.appendChild(el);
+        });
+      } else {
+        const colors = [
+          '#ff5376', '#ff914d', '#ffde59', '#7ed957', '#5ce1e6', 
+          '#5271ff', '#cb6ce6', '#8c52ff', '#ff66c4', '#734f3a', 
+          '#222222', '#ffffff'
+        ];
+
+        const pickerWrap = document.createElement('div');
+        pickerWrap.className = 'color-picker-wrap';
+        pickerWrap.title = 'Custom Color';
+        pickerWrap.innerHTML = `<input type="color" id="customColor" value="${state.color}" />`;
+        optionsRow.appendChild(pickerWrap);
+
+        pickerWrap.querySelector('input').addEventListener('input', (e) => {
+          state.color = e.target.value;
+          document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+        });
+
+        colors.forEach((col) => {
+          const swatch = document.createElement('div');
+          swatch.className = `color-swatch ${state.color === col ? 'active' : ''}`;
+          swatch.style.background = col;
+          if (col === '#ffffff') swatch.style.border = '2px solid #ccc';
+          swatch.onclick = () => {
+            document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+            swatch.classList.add('active');
+            state.color = col;
+            playCatChirp(520);
+          };
+          optionsRow.appendChild(swatch);
+        });
+      }
+    }
+
+    toolBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        toolBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.tool = btn.dataset.tool;
+        renderOptionsRow();
+        playCatChirp(550);
+      });
+    });
+
+    const sizeBtns = document.querySelectorAll('.size-btn');
+    sizeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sizeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.size = parseInt(btn.dataset.size, 10);
+        playCatChirp(460);
+      });
+    });
+  </script>
+</body>
+</html>
