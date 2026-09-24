@@ -74,15 +74,30 @@ button {
   background: var(--acc);
   color: #fff;
 }
-#canvas-wrap {
+#canvas-outer {
   flex: 1 1 0;
   min-height: 0;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  overflow: hidden;
+}
+#canvas-wrap {
+  position: relative;
   background: #fff;
-  margin: 4px 6px;
   border-radius: 18px;
   border: 3px solid var(--soft);
   overflow: hidden;
+  box-shadow: 0 4px 14px rgba(255, 77, 136, 0.12);
+  width: 100%;
+  height: 100%;
+}
+#canvas-wrap.square {
+  width: min(calc(100vw - 16px), calc(100dvh - 160px));
+  height: min(calc(100vw - 16px), calc(100dvh - 160px));
+  aspect-ratio: 1 / 1;
 }
 #cv, #guide {
   position: absolute;
@@ -225,6 +240,7 @@ footer {
   <div class="hdr-btns">
     <button type="button" class="btn-h" onclick="doUndo()">↩️</button>
     <button type="button" class="btn-h" onclick="doRedo()">↪️</button>
+    <button type="button" class="btn-h" id="sq-btn" onclick="toggleCanvasShape(this)">⏹️ Square</button>
     <button type="button" class="btn-h" id="m-btn" onclick="cycleMandala(this)">🪞 Mandala: Off</button>
     <button type="button" class="btn-h" style="background:#fff3e0; color:#e65100;" onclick="openModal('mod-meme')">😹 Meme</button>
     <button type="button" class="btn-h" style="background:#ede7f6; color:#4a148c;" onclick="openModal('mod-pages')">🐱 Pages</button>
@@ -234,13 +250,14 @@ footer {
   </div>
 </header>
 
-<div id="canvas-wrap">
-  <canvas id="cv"></canvas>
-  <canvas id="guide"></canvas>
+<div id="canvas-outer">
+  <div id="canvas-wrap">
+    <canvas id="cv"></canvas>
+    <canvas id="guide"></canvas>
+  </div>
 </div>
 
 <footer>
-  <!-- Tools Row -->
   <div class="row">
     <button type="button" class="tool-btn active" data-t="brush" onclick="setTool('brush', this)">🖌️ Paint</button>
     <button type="button" class="tool-btn" data-t="sparkle" onclick="setTool('sparkle', this)">✨ Sparkle</button>
@@ -260,7 +277,6 @@ footer {
     <button type="button" class="sz-btn" onclick="setSize(52, this)">XL</button>
   </div>
 
-  <!-- Permanent Colors Row -->
   <div class="row" id="color-row">
     <div class="picker-btn" title="Custom Color">
       <input type="color" id="native-picker" onchange="setColor(this.value, null)">
@@ -279,7 +295,6 @@ footer {
     <button type="button" class="swatch" style="background:#ffffff; border:2px solid #ccc;" onclick="setColor('#ffffff', this)"></button>
   </div>
 
-  <!-- Stamps Row (shown when Stamps is clicked) -->
   <div class="row" id="stamp-row" style="display:none;">
     <button type="button" class="stamp-btn active" onclick="setStamp('🐾', this)">🐾</button>
     <button type="button" class="stamp-btn" onclick="setStamp('🐱', this)">🐱</button>
@@ -296,7 +311,6 @@ footer {
     <button type="button" class="stamp-btn" onclick="setStamp('⭐', this)">⭐</button>
   </div>
 
-  <!-- Background Colors Row (shown when Paper is clicked) -->
   <div class="row" id="bg-row" style="display:none;">
     <span style="font-size:0.8rem; font-weight:800; color:var(--acc);">Paper:</span>
     <button type="button" class="swatch active" style="background:#ffffff; border:2px solid #ccc;" onclick="setBg('#ffffff', this)"></button>
@@ -309,7 +323,6 @@ footer {
   </div>
 </footer>
 
-<!-- Cat Meme Modal -->
 <div class="modal" id="mod-meme">
   <div class="modal-box">
     <div class="modal-head"><span>😹 Cat Meme Studio</span><span style="cursor:pointer;" onclick="closeModal('mod-meme')">✕</span></div>
@@ -335,7 +348,6 @@ footer {
   </div>
 </div>
 
-<!-- Coloring Pages Modal -->
 <div class="modal" id="mod-pages">
   <div class="modal-box">
     <div class="modal-head"><span>🐱 Cat Coloring Pages</span><span style="cursor:pointer;" onclick="closeModal('mod-pages')">✕</span></div>
@@ -411,7 +423,14 @@ function syncSize(keep = true) {
   ctx.fillStyle = state.bgColor;
   ctx.fillRect(0, 0, w, h);
 
-  if (temp) ctx.drawImage(temp, 0, 0, w, h);
+  if (temp) {
+    const scale = Math.min(w / temp.width, h / temp.height);
+    const dw = temp.width * scale;
+    const dh = temp.height * scale;
+    const dx = (w - dw) / 2;
+    const dy = (h - dh) / 2;
+    ctx.drawImage(temp, dx, dy, dw, dh);
+  }
   saveState();
   drawGuides();
 }
@@ -769,9 +788,27 @@ function renderMeme() {
 
 function applyMeme() {
   closeModal('mod-meme');
-  ctx.drawImage(mcv, 0, 0, cv.width, cv.height);
+  const scale = Math.min(cv.width / mcv.width, cv.height / mcv.height);
+  const dw = mcv.width * scale;
+  const dh = mcv.height * scale;
+  const dx = (cv.width - dw) / 2;
+  const dy = (cv.height - dh) / 2;
+
+  ctx.fillStyle = state.bgColor;
+  ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.drawImage(mcv, dx, dy, dw, dh);
   saveState();
   playTone(700);
+}
+
+let isSquare = false;
+function toggleCanvasShape(btn) {
+  isSquare = !isSquare;
+  wrap.classList.toggle('square', isSquare);
+  btn.textContent = isSquare ? '📱 Standard' : '⏹️ Square';
+  btn.classList.toggle('active', isSquare);
+  setTimeout(() => syncSize(true), 40);
+  playTone(isSquare ? 700 : 500);
 }
 </script>
 </body>
