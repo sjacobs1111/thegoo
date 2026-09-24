@@ -15,6 +15,8 @@
     --accent: #ff5e62;
     --accent-gradient: linear-gradient(135deg, #ff9966, #ff5e62);
     --secondary-accent: #00d2ff;
+    --success: #00e676;
+    --gold: #ffd166;
     --text-primary: #f0f3f8;
     --text-muted: #8c96a8;
     --border: #2e3447;
@@ -52,19 +54,61 @@
     font-size: 1rem;
     box-shadow: 0 2px 8px rgba(255, 94, 98, 0.4);
   }
-  .tip {
-    font-size: 0.8rem;
-    color: #ffc400;
-    background: rgba(255, 196, 0, 0.1);
-    border: 1px solid rgba(255, 196, 0, 0.3);
+
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .mic-selector-badge {
+    font-size: 0.82rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     padding: 5px 12px;
     border-radius: 16px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
   }
+  .mic-selector-badge select {
+    background: transparent;
+    border: none;
+    color: var(--secondary-accent);
+    font-weight: 700;
+    font-size: 0.85rem;
+    outline: none;
+    cursor: pointer;
+    max-width: 220px;
+  }
+  .mic-selector-badge select option { background: var(--bg-card); color: var(--text-primary); }
+
+  .vu-meter-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 5px 10px;
+    border-radius: 16px;
+  }
+  .vu-bar-bg {
+    width: 70px;
+    height: 8px;
+    background: #0d0f14;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .vu-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00e676, #ffd166, #ff5e62);
+    border-radius: 4px;
+    transition: width 0.05s ease-out;
+  }
+
   main {
-    max-width: 900px;
+    max-width: 920px;
     width: 100%;
     margin: 0 auto;
     padding: 16px;
@@ -73,15 +117,131 @@
     gap: 14px;
     flex: 1;
   }
-  .panel {
+
+  .stage-panel {
     background: var(--bg-secondary);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 16px;
+    padding: 18px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
   }
+
+  .conductor-box {
+    background: #0d0f14;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bounce-arena {
+    height: 44px;
+    width: 100%;
+    position: relative;
+    border-bottom: 2px solid #232734;
+  }
+
+  .bouncing-orb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    position: absolute;
+    bottom: 0px;
+    left: 0%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 16px var(--accent);
+    transition: transform 0.05s linear;
+  }
+
+  .beat-blocks-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .beat-block {
+    background: var(--bg-card);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 6px;
+    text-align: center;
+    transition: all 0.08s ease-out;
+  }
+
+  .beat-block .b-num {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text-muted);
+  }
+
+  .beat-block .b-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+  }
+
+  .beat-block.active-beat {
+    background: rgba(0, 210, 255, 0.15);
+    border-color: var(--secondary-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 0 14px rgba(0, 210, 255, 0.35);
+  }
+  .beat-block.active-beat .b-num { color: var(--secondary-accent); }
+  .beat-block.active-beat .b-label { color: #fff; }
+
+  .beat-block.active-downbeat {
+    background: rgba(255, 94, 98, 0.22);
+    border-color: var(--accent);
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 0 20px rgba(255, 94, 98, 0.55);
+  }
+  .beat-block.active-downbeat .b-num { color: #ff7b7f; }
+  .beat-block.active-downbeat .b-label { color: var(--gold); }
+
+  .stage-info-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .bar-counter {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bar-tag {
+    background: var(--bg-card);
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    color: var(--gold);
+    font-size: 0.85rem;
+  }
+
+  .count-banner {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
   .row {
     display: flex;
     flex-wrap: wrap;
@@ -106,9 +266,10 @@
   .btn-secondary { background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); }
   .btn-secondary:hover { background: var(--bg-card-hover); }
   .btn-danger { background: rgba(255, 80, 80, 0.15); color: #ff6b6b; border: 1px solid rgba(255, 80, 80, 0.3); }
+
   .badge {
     background: var(--bg-card);
-    padding: 6px 10px;
+    padding: 6px 12px;
     border-radius: 6px;
     border: 1px solid var(--border);
     display: flex;
@@ -132,13 +293,15 @@
     cursor: pointer;
   }
   .badge select option { background: var(--bg-card); color: var(--text-primary); }
+
   .progress-wrap {
-    height: 12px;
-    background: var(--bg-card);
-    border-radius: 6px;
+    height: 10px;
+    background: #0d0f14;
+    border-radius: 5px;
     overflow: hidden;
     position: relative;
     border: 1px solid var(--border);
+    width: 100%;
   }
   .progress-fill {
     height: 100%;
@@ -146,13 +309,7 @@
     background: var(--accent-gradient);
     transition: width 0.05s linear;
   }
-  .status {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+
   .tracks-head { display: flex; justify-content: space-between; align-items: center; }
   .track-list { display: flex; flex-direction: column; gap: 8px; }
   .track-row {
@@ -216,6 +373,7 @@
   .del-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1rem; padding: 4px; }
   .del-btn:hover { color: #ff6b6b; }
   .empty { text-align: center; padding: 36px 16px; border: 2px dashed var(--border); border-radius: 8px; color: var(--text-muted); }
+
   details {
     background: var(--bg-secondary);
     border: 1px solid var(--border);
@@ -227,24 +385,82 @@
 </style>
 </head>
 <body>
+
 <header>
   <div class="logo"><span>♪</span> Maggie's Music Maker</div>
-  <div class="tip">🎧 Use wired headphones to eliminate latency & mic bleed</div>
+  
+  <div class="header-controls">
+    <div class="mic-selector-badge">
+      <span>🎙️ Mic:</span>
+      <select id="micSelect">
+        <option value="default">Detecting microphones...</option>
+      </select>
+    </div>
+
+    <div class="vu-meter-wrap" title="Live Voice Level Indicator">
+      <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">LEVEL</span>
+      <div class="vu-bar-bg"><div class="vu-bar-fill" id="vuFill"></div></div>
+    </div>
+  </div>
 </header>
+
 <main>
-  <div class="panel">
+
+  <div class="stage-panel">
+
+    <div class="conductor-box">
+      <div class="bounce-arena">
+        <div class="bouncing-orb" id="bouncingOrb"></div>
+      </div>
+
+      <div class="beat-blocks-grid">
+        <div class="beat-block" id="beat1">
+          <div class="b-num">1</div>
+          <div class="b-label">Downbeat</div>
+        </div>
+        <div class="beat-block" id="beat2">
+          <div class="b-num">2</div>
+          <div class="b-label">Beat</div>
+        </div>
+        <div class="beat-block" id="beat3">
+          <div class="b-num">3</div>
+          <div class="b-label">Beat</div>
+        </div>
+        <div class="beat-block" id="beat4">
+          <div class="b-num">4</div>
+          <div class="b-label">Beat</div>
+        </div>
+      </div>
+
+      <div class="stage-info-bar">
+        <div class="bar-counter">
+          <span id="barDisplay">Bar 1 of 4</span>
+          <span class="bar-tag" id="beatDisplay">Beat 1</span>
+        </div>
+        <div class="count-banner" id="conductorMsg">Ready &bull; Tap 'Play Visual Beat' to practice</div>
+      </div>
+
+      <div class="progress-wrap"><div class="progress-fill" id="prog"></div></div>
+    </div>
+
     <div class="row">
       <div style="display:flex; gap:8px;">
-        <button id="btnPlay" class="btn btn-secondary"><span id="playIcon">▶</span> <span id="playText">Play Rhythm</span></button>
-        <button id="btnRec" class="btn btn-primary">● <span id="recText">Record Base Loop (Track 1)</span></button>
+        <button id="btnPlay" class="btn btn-secondary">
+          <span id="playIcon">▶</span> <span id="playText">Play Visual Beat</span>
+        </button>
+        <button id="btnRec" class="btn btn-primary">
+          ● <span id="recText">Record Base Loop (Track 1)</span>
+        </button>
       </div>
+
       <div style="display:flex; gap:8px; flex-wrap:wrap;">
         <div class="badge">
-          <label>BPM</label>
+          <label>Tempo</label>
           <input type="number" id="bpm" value="95" min="40" max="220" style="width:46px;">
+          <span style="font-size:0.75rem; color:var(--text-muted);">BPM</span>
         </div>
         <div class="badge">
-          <label>Bars</label>
+          <label>Phrase</label>
           <select id="bars">
             <option value="2">2 Bars (8 beats)</option>
             <option value="4" selected>4 Bars (16 beats)</option>
@@ -252,35 +468,14 @@
             <option value="free">Freeform Tap</option>
           </select>
         </div>
-        <div class="badge">
-          <label>Tone</label>
-          <select id="clickTone">
-            <option value="wood" selected>🪵 Woodblock</option>
-            <option value="snap">🫰 Finger Snap</option>
-            <option value="thump">👞 Foot Thump</option>
-            <option value="kalimba">✨ Kalimba / Chime</option>
-            <option value="shaker">🌾 Shaker</option>
-            <option value="studio">🎛️ Studio Rim</option>
-          </select>
-        </div>
-        <div class="badge">
-          <label>Rhythm</label>
-          <select id="clickRhythm">
-            <option value="standard" selected>4/4 Standard</option>
-            <option value="backbeat">Backbeat (2 & 4)</option>
-            <option value="eighths">8th Notes</option>
-            <option value="waltz">3/4 Waltz Feel</option>
-            <option value="heartbeat">Heartbeat</option>
-          </select>
-        </div>
-        <div class="badge">
-          <label>Click</label>
-          <input type="checkbox" id="chkClick" checked style="width: 16px; height: 16px;">
+        <div class="badge" title="Boosts vocal recording volume">
+          <label>Mic Boost</label>
+          <input type="range" id="micGainSlider" min="1.0" max="3.5" step="0.25" value="1.75" style="width:70px;">
+          <span id="gainVal" style="font-size:0.8rem; font-weight:700; color:var(--secondary-accent);">1.8x</span>
         </div>
       </div>
     </div>
-    <div class="progress-wrap"><div class="progress-fill" id="prog"></div></div>
-    <div class="status"><span id="stat">Ready. Tap 'Play Rhythm' to practice, or tap record.</span><span id="time">0.0s / 0.0s</span></div>
+
   </div>
 
   <div class="tracks-head">
@@ -293,117 +488,182 @@
   </div>
 
   <div class="track-list" id="tracksContainer">
-    <div class="empty" id="emptyMsg">No vocal layers yet. You can tap 'Play Rhythm' to rehearse, then record Track 1!</div>
+    <div class="empty" id="emptyMsg">
+      No vocal layers recorded yet. Select the phone mic above, check your voice on the Level meter, then record Track 1!
+    </div>
   </div>
 
   <details>
-    <summary>⚙️ Vocal Timing Offset (Latency Calibration)</summary>
-    <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
-      <label style="font-size:0.8rem; color:var(--text-muted);">Offset:</label>
-      <input type="range" id="latOffset" min="0" max="150" value="40" step="5" style="flex:1;">
-      <span id="latVal" style="font-weight:700; width:45px;">40 ms</span>
+    <summary>⚙️ Microphone Calibration & Audio Settings</summary>
+    <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 12px;">
+      <div style="display:flex; align-items:center; gap:10px;">
+        <input type="checkbox" id="chkAutoNormalize" checked style="width:18px; height:18px;">
+        <label for="chkAutoNormalize" style="font-size:0.85rem; font-weight:600; cursor:pointer;">
+          Auto-Normalize Vocals (Automatically brings quiet vocal takes up to rich, healthy volume)
+        </label>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <input type="checkbox" id="chkMuteSpeakerRec" style="width:18px; height:18px;">
+        <label for="chkMuteSpeakerRec" style="font-size:0.85rem; font-weight:600; cursor:pointer;">
+          Mute headphone/speaker playback while recording layers (Pure silence for zero mic bleed)
+        </label>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 10px; margin-top: 6px;">
+        <label style="font-size:0.8rem; color:var(--text-muted); min-width: 150px;">Vocal Latency Offset:</label>
+        <input type="range" id="latOffset" min="0" max="150" value="40" step="5" style="flex:1;">
+        <span id="latVal" style="font-weight:700; width:45px;">40 ms</span>
+      </div>
     </div>
-    <p style="color:var(--text-muted); font-size:0.75rem; margin-top:6px;">
-      If recorded harmonies feel slightly delayed behind the backing loop, adjust this offset forward to compensate for your device's audio input buffer.
-    </p>
   </details>
+
 </main>
 
 <script>
 (() => {
-  let ctx = null, mic = null, proc = null, stream = null;
+  let ctx = null, mic = null, micGainNode = null, proc = null, stream = null;
+  let vuAnalyser = null, vuData = null;
   let tracks = [], loopDur = 0, isPlaying = false, loopStart = 0, animId = null;
   let recState = 'IDLE', targetIdx = -1, chunks = [], countInStep = 0, countTimer = null;
 
+  const micSelect = document.getElementById('micSelect');
+  const vuFill = document.getElementById('vuFill');
+  const micGainSlider = document.getElementById('micGainSlider'), gainVal = document.getElementById('gainVal');
   const btnPlay = document.getElementById('btnPlay'), btnRec = document.getElementById('btnRec');
   const playText = document.getElementById('playText'), recText = document.getElementById('recText'), playIcon = document.getElementById('playIcon');
   const bpmInput = document.getElementById('bpm'), barsSelect = document.getElementById('bars');
-  const clickTone = document.getElementById('clickTone'), clickRhythm = document.getElementById('clickRhythm'), chkClick = document.getElementById('chkClick');
-  const prog = document.getElementById('prog'), stat = document.getElementById('stat'), timeDisp = document.getElementById('time');
+  const bouncingOrb = document.getElementById('bouncingOrb');
+  const beatBlocks = [
+    document.getElementById('beat1'),
+    document.getElementById('beat2'),
+    document.getElementById('beat3'),
+    document.getElementById('beat4')
+  ];
+  const barDisplay = document.getElementById('barDisplay'), beatDisplay = document.getElementById('beatDisplay');
+  const conductorMsg = document.getElementById('conductorMsg');
+  const prog = document.getElementById('prog');
   const tracksContainer = document.getElementById('tracksContainer'), emptyMsg = document.getElementById('emptyMsg');
   const tCount = document.getElementById('tCount'), btnExportWav = document.getElementById('btnExportWav'), btnExportMp3 = document.getElementById('btnExportMp3'), btnClear = document.getElementById('btnClear');
+  const chkAutoNormalize = document.getElementById('chkAutoNormalize'), chkMuteSpeakerRec = document.getElementById('chkMuteSpeakerRec');
   const latOffset = document.getElementById('latOffset'), latVal = document.getElementById('latVal');
 
   latOffset.oninput = () => latVal.textContent = `${latOffset.value} ms`;
+  micGainSlider.oninput = () => {
+    gainVal.textContent = `${parseFloat(micGainSlider.value).toFixed(1)}x`;
+    if (micGainNode) {
+      micGainNode.gain.setValueAtTime(parseFloat(micGainSlider.value), ctx.currentTime);
+    }
+  };
 
-  async function initAudio() {
+  async function refreshMicrophoneList() {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const audioInputs = devices.filter(d => d.kind === 'audioinput');
+      if (audioInputs.length === 0) return;
+
+      const currentVal = micSelect.value;
+      micSelect.innerHTML = '';
+      let builtInCandidateId = null;
+
+      audioInputs.forEach((device, index) => {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        const label = device.label || `Microphone ${index + 1}`;
+        option.textContent = label;
+
+        const lower = label.toLowerCase();
+        if (lower.includes('built-in') || lower.includes('phone') || lower.includes('internal') || lower.includes('iphone') || lower.includes('bottom')) {
+          if (!builtInCandidateId) builtInCandidateId = device.deviceId;
+          option.textContent = `📱 ${label} (Phone Mic)`;
+        } else if (lower.includes('headset') || lower.includes('wired') || lower.includes('external') || lower.includes('earphone')) {
+          option.textContent = `🎧 ${label} (Headset Mic)`;
+        }
+
+        micSelect.appendChild(option);
+      });
+
+      if (currentVal && Array.from(micSelect.options).some(o => o.value === currentVal)) {
+        micSelect.value = currentVal;
+      } else if (builtInCandidateId) {
+        micSelect.value = builtInCandidateId;
+      }
+    } catch (err) {
+      console.warn("Device enumeration error: ", err);
+    }
+  }
+
+  micSelect.onchange = async () => {
+    if (stream) {
+      stream.getTracks().forEach(t => t.stop());
+      stream = null;
+    }
+    await initAudio(micSelect.value);
+  };
+
+  async function initAudio(preferredDeviceId = null) {
     if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
     if (ctx.state === 'suspended') await ctx.resume();
+
     if (!stream) {
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+        const audioConstraints = {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
+          latency: 0
+        };
+
+        if (preferredDeviceId && preferredDeviceId !== 'default') {
+          audioConstraints.deviceId = { exact: preferredDeviceId };
+        }
+
+        stream = await navigator.mediaDevices.getUserMedia({ audio: audioConstraints });
+        await refreshMicrophoneList();
+
         mic = ctx.createMediaStreamSource(stream);
+
+        micGainNode = ctx.createGain();
+        micGainNode.gain.setValueAtTime(parseFloat(micGainSlider.value) || 1.75, ctx.currentTime);
+
+        vuAnalyser = ctx.createAnalyser();
+        vuAnalyser.fftSize = 256;
+        vuData = new Uint8Array(vuAnalyser.frequencyBinCount);
+
         proc = ctx.createScriptProcessor(4096, 1, 1);
         proc.onaudioprocess = (e) => {
-          if (recState === 'REC_T1' || recState === 'REC_LAYER') chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+          if (recState === 'REC_T1' || recState === 'REC_LAYER') {
+            chunks.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+          }
         };
-        mic.connect(proc);
+
+        mic.connect(micGainNode);
+        micGainNode.connect(vuAnalyser);
+        micGainNode.connect(proc);
+
         const mute = ctx.createGain(); mute.gain.value = 0;
         proc.connect(mute); mute.connect(ctx.destination);
+
+        startVUMeter();
       } catch (err) {
-        console.warn("Microphone access not granted yet: ", err.message);
+        console.warn("Mic access error: ", err.message);
       }
     }
   }
 
-  function playClick(isDownbeat = false) {
-    if (!ctx || !chkClick.checked) return;
-    const tone = clickTone.value;
-    const t = ctx.currentTime;
-
-    if (tone === 'wood') {
-      const osc = ctx.createOscillator(), g = ctx.createGain();
-      const baseFreq = isDownbeat ? 880 : 620;
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(baseFreq * 1.5, t);
-      osc.frequency.exponentialRampToValueAtTime(baseFreq, t + 0.025);
-      g.gain.setValueAtTime(isDownbeat ? 0.45 : 0.28, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
-      osc.connect(g); g.connect(ctx.destination);
-      osc.start(t); osc.stop(t + 0.045);
-    } else if (tone === 'snap') {
-      const osc = ctx.createOscillator(), g = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(isDownbeat ? 340 : 280, t);
-      osc.frequency.exponentialRampToValueAtTime(120, t + 0.02);
-      g.gain.setValueAtTime(isDownbeat ? 0.4 : 0.25, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
-      osc.connect(g); g.connect(ctx.destination);
-      osc.start(t); osc.stop(t + 0.04);
-    } else if (tone === 'thump') {
-      const osc = ctx.createOscillator(), g = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(isDownbeat ? 110 : 80, t);
-      osc.frequency.exponentialRampToValueAtTime(45, t + 0.06);
-      g.gain.setValueAtTime(isDownbeat ? 0.6 : 0.35, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
-      osc.connect(g); g.connect(ctx.destination);
-      osc.start(t); osc.stop(t + 0.09);
-    } else if (tone === 'kalimba') {
-      const osc = ctx.createOscillator(), g = ctx.createGain();
-      const freq = isDownbeat ? 1175 : 880;
-      osc.type = 'sine'; osc.frequency.setValueAtTime(freq, t);
-      g.gain.setValueAtTime(isDownbeat ? 0.35 : 0.2, t);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + (isDownbeat ? 0.25 : 0.15));
-      osc.connect(g); g.connect(ctx.destination);
-      osc.start(t); osc.stop(t + 0.28);
-    } else if (tone === 'shaker') {
-      const osc = ctx.createOscillator(), g = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(isDownbeat ? 2400 : 1800, t);
-      g.gain.setValueAtTime(isDownbeat ? 0.3 : 0.18, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
-      osc.connect(g); g.connect(ctx.destination);
-      osc.start(t); osc.stop(t + 0.035);
-    } else {
-      const osc = ctx.createOscillator(), g = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(isDownbeat ? 1200 : 800, t);
-      g.gain.setValueAtTime(isDownbeat ? 0.4 : 0.22, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + 0.03);
-      osc.connect(g); g.connect(ctx.destination);
-      osc.start(t); osc.stop(t + 0.035);
+  function startVUMeter() {
+    function updateVU() {
+      if (vuAnalyser) {
+        vuAnalyser.getByteFrequencyData(vuData);
+        let sum = 0;
+        for (let i = 0; i < vuData.length; i++) sum += vuData[i];
+        let avg = sum / vuData.length;
+        let pct = Math.min(100, (avg / 100) * 100);
+        vuFill.style.width = `${pct}%`;
+      }
+      requestAnimationFrame(updateVU);
     }
+    updateVU();
   }
 
   function updateUI() {
@@ -415,7 +675,7 @@
     barsSelect.disabled = tracks.length > 0;
 
     if (!isPlaying) {
-      playText.textContent = tracks.length === 0 ? 'Play Rhythm' : 'Play All';
+      playText.textContent = tracks.length === 0 ? 'Play Visual Beat' : 'Play All';
       playIcon.textContent = '▶';
     }
 
@@ -447,7 +707,7 @@
         <button class="del-btn" data-act="del">🗑️</button>
       `;
       el.querySelector('.track-input').onchange = (e) => t.name = e.target.value;
-      el.querySelector('.vol').oninput = (e) => { t.vol = parseFloat(e.target.value); if (t.gain) t.gain.gain.setValueAtTime(t.vol, ctx.currentTime); };
+      el.querySelector('.vol').oninput = (e) => { t.vol = parseFloat(e.target.value); applyMix(); };
       el.querySelector('.pan').oninput = (e) => { t.pan = parseFloat(e.target.value); if (t.panner) t.panner.pan.setValueAtTime(t.pan, ctx.currentTime); };
       el.querySelector('[data-act="mute"]').onclick = () => { t.muted = !t.muted; applyMix(); updateUI(); };
       el.querySelector('[data-act="solo"]').onclick = () => { t.solo = !t.solo; applyMix(); updateUI(); };
@@ -458,9 +718,13 @@
 
   function applyMix() {
     const hasSolo = tracks.some(t => t.solo);
+    const isMutingSpeaker = (chkMuteSpeakerRec.checked && recState === 'REC_LAYER');
+
     tracks.forEach(t => {
       if (!t.gain) return;
-      t.gain.gain.setValueAtTime((t.muted || (hasSolo && !t.solo)) ? 0 : t.vol, ctx.currentTime);
+      let effective = t.vol;
+      if (isMutingSpeaker || t.muted || (hasSolo && !t.solo)) effective = 0;
+      t.gain.gain.setValueAtTime(effective, ctx.currentTime);
     });
   }
 
@@ -472,8 +736,13 @@
     t.src.loop = true;
     t.src.loopEnd = loopDur;
     t.gain = ctx.createGain();
+    
     const hasSolo = tracks.some(x => x.solo);
-    t.gain.gain.setValueAtTime((t.muted || (hasSolo && !t.solo)) ? 0 : t.vol, ctx.currentTime);
+    const isMutingSpeaker = (chkMuteSpeakerRec.checked && recState === 'REC_LAYER');
+
+    let effective = t.vol;
+    if (isMutingSpeaker || t.muted || (hasSolo && !t.solo)) effective = 0;
+    t.gain.gain.setValueAtTime(effective, ctx.currentTime);
 
     let finalNode = t.gain;
     if (ctx.createStereoPanner) {
@@ -497,10 +766,10 @@
       const bpm = parseFloat(bpmInput.value) || 95;
       const bCount = barsSelect.value === 'free' ? 4 : parseInt(barsSelect.value);
       loopDur = (60 / bpm) * (bCount * 4);
-      stat.textContent = `Auditioning rhythm track (${bCount} Bars @ ${bpm} BPM). Practice your melody!`;
+      conductorMsg.textContent = `Visual Beat Running (${bpm} BPM) • Practice Melody`;
     } else {
       tracks.forEach(t => playTrack(t, loopStart));
-      stat.textContent = `Looping ${tracks.length} vocal layer${tracks.length > 1 ? 's' : ''}.`;
+      conductorMsg.textContent = `Looping ${tracks.length} vocal layer${tracks.length > 1 ? 's' : ''}`;
     }
     tick();
   }
@@ -508,60 +777,70 @@
   function stop() {
     isPlaying = false;
     playIcon.textContent = '▶';
-    playText.textContent = tracks.length === 0 ? 'Play Rhythm' : 'Play All';
+    playText.textContent = tracks.length === 0 ? 'Play Visual Beat' : 'Play All';
     tracks.forEach(t => { if (t.src) { try { t.src.stop(); } catch(e){} t.src = null; } });
     if (animId) cancelAnimationFrame(animId);
     prog.style.width = '0%';
-    stat.textContent = tracks.length === 0 ? "Rhythm paused. Tap record when ready!" : "Playback paused.";
+    clearBeatHighlights();
+    conductorMsg.textContent = "Paused • Tap Record when ready";
   }
 
-  btnPlay.onclick = async () => { await initAudio(); isPlaying ? stop() : play(); };
+  btnPlay.onclick = async () => { await initAudio(micSelect.value); isPlaying ? stop() : play(); };
 
-  let lastSubdivision = -1;
+  function clearBeatHighlights() {
+    beatBlocks.forEach(b => {
+      b.classList.remove('active-beat', 'active-downbeat');
+    });
+  }
+
+  let lastBeatNumber = -1;
+
   function tick() {
     if (!isPlaying && recState !== 'REC_T1' && recState !== 'REC_LAYER') return;
     const now = ctx.currentTime;
-    const effectiveDur = loopDur > 0 ? loopDur : ((60 / (parseFloat(bpmInput.value) || 95)) * 16);
+    const bpm = parseFloat(bpmInput.value) || 95;
+    const totalBars = barsSelect.value === 'free' ? 4 : parseInt(barsSelect.value);
+    const effectiveDur = loopDur > 0 ? loopDur : ((60 / bpm) * (totalBars * 4));
     const elapsed = (now - loopStart) % effectiveDur;
+
     prog.style.width = `${((elapsed / effectiveDur) * 100).toFixed(1)}%`;
-    timeDisp.textContent = `${elapsed.toFixed(1)}s / ${effectiveDur.toFixed(1)}s`;
 
-    if (barsSelect.value !== 'free' || tracks.length === 0) {
-      const bpm = parseFloat(bpmInput.value) || 95;
-      const qBeat = 60 / bpm;
-      const eighth = qBeat / 2;
-      const rhythm = clickRhythm.value;
+    const beatLen = 60 / bpm;
+    const currentTotalBeat = Math.floor(elapsed / beatLen);
+    const barIndex = Math.floor(currentTotalBeat / 4) + 1;
+    const beatIndexInBar = (currentTotalBeat % 4);
+    const beatProgress = (elapsed % beatLen) / beatLen;
 
-      let subIndex = Math.floor(elapsed / (rhythm === 'eighths' ? eighth : qBeat));
-      if (subIndex !== lastSubdivision) {
-        lastSubdivision = subIndex;
-        if (rhythm === 'standard') {
-          playClick(subIndex % 4 === 0);
-        } else if (rhythm === 'backbeat') {
-          if (subIndex % 4 === 1 || subIndex % 4 === 3) playClick(true);
-        } else if (rhythm === 'eighths') {
-          playClick(subIndex % 8 === 0);
-        } else if (rhythm === 'waltz') {
-          playClick(subIndex % 3 === 0);
-        } else if (rhythm === 'heartbeat') {
-          if (subIndex % 4 === 0) {
-            playClick(true);
-            setTimeout(() => playClick(false), 130);
-          }
-        }
+    barDisplay.textContent = `Bar ${barIndex} of ${totalBars}`;
+    beatDisplay.textContent = `Beat ${beatIndexInBar + 1}`;
+
+    if (beatIndexInBar !== lastBeatNumber) {
+      lastBeatNumber = beatIndexInBar;
+      clearBeatHighlights();
+      if (beatIndexInBar === 0) {
+        beatBlocks[0].classList.add('active-downbeat');
+      } else {
+        beatBlocks[beatIndexInBar].classList.add('active-beat');
       }
     }
+
+    const measureProgress = ((beatIndexInBar + beatProgress) / 4);
+    const orbX = Math.max(3, Math.min(97, measureProgress * 100));
+    const bounceHeight = Math.sin(beatProgress * Math.PI) * 22;
+    bouncingOrb.style.left = `${orbX}%`;
+    bouncingOrb.style.bottom = `${bounceHeight}px`;
 
     if (recState === 'ARMED') {
       if (elapsed >= effectiveDur - 0.08 || elapsed < 0.04) startLayerRec();
     } else if (recState === 'REC_LAYER') {
       if (now - layerStart >= effectiveDur - 0.02) finishLayerRec();
     }
+
     animId = requestAnimationFrame(tick);
   }
 
   btnRec.onclick = async () => {
-    await initAudio();
+    await initAudio(micSelect.value);
     if (tracks.length >= 10) return;
     if (tracks.length === 0) {
       if (recState === 'IDLE') startT1Count();
@@ -574,26 +853,32 @@
   function startT1Count() {
     recState = 'COUNT'; countInStep = 4;
     const ms = (60 / (parseFloat(bpmInput.value) || 95)) * 1000;
-    stat.textContent = `Get ready... 4`; playClick(false);
+    conductorMsg.textContent = `Get ready to sing... 4`;
+    
     countTimer = setInterval(() => {
       countInStep--;
-      if (countInStep > 0) { stat.textContent = `Get ready... ${countInStep}`; playClick(false); }
-      else { clearInterval(countTimer); startT1Rec(); }
+      if (countInStep > 0) {
+        conductorMsg.textContent = `Get ready to sing... ${countInStep}`;
+      } else {
+        clearInterval(countTimer);
+        startT1Rec();
+      }
     }, ms);
   }
 
   let t1Start = 0;
   function startT1Rec() {
-    recState = 'REC_T1'; chunks = []; playClick(true);
+    recState = 'REC_T1'; chunks = [];
     t1Start = ctx.currentTime; loopStart = t1Start;
     const bars = barsSelect.value;
     if (bars !== 'free') {
-      loopDur = (60 / (parseFloat(bpmInput.value) || 95)) * (parseInt(bars) * 4);
-      stat.textContent = `● Recording Track 1 (${bars} Bars)... Sing!`;
+      const bpm = parseFloat(bpmInput.value) || 95;
+      loopDur = (60 / bpm) * (parseInt(bars) * 4);
+      conductorMsg.textContent = `● RECORDING TRACK 1 (${bars} BARS)... SING!`;
       recText.textContent = `Recording...`;
       setTimeout(() => { if (recState === 'REC_T1') finishT1(); }, loopDur * 1000);
     } else {
-      stat.textContent = `● Recording... Tap 'Finish' when phrase ends.`;
+      conductorMsg.textContent = `● RECORDING... TAP 'FINISH' WHEN PHRASE ENDS`;
       recText.textContent = `Finish Base Loop`;
     }
     tick();
@@ -603,7 +888,7 @@
     if (barsSelect.value === 'free') loopDur = Math.max(1.0, ctx.currentTime - t1Start);
     recState = 'IDLE';
     tracks.push({ name: 'Track 1 (Lead/Beat)', buf: compileBuf(loopDur), vol: 0.9, pan: 0, muted: false, solo: false });
-    stat.textContent = `Track 1 locked (${loopDur.toFixed(2)}s). Seamlessly looping.`;
+    conductorMsg.textContent = `Track 1 locked (${loopDur.toFixed(2)}s) • Looping in sync`;
     updateUI(); play();
   }
 
@@ -611,7 +896,7 @@
   function armLayer() {
     recState = 'ARMED'; targetIdx = tracks.length;
     tracks.push({ name: `Layer ${tracks.length + 1}`, buf: null, vol: 0.85, pan: tracks.length % 2 === 1 ? -0.35 : 0.35, muted: false, solo: false, armed: true, rec: false });
-    stat.textContent = `Layer armed: will punch-in at the start of next cycle.`;
+    conductorMsg.textContent = `Layer armed: will start at the top of next cycle!`;
     recText.textContent = `Waiting for cycle start...`;
     updateUI(); if (!isPlaying) play();
   }
@@ -619,8 +904,9 @@
   function startLayerRec() {
     recState = 'REC_LAYER'; chunks = []; layerStart = ctx.currentTime;
     tracks[targetIdx].armed = false; tracks[targetIdx].rec = true;
-    playClick(true); stat.textContent = `● Recording Layer ${targetIdx + 1}...`;
+    conductorMsg.textContent = `● RECORDING LAYER ${targetIdx + 1}... SING HARMONY!`;
     recText.textContent = `Recording Layer...`;
+    applyMix();
     updateUI();
   }
 
@@ -628,8 +914,9 @@
     recState = 'IDLE';
     tracks[targetIdx].buf = compileBuf(loopDur);
     tracks[targetIdx].rec = false;
+    applyMix();
     playTrack(tracks[targetIdx], ctx.currentTime);
-    stat.textContent = `Layer ${targetIdx + 1} added and in sync!`;
+    conductorMsg.textContent = `Layer ${targetIdx + 1} added! Seamlessly in sync.`;
     updateUI();
   }
 
@@ -642,7 +929,23 @@
     const targetSamples = Math.floor(dur * ctx.sampleRate);
     const buf = ctx.createBuffer(1, targetSamples, ctx.sampleRate);
     const ch = buf.getChannelData(0);
-    for (let i = 0; i < targetSamples; i++) ch[i] = (i + latSamples < full.length) ? full[i + latSamples] : 0;
+
+    for (let i = 0; i < targetSamples; i++) {
+      ch[i] = (i + latSamples < full.length) ? full[i + latSamples] : 0;
+    }
+
+    if (chkAutoNormalize.checked) {
+      let peak = 0;
+      for (let i = 0; i < targetSamples; i++) {
+        let abs = Math.abs(ch[i]);
+        if (abs > peak) peak = abs;
+      }
+      if (peak > 0.02 && peak < 0.75) {
+        let scale = 0.85 / peak;
+        for (let i = 0; i < targetSamples; i++) ch[i] *= scale;
+      }
+    }
+
     const fade = Math.floor(0.003 * ctx.sampleRate);
     for (let i = 0; i < fade; i++) { ch[i] *= (i/fade); ch[targetSamples - 1 - i] *= (i/fade); }
     return buf;
@@ -651,6 +954,7 @@
   btnClear.onclick = () => {
     if (confirm("Clear all recorded tracks?")) {
       stop(); tracks = []; loopDur = 0; recState = 'IDLE';
+      conductorMsg.textContent = "Ready • Tap 'Play Visual Beat' to practice";
       updateUI();
     }
   };
@@ -687,7 +991,7 @@
       return;
     }
 
-    stat.textContent = "Encoding stereo MP3 (192 kbps)...";
+    conductorMsg.textContent = "Encoding stereo MP3 (192 kbps)...";
     const mp3encoder = new lamejs.Mp3Encoder(2, sr, 192);
     const num = L.length;
     const leftInt16 = new Int16Array(num);
@@ -710,7 +1014,7 @@
 
     const blob = new Blob(mp3Chunks, { type: 'audio/mp3' });
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Maggies_Song_${Date.now()}.mp3`; a.click();
-    stat.textContent = "MP3 exported successfully!";
+    conductorMsg.textContent = "MP3 exported successfully!";
   };
 
   function encodeWAV(l, r, sr) {
@@ -718,8 +1022,8 @@
     const s = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
     s(0, 'RIFF'); v.setUint32(4, 36 + l.length * 4, true); s(8, 'WAVE'); s(12, 'fmt ');
     v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 2, true);
-    v.setUint32(24, sr, true); v.setUint32(28, sr * 4, true); v.setUint16(32, 4, true); v.setUint16(34, 16, true);
-    s(36, 'data'); v.setUint32(40, l.length * 4, true);
+    v.setUint32(24, sr, true); v.setUint32(28, sr * 4, true); v.setUint16(32, 4, true);
+    v.setUint16(34, 16, true); s(36, 'data'); v.setUint32(40, l.length * 4, true);
     let off = 44;
     for (let i = 0; i < l.length; i++) {
       v.setInt16(off, Math.max(-1, Math.min(1, l[i])) * 0x7FFF, true); off += 2;
@@ -729,6 +1033,7 @@
   }
 
   updateUI();
+  refreshMicrophoneList();
 })();
 </script>
 </body>
