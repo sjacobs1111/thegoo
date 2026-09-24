@@ -326,23 +326,37 @@ footer {
 <div class="modal" id="mod-meme">
   <div class="modal-box">
     <div class="modal-head"><span>😹 Cat Meme Studio</span><span style="cursor:pointer;" onclick="closeModal('mod-meme')">✕</span></div>
-    <div style="display:flex; gap:6px; overflow-x:auto;">
-      <button type="button" class="sz-btn active" style="font-size:1.5rem; width:48px; height:48px;" onclick="setMemeAvatar('😾', this)">😾</button>
-      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px;" onclick="setMemeAvatar('😸', this)">😸</button>
-      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px;" onclick="setMemeAvatar('🙀', this)">🙀</button>
-      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px;" onclick="setMemeAvatar('😼', this)">😼</button>
-      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px;" onclick="setMemeAvatar('canvas', this)">🎨</button>
+    <div style="display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none;">
+      <button type="button" class="sz-btn active" style="font-size:1.5rem; width:48px; height:48px; flex:0 0 48px;" onclick="setMemeAvatar('😾', this)">😾</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px; flex:0 0 48px;" onclick="setMemeAvatar('😸', this)">😸</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px; flex:0 0 48px;" onclick="setMemeAvatar('🙀', this)">🙀</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px; flex:0 0 48px;" onclick="setMemeAvatar('😼', this)">😼</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px; flex:0 0 48px;" onclick="setMemeAvatar('😻', this)">😻</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px; flex:0 0 48px;" onclick="setMemeAvatar('😹', this)">😹</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px; flex:0 0 48px;" onclick="setMemeAvatar('😽', this)">😽</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px; flex:0 0 48px;" onclick="setMemeAvatar('😿', this)">😿</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px; flex:0 0 48px;" onclick="setMemeAvatar('🦁', this)">🦁</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px; flex:0 0 48px;" onclick="setMemeAvatar('canvas', this)">🎨</button>
     </div>
     <div style="height:160px; background:#222; border-radius:12px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
       <canvas id="m-cv" width="360" height="180" style="width:100%; height:100%; object-fit:contain;"></canvas>
     </div>
     <input type="text" id="m-top" class="inp" placeholder="TOP TEXT" value="WHEN THE HUMAN SAYS" oninput="renderMeme()">
     <input type="text" id="m-bot" class="inp" placeholder="BOTTOM TEXT" value="NO MORE TREATS" oninput="renderMeme()">
-    <div style="display:flex; flex-wrap:wrap; gap:5px;">
+    <div style="font-size:0.75rem; font-weight:800; color:var(--acc);">QUICK MEME IDEAS:</div>
+    <div style="display:flex; flex-wrap:wrap; gap:5px; max-height:120px; overflow-y:auto; padding-right:2px;">
       <button type="button" class="btn-h" onclick="quickMeme('I DID NOT TOUCH IT', 'IT BROKE ITSELF')">It broke itself</button>
       <button type="button" class="btn-h" onclick="quickMeme('3 AM:', 'TIME FOR ZOOMIES!')">3 AM Zoomies</button>
       <button type="button" class="btn-h" onclick="quickMeme('I AM GIA THE GREAT', 'OBEY MY PURRS!')">Gia the Great</button>
       <button type="button" class="btn-h" onclick="quickMeme('DID SOMEONE SAY', 'TUNA TREATS?!')">Tuna Treats</button>
+      <button type="button" class="btn-h" onclick="quickMeme('I MUST CATCH', 'THE RED DOT!')">Red Dot</button>
+      <button type="button" class="btn-h" onclick="quickMeme('IF I FITS', 'I SITS')">If I Fits I Sits</button>
+      <button type="button" class="btn-h" onclick="quickMeme('I CAN SEE THE BOTTOM', 'OF MY BOWL!')">Empty Bowl</button>
+      <button type="button" class="btn-h" onclick="quickMeme('WORK HARD', 'NAP HARDER')">Nap Harder</button>
+      <button type="button" class="btn-h" onclick="quickMeme('LET ME OUT', 'SO I CAN COME BACK IN')">Door Drama</button>
+      <button type="button" class="btn-h" onclick="quickMeme('YOUR WORK CAN WAIT', 'PET ME NOW')">Pet Me Now</button>
+      <button type="button" class="btn-h" onclick="quickMeme('NOT GUILTY', 'BY REASON OF CUTENESS')">Not Guilty</button>
+      <button type="button" class="btn-h" onclick="quickMeme('I AM NOT SLEEPING', 'I AM PLOTTING')">Plotting</button>
     </div>
     <button type="button" class="submit" onclick="applyMeme()">🎨 Put Meme on Canvas!</button>
   </div>
