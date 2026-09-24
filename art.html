@@ -11,18 +11,16 @@
   --acc: #ff4d88;
   --soft: #ffe4ee;
   --txt: #3c3242;
-  --border: #eedce4;
 }
 * {
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
   margin: 0; padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 html, body {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   height: 100dvh;
   overflow: hidden;
   background: var(--bg);
@@ -31,75 +29,60 @@ html, body {
   display: flex;
   flex-direction: column;
 }
-
 header {
-  flex: 0 0 auto;
-  height: 52px;
+  flex: 0 0 50px;
   background: var(--bar);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 10px;
   border-bottom: 2px solid var(--soft);
-  gap: 6px;
-  z-index: 30;
+  gap: 5px;
+  z-index: 20;
 }
 .brand {
   font-weight: 800;
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--acc);
   white-space: nowrap;
+}
+.hdr-btns {
   display: flex;
   align-items: center;
   gap: 4px;
-}
-.brand span.crown {
-  font-size: 1.25rem;
-  color: #ffb703;
-}
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 5px;
   overflow-x: auto;
   scrollbar-width: none;
 }
-.header-actions::-webkit-scrollbar { display: none; }
-
+.hdr-btns::-webkit-scrollbar { display: none; }
 button {
   font-family: inherit;
   border: none;
   outline: none;
   cursor: pointer;
-  -webkit-appearance: none;
 }
-
-.btn-hdr {
+.btn-h {
   background: var(--soft);
   border: 1px solid rgba(255, 77, 136, 0.3);
   color: var(--txt);
-  padding: 6px 9px;
-  border-radius: 12px;
-  font-size: 0.8rem;
+  padding: 6px 8px;
+  border-radius: 10px;
+  font-size: 0.78rem;
   font-weight: 700;
   white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 3px;
 }
-.btn-hdr:active { transform: scale(0.94); background: var(--acc); color: #fff; }
-.btn-hdr.active { background: var(--acc); color: #fff; border-color: var(--acc); }
-
+.btn-h:active, .btn-h.active {
+  background: var(--acc);
+  color: #fff;
+}
 #canvas-wrap {
   flex: 1 1 0;
   min-height: 0;
   position: relative;
-  background: #ffffff;
-  margin: 6px 8px;
-  border-radius: 20px;
+  background: #fff;
+  margin: 4px 6px;
+  border-radius: 18px;
   border: 3px solid var(--soft);
   overflow: hidden;
-  box-shadow: 0 4px 14px rgba(255, 77, 136, 0.12);
 }
 #cv, #guide {
   position: absolute;
@@ -109,221 +92,145 @@ button {
 }
 #cv { touch-action: none; cursor: crosshair; }
 #guide { pointer-events: none; display: none; z-index: 5; }
-
 footer {
   flex: 0 0 auto;
   background: var(--bar);
-  padding: 8px 10px max(10px, env(safe-area-inset-bottom, 12px));
+  padding: 6px 8px max(8px, env(safe-area-inset-bottom, 10px));
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   border-top: 2px solid var(--soft);
-  z-index: 30;
-  box-shadow: 0 -4px 12px rgba(0,0,0,0.03);
+  z-index: 20;
 }
-
-.scroll-row {
+.row {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   overflow-x: auto;
   scrollbar-width: none;
   padding: 2px 0;
 }
-.scroll-row::-webkit-scrollbar { display: none; }
-
+.row::-webkit-scrollbar { display: none; }
 .tool-btn {
   flex: 0 0 auto;
-  padding: 7px 12px;
-  border-radius: 14px;
+  padding: 6px 10px;
+  border-radius: 12px;
   background: #f7f5f9;
   border: 2px solid #eae5ee;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--txt);
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 .tool-btn.active {
   background: var(--acc);
   border-color: var(--acc);
   color: #fff;
-  box-shadow: 0 3px 8px rgba(255, 77, 136, 0.35);
 }
-.tool-btn:active { transform: scale(0.95); }
-
-.size-pill {
+.sz-btn {
   flex: 0 0 auto;
-  width: 34px; height: 34px;
+  width: 32px; height: 32px;
   border-radius: 10px;
   background: #f5f2f7;
   border: 2px solid #e4dfe9;
   font-weight: 800;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   display: flex; align-items: center; justify-content: center;
-  color: var(--txt);
 }
-.size-pill.active {
+.sz-btn.active {
   border-color: var(--acc);
   background: var(--soft);
   color: var(--acc);
 }
-
-.swatch-btn {
+.swatch {
   flex: 0 0 auto;
-  width: 32px; height: 32px;
+  width: 30px; height: 30px;
   border-radius: 50%;
-  border: 2.5px solid #ffffff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   cursor: pointer;
-  transition: transform 0.12s;
 }
-.swatch-btn.active {
-  transform: scale(1.24);
+.swatch.active {
+  transform: scale(1.22);
   border-color: #2b2230;
 }
-
-.color-input-btn {
+.picker-btn {
   flex: 0 0 auto;
   position: relative;
-  width: 32px; height: 32px;
+  width: 30px; height: 30px;
   border-radius: 50%;
   overflow: hidden;
   background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
   border: 2px solid #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.18);
 }
-.color-input-btn input {
+.picker-btn input {
   position: absolute;
   top: -10px; left: -10px;
-  width: 55px; height: 55px;
+  width: 50px; height: 50px;
   opacity: 0;
   cursor: pointer;
 }
-
 .stamp-btn {
   flex: 0 0 auto;
-  font-size: 1.45rem;
-  padding: 3px 8px;
-  border-radius: 12px;
+  font-size: 1.4rem;
+  padding: 2px 6px;
+  border-radius: 10px;
   background: #faf6fc;
-  border: 2px solid transparent;
-  line-height: 1.1;
 }
 .stamp-btn.active {
   background: var(--soft);
-  border-color: var(--acc);
-  transform: scale(1.15);
+  border: 2px solid var(--acc);
 }
-
-.modal-overlay {
-  position: fixed;
-  inset: 0;
+.modal {
+  position: fixed; inset: 0;
   background: rgba(30, 10, 35, 0.55);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  padding: 14px;
+  display: none; align-items: center; justify-content: center;
+  z-index: 100; padding: 14px;
 }
-.modal-dialog {
-  background: #ffffff;
-  border-radius: 22px;
-  padding: 16px 18px;
-  max-width: 410px;
-  width: 100%;
-  max-height: 85vh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 11px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+.modal-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 16px;
+  max-width: 400px; width: 100%;
+  max-height: 85vh; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 10px;
 }
-.modal-hdr {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 800;
-  color: var(--acc);
-  font-size: 1.1rem;
-  border-bottom: 2px solid var(--soft);
-  padding-bottom: 6px;
+.modal-head {
+  display: flex; justify-content: space-between; align-items: center;
+  font-weight: 800; color: var(--acc); font-size: 1.05rem;
+  border-bottom: 2px solid var(--soft); padding-bottom: 6px;
 }
-.modal-close {
-  background: #f0ebf2;
-  border-radius: 50%;
-  width: 28px; height: 28px;
-  font-size: 1rem;
-  font-weight: bold;
+.inp {
+  width: 100%; padding: 8px 10px; border-radius: 10px;
+  border: 2px solid #e5dfe9; font-weight: 600;
 }
-.text-inp {
-  width: 100%;
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: 2px solid #e5dfe9;
-  font-size: 0.95rem;
-  font-weight: 600;
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.card {
+  border: 2px solid #e5dfe9; border-radius: 12px;
+  padding: 8px; text-align: center; background: #fbf9fd;
+  font-weight: 800; font-size: 0.8rem;
 }
-.text-inp:focus { border-color: var(--acc); }
-
-.tag-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-.tag-btn {
-  padding: 4px 8px;
-  border-radius: 10px;
-  background: #f7f4f9;
-  border: 1px solid #e1dae7;
-  font-size: 0.72rem;
-  font-weight: 700;
-}
-.tag-btn:active { background: var(--soft); color: var(--acc); }
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-.page-btn {
-  border: 2px solid #e5dfe9;
-  border-radius: 14px;
-  padding: 10px 6px;
-  text-align: center;
-  background: #fbf9fd;
-  font-weight: 800;
-  font-size: 0.82rem;
-}
-.page-btn:active { border-color: var(--acc); background: var(--soft); }
-
-.btn-big {
-  background: var(--acc);
-  color: #fff;
-  padding: 11px;
-  border-radius: 14px;
-  font-weight: 800;
-  font-size: 0.95rem;
+.card:active { border-color: var(--acc); background: var(--soft); }
+.submit {
+  background: var(--acc); color: #fff;
+  padding: 10px; border-radius: 12px;
+  font-weight: 800; font-size: 0.92rem;
 }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="brand">
-    <span class="crown">👑</span>
-    <span>Gia the Great's Art World</span>
-  </div>
-  <div class="header-actions">
-    <button type="button" class="btn-hdr" id="btn-undo">↩️</button>
-    <button type="button" class="btn-hdr" id="btn-redo">↪️</button>
-    <button type="button" class="btn-hdr" id="btn-mandala">🪞 Mandala: Off</button>
-    <button type="button" class="btn-hdr" id="btn-meme" style="background:#fff3e0; color:#e65100;">😹 Meme</button>
-    <button type="button" class="btn-hdr" id="btn-pages" style="background:#ede7f6; color:#4a148c;">🐱 Pages</button>
-    <button type="button" class="btn-hdr" id="btn-sound">🔊</button>
-    <button type="button" class="btn-hdr" id="btn-clear">🧹</button>
-    <button type="button" class="btn-hdr" id="btn-save" style="background:#e8f5e9; color:#1b5e20;">💾 Save</button>
+  <div class="brand">👑🐾 Gia the Great's Art World</div>
+  <div class="hdr-btns">
+    <button type="button" class="btn-h" onclick="doUndo()">↩️</button>
+    <button type="button" class="btn-h" onclick="doRedo()">↪️</button>
+    <button type="button" class="btn-h" id="m-btn" onclick="cycleMandala(this)">🪞 Mandala: Off</button>
+    <button type="button" class="btn-h" style="background:#fff3e0; color:#e65100;" onclick="openModal('mod-meme')">😹 Meme</button>
+    <button type="button" class="btn-h" style="background:#ede7f6; color:#4a148c;" onclick="openModal('mod-pages')">🐱 Pages</button>
+    <button type="button" class="btn-h" id="snd-btn" onclick="toggleSound(this)">🔊</button>
+    <button type="button" class="btn-h" onclick="clearCanvas()">🧹</button>
+    <button type="button" class="btn-h" style="background:#e8f5e9; color:#1b5e20;" onclick="saveImage()">💾 Save</button>
   </div>
 </header>
 
@@ -333,90 +240,131 @@ footer {
 </div>
 
 <footer>
-  <!-- Row 1: Tools & Sizes -->
-  <div class="scroll-row">
-    <button type="button" class="tool-btn active" data-tool="brush">🖌️ Brush</button>
-    <button type="button" class="tool-btn" data-tool="sparkle">✨ Sparkle</button>
-    <button type="button" class="tool-btn" data-tool="neon">🌟 Neon</button>
-    <button type="button" class="tool-btn" data-tool="spray">💨 Spray</button>
-    <button type="button" class="tool-btn" data-tool="rainbow">🌈 Rainbow</button>
-    <button type="button" class="tool-btn" data-tool="ribbon">🎀 Ribbon</button>
-    <button type="button" class="tool-btn" data-tool="eraser">🧼 Eraser</button>
-    <button type="button" class="tool-btn" data-tool="stamp">🐾 Stamps</button>
-    <button type="button" class="tool-btn" data-tool="bgcolor">🎨 Background</button>
+  <!-- Tools Row -->
+  <div class="row">
+    <button type="button" class="tool-btn active" data-t="brush" onclick="setTool('brush', this)">🖌️ Paint</button>
+    <button type="button" class="tool-btn" data-t="sparkle" onclick="setTool('sparkle', this)">✨ Sparkle</button>
+    <button type="button" class="tool-btn" data-t="neon" onclick="setTool('neon', this)">🌟 Neon</button>
+    <button type="button" class="tool-btn" data-t="spray" onclick="setTool('spray', this)">💨 Spray</button>
+    <button type="button" class="tool-btn" data-t="rainbow" onclick="setTool('rainbow', this)">🌈 Rainbow</button>
+    <button type="button" class="tool-btn" data-t="ribbon" onclick="setTool('ribbon', this)">🎀 Ribbon</button>
+    <button type="button" class="tool-btn" data-t="eraser" onclick="setTool('eraser', this)">🧼 Eraser</button>
+    <button type="button" class="tool-btn" data-t="stamp" onclick="setTool('stamp', this)">🐾 Stamps</button>
+    <button type="button" class="tool-btn" data-t="bg" onclick="setTool('bg', this)">🎨 Paper</button>
 
     <div style="width:1px; height:18px; background:#e2dce7; flex:0 0 auto;"></div>
 
-    <button type="button" class="size-pill" data-size="6">S</button>
-    <button type="button" class="size-pill active" data-size="14">M</button>
-    <button type="button" class="size-pill" data-size="28">L</button>
-    <button type="button" class="size-pill" data-size="52">XL</button>
+    <button type="button" class="sz-btn" onclick="setSize(6, this)">S</button>
+    <button type="button" class="sz-btn active" onclick="setSize(14, this)">M</button>
+    <button type="button" class="sz-btn" onclick="setSize(28, this)">L</button>
+    <button type="button" class="sz-btn" onclick="setSize(52, this)">XL</button>
   </div>
 
-  <!-- Row 2: Always-Visible Palette or Active Sub-Options -->
-  <div class="scroll-row" id="palette-row"></div>
+  <!-- Permanent Colors Row -->
+  <div class="row" id="color-row">
+    <div class="picker-btn" title="Custom Color">
+      <input type="color" id="native-picker" onchange="setColor(this.value, null)">
+    </div>
+    <button type="button" class="swatch active" style="background:#ff4d88;" onclick="setColor('#ff4d88', this)"></button>
+    <button type="button" class="swatch" style="background:#ff1744;" onclick="setColor('#ff1744', this)"></button>
+    <button type="button" class="swatch" style="background:#ff7043;" onclick="setColor('#ff7043', this)"></button>
+    <button type="button" class="swatch" style="background:#ffd600;" onclick="setColor('#ffd600', this)"></button>
+    <button type="button" class="swatch" style="background:#76ff03;" onclick="setColor('#76ff03', this)"></button>
+    <button type="button" class="swatch" style="background:#00e676;" onclick="setColor('#00e676', this)"></button>
+    <button type="button" class="swatch" style="background:#00e5ff;" onclick="setColor('#00e5ff', this)"></button>
+    <button type="button" class="swatch" style="background:#2979ff;" onclick="setColor('#2979ff', this)"></button>
+    <button type="button" class="swatch" style="background:#d500f9;" onclick="setColor('#d500f9', this)"></button>
+    <button type="button" class="swatch" style="background:#8d6e63;" onclick="setColor('#8d6e63', this)"></button>
+    <button type="button" class="swatch" style="background:#212121;" onclick="setColor('#212121', this)"></button>
+    <button type="button" class="swatch" style="background:#ffffff; border:2px solid #ccc;" onclick="setColor('#ffffff', this)"></button>
+  </div>
+
+  <!-- Stamps Row (shown when Stamps is clicked) -->
+  <div class="row" id="stamp-row" style="display:none;">
+    <button type="button" class="stamp-btn active" onclick="setStamp('🐾', this)">🐾</button>
+    <button type="button" class="stamp-btn" onclick="setStamp('🐱', this)">🐱</button>
+    <button type="button" class="stamp-btn" onclick="setStamp('😸', this)">😸</button>
+    <button type="button" class="stamp-btn" onclick="setStamp('😻', this)">😻</button>
+    <button type="button" class="stamp-btn" onclick="setStamp('👑', this)">👑</button>
+    <button type="button" class="stamp-btn" onclick="setStamp('🧶', this)">🧶</button>
+    <button type="button" class="stamp-btn" onclick="setStamp('🐟', this)">🐟</button>
+    <button type="button" class="stamp-btn" onclick="setStamp('🦄', this)">🦄</button>
+    <button type="button" class="stamp-btn" onclick="setStamp('💖', this)">💖</button>
+    <button type="button" class="stamp-btn" onclick="setStamp('✨', this)">✨</button>
+    <button type="button" class="stamp-btn" onclick="setStamp('🌈', this)">🌈</button>
+    <button type="button" class="stamp-btn" onclick="setStamp('🧁', this)">🧁</button>
+    <button type="button" class="stamp-btn" onclick="setStamp('⭐', this)">⭐</button>
+  </div>
+
+  <!-- Background Colors Row (shown when Paper is clicked) -->
+  <div class="row" id="bg-row" style="display:none;">
+    <span style="font-size:0.8rem; font-weight:800; color:var(--acc);">Paper:</span>
+    <button type="button" class="swatch active" style="background:#ffffff; border:2px solid #ccc;" onclick="setBg('#ffffff', this)"></button>
+    <button type="button" class="swatch" style="background:#ffe4ee;" onclick="setBg('#ffe4ee', this)"></button>
+    <button type="button" class="swatch" style="background:#e6f3ff;" onclick="setBg('#e6f3ff', this)"></button>
+    <button type="button" class="swatch" style="background:#e8faea;" onclick="setBg('#e8faea', this)"></button>
+    <button type="button" class="swatch" style="background:#fff9db;" onclick="setBg('#fff9db', this)"></button>
+    <button type="button" class="swatch" style="background:#f3e5f5;" onclick="setBg('#f3e5f5', this)"></button>
+    <button type="button" class="swatch" style="background:#22252a;" onclick="setBg('#22252a', this)"></button>
+  </div>
 </footer>
 
-<div class="modal-overlay" id="modal-meme">
-  <div class="modal-dialog">
-    <div class="modal-hdr">
-      <span>😹 Cat Meme Studio</span>
-      <button type="button" class="modal-close" onclick="closeModal('modal-meme')">✕</button>
-    </div>
+<!-- Cat Meme Modal -->
+<div class="modal" id="mod-meme">
+  <div class="modal-box">
+    <div class="modal-head"><span>😹 Cat Meme Studio</span><span style="cursor:pointer;" onclick="closeModal('mod-meme')">✕</span></div>
     <div style="display:flex; gap:6px; overflow-x:auto;">
-      <button type="button" class="size-pill active" style="font-size:1.6rem; width:50px; height:50px;" onclick="chooseCat('😾',this)">😾</button>
-      <button type="button" class="size-pill" style="font-size:1.6rem; width:50px; height:50px;" onclick="chooseCat('😸',this)">😸</button>
-      <button type="button" class="size-pill" style="font-size:1.6rem; width:50px; height:50px;" onclick="chooseCat('🙀',this)">🙀</button>
-      <button type="button" class="size-pill" style="font-size:1.6rem; width:50px; height:50px;" onclick="chooseCat('😼',this)">😼</button>
-      <button type="button" class="size-pill" style="font-size:1.6rem; width:50px; height:50px;" onclick="chooseCat('canvas',this)">🎨</button>
+      <button type="button" class="sz-btn active" style="font-size:1.5rem; width:48px; height:48px;" onclick="setMemeAvatar('😾', this)">😾</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px;" onclick="setMemeAvatar('😸', this)">😸</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px;" onclick="setMemeAvatar('🙀', this)">🙀</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px;" onclick="setMemeAvatar('😼', this)">😼</button>
+      <button type="button" class="sz-btn" style="font-size:1.5rem; width:48px; height:48px;" onclick="setMemeAvatar('canvas', this)">🎨</button>
     </div>
-    <div style="height:170px; background:#222; border-radius:14px; overflow:hidden; display:flex; align-items:center; justify-content:center;">
-      <canvas id="meme-cv" width="360" height="180" style="width:100%; height:100%; object-fit:contain;"></canvas>
+    <div style="height:160px; background:#222; border-radius:12px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+      <canvas id="m-cv" width="360" height="180" style="width:100%; height:100%; object-fit:contain;"></canvas>
     </div>
-    <input type="text" id="meme-top" class="text-inp" placeholder="TOP TEXT" value="WHEN THE HUMAN SAYS">
-    <input type="text" id="meme-bot" class="text-inp" placeholder="BOTTOM TEXT" value="NO MORE TREATS">
-    <div class="tag-list">
-      <button type="button" class="tag-btn" onclick="fillMeme('I DID NOT TOUCH IT','IT BROKE ITSELF')">It broke itself</button>
-      <button type="button" class="tag-btn" onclick="fillMeme('3 AM:','TIME FOR ZOOMIES!')">3 AM Zoomies</button>
-      <button type="button" class="tag-btn" onclick="fillMeme('I AM GIA THE GREAT','OBEY MY PURRS!')">Gia the Great</button>
-      <button type="button" class="tag-btn" onclick="fillMeme('DID SOMEONE SAY','TUNA TREATS?!')">Tuna Treats</button>
+    <input type="text" id="m-top" class="inp" placeholder="TOP TEXT" value="WHEN THE HUMAN SAYS" oninput="renderMeme()">
+    <input type="text" id="m-bot" class="inp" placeholder="BOTTOM TEXT" value="NO MORE TREATS" oninput="renderMeme()">
+    <div style="display:flex; flex-wrap:wrap; gap:5px;">
+      <button type="button" class="btn-h" onclick="quickMeme('I DID NOT TOUCH IT', 'IT BROKE ITSELF')">It broke itself</button>
+      <button type="button" class="btn-h" onclick="quickMeme('3 AM:', 'TIME FOR ZOOMIES!')">3 AM Zoomies</button>
+      <button type="button" class="btn-h" onclick="quickMeme('I AM GIA THE GREAT', 'OBEY MY PURRS!')">Gia the Great</button>
+      <button type="button" class="btn-h" onclick="quickMeme('DID SOMEONE SAY', 'TUNA TREATS?!')">Tuna Treats</button>
     </div>
-    <button type="button" class="btn-big" id="btn-apply-meme">🎨 Put Meme on Canvas!</button>
+    <button type="button" class="submit" onclick="applyMeme()">🎨 Put Meme on Canvas!</button>
   </div>
 </div>
 
-<div class="modal-overlay" id="modal-pages">
-  <div class="modal-dialog">
-    <div class="modal-hdr">
-      <span>🐱 Cat Coloring Pages</span>
-      <button type="button" class="modal-close" onclick="closeModal('modal-pages')">✕</button>
-    </div>
-    <div class="card-grid">
-      <button type="button" class="page-btn" onclick="loadPage('princess')"><div style="font-size:1.8rem;">👑🐱</div>Princess Kitty</button>
-      <button type="button" class="page-btn" onclick="loadPage('astro')"><div style="font-size:1.8rem;">🚀🐱</div>Astro-Cat</button>
-      <button type="button" class="page-btn" onclick="loadPage('cupcake')"><div style="font-size:1.8rem;">🧁😸</div>Cupcake Cat</button>
-      <button type="button" class="page-btn" onclick="loadPage('fishbowl')"><div style="font-size:1.8rem;">🐠😽</div>Fishbowl Kitty</button>
-      <button type="button" class="page-btn" onclick="loadPage('yarn')"><div style="font-size:1.8rem;">🧶😻</div>Yarn Kitten</button>
-      <button type="button" class="page-btn" onclick="loadPage('mandala')"><div style="font-size:1.8rem;">🌸🐈</div>Mandala Cat</button>
+<!-- Coloring Pages Modal -->
+<div class="modal" id="mod-pages">
+  <div class="modal-box">
+    <div class="modal-head"><span>🐱 Cat Coloring Pages</span><span style="cursor:pointer;" onclick="closeModal('mod-pages')">✕</span></div>
+    <div class="grid2">
+      <button type="button" class="card" onclick="loadPage('princess')"><div style="font-size:1.8rem;">👑🐱</div>Princess Kitty</button>
+      <button type="button" class="card" onclick="loadPage('astro')"><div style="font-size:1.8rem;">🚀🐱</div>Astro-Cat</button>
+      <button type="button" class="card" onclick="loadPage('cupcake')"><div style="font-size:1.8rem;">🧁😸</div>Cupcake Cat</button>
+      <button type="button" class="card" onclick="loadPage('fishbowl')"><div style="font-size:1.8rem;">🐠😽</div>Fishbowl Kitty</button>
+      <button type="button" class="card" onclick="loadPage('yarn')"><div style="font-size:1.8rem;">🧶😻</div>Yarn Kitten</button>
+      <button type="button" class="card" onclick="loadPage('mandala')"><div style="font-size:1.8rem;">🌸🐈</div>Mandala Cat</button>
     </div>
   </div>
 </div>
 
 <script>
 let soundOn = true, aCtx = null;
-function playSound(freq = 560, duration = 0.18, sweep = 1.3) {
+function playTone(freq = 560, dur = 0.18, sweep = 1.3) {
   if (!soundOn) return;
   try {
     if (!aCtx) aCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (aCtx.state === 'suspended') aCtx.resume();
-    const osc = aCtx.createOscillator(), gain = aCtx.createGain(), now = aCtx.currentTime;
-    osc.frequency.setValueAtTime(freq, now);
-    osc.frequency.exponentialRampToValueAtTime(freq * sweep, now + duration * 0.4);
-    osc.frequency.exponentialRampToValueAtTime(freq * 0.9, now + duration);
-    gain.gain.setValueAtTime(0.15, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+    const osc = aCtx.createOscillator(), gain = aCtx.createGain(), t = aCtx.currentTime;
+    osc.frequency.setValueAtTime(freq, t);
+    osc.frequency.exponentialRampToValueAtTime(freq * sweep, t + dur * 0.4);
+    osc.frequency.exponentialRampToValueAtTime(freq * 0.9, t + dur);
+    gain.gain.setValueAtTime(0.15, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
     osc.connect(gain); gain.connect(aCtx.destination);
-    osc.start(now); osc.stop(now + duration);
+    osc.start(t); osc.stop(t + dur);
   } catch(e) {}
 }
 
@@ -432,30 +380,26 @@ const state = {
   x: 0, y: 0
 };
 
-const stampList = ['🐾', '🐱', '😸', '😻', '👑', '🧶', '🐟', '🦄', '💖', '✨', '🌈', '🧁', '⭐'];
-const colorList = ['#ff4d88', '#ff1744', '#ff7043', '#ffa726', '#ffd600', '#76ff03', '#00e676', '#00e5ff', '#2979ff', '#d500f9', '#8d6e63', '#212121', '#ffffff'];
-const bgList = ['#ffffff', '#ffe4ee', '#e6f3ff', '#e8faea', '#fff9db', '#f3e5f5', '#22252a'];
-
 const wrap = document.getElementById('canvas-wrap');
 const cv = document.getElementById('cv');
 const ctx = cv.getContext('2d', { willReadFrequently: true });
 const gcv = document.getElementById('guide');
 const gctx = gcv.getContext('2d');
 
-const undoHistory = [], redoHistory = [];
-function pushState() {
-  if (undoHistory.length >= 25) undoHistory.shift();
-  undoHistory.push(ctx.getImageData(0, 0, cv.width, cv.height));
-  redoHistory.length = 0;
+const undoList = [], redoList = [];
+function saveState() {
+  if (undoList.length >= 25) undoList.shift();
+  undoList.push(ctx.getImageData(0, 0, cv.width, cv.height));
+  redoList.length = 0;
 }
 
-function syncCanvasSize(preserve = true) {
-  const rect = wrap.getBoundingClientRect();
-  const w = Math.max(80, Math.floor(rect.width));
-  const h = Math.max(80, Math.floor(rect.height));
+function syncSize(keep = true) {
+  const r = wrap.getBoundingClientRect();
+  const w = Math.max(80, Math.floor(r.width));
+  const h = Math.max(80, Math.floor(r.height));
 
   let temp = null;
-  if (preserve && cv.width > 0 && cv.height > 0) {
+  if (keep && cv.width > 0 && cv.height > 0) {
     temp = document.createElement('canvas');
     temp.width = cv.width; temp.height = cv.height;
     temp.getContext('2d').drawImage(cv, 0, 0);
@@ -468,22 +412,22 @@ function syncCanvasSize(preserve = true) {
   ctx.fillRect(0, 0, w, h);
 
   if (temp) ctx.drawImage(temp, 0, 0, w, h);
-  pushState();
-  renderGuides();
+  saveState();
+  drawGuides();
 }
 
-syncCanvasSize(false);
-window.addEventListener('resize', () => syncCanvasSize(true));
-setTimeout(() => syncCanvasSize(true), 80);
+syncSize(false);
+window.addEventListener('resize', () => syncSize(true));
+setTimeout(() => syncSize(true), 100);
 
-function getPoint(e) {
+function getPos(e) {
   const r = cv.getBoundingClientRect();
-  const clientX = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
-  const clientY = (e.touches && e.touches[0]) ? e.touches[0].clientY : e.clientY;
-  return { x: clientX - r.left, y: clientY - r.top };
+  const cx = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+  const cy = (e.touches && e.touches[0]) ? e.touches[0].clientY : e.clientY;
+  return { x: cx - r.left, y: cy - r.top };
 }
 
-function getSymmetryPoints(x, y) {
+function getSymPoints(x, y) {
   if (!state.mandala) return [{x, y}];
   const cx = cv.width / 2, cy = cv.height / 2, pts = [];
   if (state.mandala === 2) {
@@ -499,43 +443,42 @@ function getSymmetryPoints(x, y) {
   return pts;
 }
 
-function onStart(x, y) {
+function onDown(x, y) {
   state.drawing = true;
   state.x = x; state.y = y;
-  const pts = getSymmetryPoints(x, y);
-
+  const pts = getSymPoints(x, y);
   if (state.tool === 'stamp') {
-    pts.forEach(p => drawSingleStamp(p.x, p.y));
-    pushState();
+    pts.forEach(p => drawStamp(p.x, p.y));
+    saveState();
   } else {
-    pts.forEach(p => drawSingleDot(p.x, p.y));
+    pts.forEach(p => drawDot(p.x, p.y));
   }
-  playSound(state.tool === 'sparkle' ? 840 : 540);
+  playTone(state.tool === 'sparkle' ? 840 : 540);
 }
 
-function onMove(x, y) {
+function onDrag(x, y) {
   if (!state.drawing) return;
   if (state.tool === 'stamp') {
     if (Math.hypot(x - state.x, y - state.y) > state.size * 2) {
-      getSymmetryPoints(x, y).forEach(p => drawSingleStamp(p.x, p.y));
+      getSymPoints(x, y).forEach(p => drawStamp(p.x, p.y));
       state.x = x; state.y = y;
     }
   } else {
-    const p1 = getSymmetryPoints(state.x, state.y);
-    const p2 = getSymmetryPoints(x, y);
+    const p1 = getSymPoints(state.x, state.y);
+    const p2 = getSymPoints(x, y);
     for (let i = 0; i < p1.length; i++) {
-      drawStroke(p1[i].x, p1[i].y, p2[i].x, p2[i].y);
+      drawLine(p1[i].x, p1[i].y, p2[i].x, p2[i].y);
     }
     state.x = x; state.y = y;
   }
 }
 
-function onEnd() {
-  if (state.drawing && state.tool !== 'stamp') pushState();
+function onUp() {
+  if (state.drawing && state.tool !== 'stamp') saveState();
   state.drawing = false;
 }
 
-function drawSingleDot(x, y) {
+function drawDot(x, y) {
   ctx.save();
   const rad = Math.max(1, state.size / 2);
   ctx.fillStyle = state.tool === 'eraser' ? state.bgColor : (state.tool === 'rainbow' ? `hsl(${state.hue},95%,58%)` : state.color);
@@ -546,7 +489,7 @@ function drawSingleDot(x, y) {
   ctx.restore();
 }
 
-function drawStroke(x1, y1, x2, y2) {
+function drawLine(x1, y1, x2, y2) {
   ctx.save();
   if (state.tool === 'eraser') {
     ctx.lineCap = 'round'; ctx.lineWidth = state.size * 1.5; ctx.strokeStyle = state.bgColor;
@@ -584,7 +527,7 @@ function drawStroke(x1, y1, x2, y2) {
   ctx.restore();
 }
 
-function drawSingleStamp(x, y) {
+function drawStamp(x, y) {
   ctx.save();
   ctx.font = `${Math.max(24, state.size * 2)}px sans-serif`;
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -595,18 +538,16 @@ function drawSingleStamp(x, y) {
 cv.addEventListener('pointerdown', e => {
   e.preventDefault();
   try { cv.setPointerCapture(e.pointerId); } catch(_) {}
-  const p = getPoint(e);
-  onStart(p.x, p.y);
+  const p = getPos(e); onDown(p.x, p.y);
 });
 cv.addEventListener('pointermove', e => {
   e.preventDefault();
-  const p = getPoint(e);
-  onMove(p.x, p.y);
+  const p = getPos(e); onDrag(p.x, p.y);
 });
-cv.addEventListener('pointerup', e => { e.preventDefault(); onEnd(); });
-cv.addEventListener('pointercancel', onEnd);
+cv.addEventListener('pointerup', e => { e.preventDefault(); onUp(); });
+cv.addEventListener('pointercancel', onUp);
 
-function renderGuides() {
+function drawGuides() {
   gctx.clearRect(0, 0, gcv.width, gcv.height);
   if (!state.mandala) { gcv.style.display = 'none'; return; }
   gcv.style.display = 'block';
@@ -625,64 +566,115 @@ function renderGuides() {
   gctx.setLineDash([]);
 }
 
-document.getElementById('btn-undo').onclick = () => {
-  if (undoHistory.length > 1) {
-    redoHistory.push(undoHistory.pop());
-    ctx.putImageData(undoHistory[undoHistory.length - 1], 0, 0);
-    playSound(460);
-  }
-};
-document.getElementById('btn-redo').onclick = () => {
-  if (redoHistory.length > 0) {
-    const s = redoHistory.pop();
-    undoHistory.push(s);
-    ctx.putImageData(s, 0, 0);
-    playSound(620);
-  }
-};
+function setTool(t, btn) {
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.tool = t;
 
-const mandalaModes = [
+  document.getElementById('color-row').style.display = (t === 'stamp' || t === 'bg') ? 'none' : 'flex';
+  document.getElementById('stamp-row').style.display = (t === 'stamp') ? 'flex' : 'none';
+  document.getElementById('bg-row').style.display = (t === 'bg') ? 'flex' : 'none';
+
+  playTone(580);
+}
+
+function setSize(s, btn) {
+  document.querySelectorAll('.sz-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.size = s;
+  playTone(440);
+}
+
+function setColor(c, btn) {
+  state.color = c;
+  document.querySelectorAll('#color-row .swatch').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  playTone(520);
+}
+
+function setStamp(st, btn) {
+  state.stamp = st;
+  document.querySelectorAll('.stamp-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  playTone(620);
+}
+
+function setBg(c, btn) {
+  state.bgColor = c;
+  document.querySelectorAll('#bg-row .swatch').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  ctx.fillStyle = c;
+  ctx.fillRect(0, 0, cv.width, cv.height);
+  saveState();
+  playTone(480);
+}
+
+function doUndo() {
+  if (undoList.length > 1) {
+    redoList.push(undoList.pop());
+    ctx.putImageData(undoList[undoList.length - 1], 0, 0);
+    playTone(460);
+  }
+}
+
+function doRedo() {
+  if (redoList.length > 0) {
+    const s = redoList.pop();
+    undoList.push(s);
+    ctx.putImageData(s, 0, 0);
+    playTone(620);
+  }
+}
+
+const mandalaList = [
   {n: 0, l: '🪞 Mandala: Off'},
   {n: 2, l: '🪞 2-Way Mirror'},
   {n: 4, l: '🌸 4-Way Quad'},
   {n: 8, l: '✨ 8-Way Mandala'},
   {n: 12, l: '👑 12-Way Royal'}
 ];
-let mIndex = 0;
-document.getElementById('btn-mandala').onclick = e => {
-  mIndex = (mIndex + 1) % mandalaModes.length;
-  state.mandala = mandalaModes[mIndex].n;
-  e.currentTarget.textContent = mandalaModes[mIndex].l;
-  e.currentTarget.classList.toggle('active', state.mandala > 0);
-  renderGuides();
-  playSound(state.mandala ? 720 : 380);
-};
+let mIdx = 0;
+function cycleMandala(btn) {
+  mIdx = (mIdx + 1) % mandalaList.length;
+  state.mandala = mandalaList[mIdx].n;
+  btn.textContent = mandalaList[mIdx].l;
+  btn.classList.toggle('active', state.mandala > 0);
+  drawGuides();
+  playTone(state.mandala ? 720 : 380);
+}
 
-document.getElementById('btn-sound').onclick = e => {
+function toggleSound(btn) {
   soundOn = !soundOn;
-  e.currentTarget.textContent = soundOn ? '🔊' : '🔇';
-};
-document.getElementById('btn-clear').onclick = () => {
+  btn.textContent = soundOn ? '🔊' : '🔇';
+}
+
+function clearCanvas() {
   ctx.fillStyle = state.bgColor;
   ctx.fillRect(0, 0, cv.width, cv.height);
-  pushState();
-  playSound(340);
-};
-document.getElementById('btn-save').onclick = () => {
-  playSound(780);
+  saveState();
+  playTone(340);
+}
+
+function saveImage() {
+  playTone(780);
   const a = document.createElement('a');
   a.download = `gia-art-${Date.now()}.png`;
   a.href = cv.toDataURL();
   a.click();
-};
+}
 
-function openModal(id) { document.getElementById(id).style.display = 'flex'; playSound(600); }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; playSound(400); }
-document.getElementById('btn-meme').onclick = () => { openModal('modal-meme'); drawMemePreview(); };
-document.getElementById('btn-pages').onclick = () => openModal('modal-pages');
+function openModal(id) {
+  document.getElementById(id).style.display = 'flex';
+  if (id === 'mod-meme') renderMeme();
+  playTone(600);
+}
+function closeModal(id) {
+  document.getElementById(id).style.display = 'none';
+  playTone(400);
+}
 
 function loadPage(type) {
-  closeModal('modal-pages');
+  closeModal('mod-pages');
   ctx.fillStyle = state.bgColor;
   ctx.fillRect(0, 0, cv.width, cv.height);
 
@@ -691,7 +683,7 @@ function loadPage(type) {
   ctx.save();
   ctx.strokeStyle = '#2b2130'; ctx.lineWidth = 4; ctx.fillStyle = '#fff'; ctx.lineCap = 'round';
 
-  function drawCatHead(ox, oy, sz) {
+  function drawHead(ox, oy, sz) {
     ctx.beginPath(); ctx.ellipse(ox, oy, sz, sz * 0.85, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(ox - sz * 0.7, oy - sz * 0.4); ctx.lineTo(ox - sz * 0.6, oy - sz * 1.1); ctx.lineTo(ox - sz * 0.2, oy - sz * 0.7); ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(ox + sz * 0.7, oy - sz * 0.4); ctx.lineTo(ox + sz * 0.6, oy - sz * 1.1); ctx.lineTo(ox + sz * 0.2, oy - sz * 0.7); ctx.closePath(); ctx.fill(); ctx.stroke();
@@ -701,23 +693,23 @@ function loadPage(type) {
   }
 
   if (type === 'princess') {
-    drawCatHead(cx, cy, s);
+    drawHead(cx, cy, s);
     ctx.beginPath(); ctx.moveTo(cx - 30, cy - s * 0.7); ctx.lineTo(cx - 25, cy - s * 1.15); ctx.lineTo(cx, cy - s * 0.9); ctx.lineTo(cx + 25, cy - s * 1.15); ctx.lineTo(cx + 30, cy - s * 0.7); ctx.closePath(); ctx.stroke();
     for (let i = -3; i <= 3; i++) { ctx.beginPath(); ctx.arc(cx + i * 20, cy + s * 0.8, 6, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); }
   } else if (type === 'astro') {
     ctx.beginPath(); ctx.arc(cx, cy, s * 1.1, 0, Math.PI * 2); ctx.stroke();
-    drawCatHead(cx, cy + 10, s * 0.7);
+    drawHead(cx, cy + 10, s * 0.7);
     ctx.beginPath(); ctx.arc(cx + s * 1.2, cy - s * 0.8, 25, 0, Math.PI * 2); ctx.stroke();
   } else if (type === 'cupcake') {
     ctx.beginPath(); ctx.moveTo(cx - s * 0.6, cy + s * 0.2); ctx.lineTo(cx - s * 0.4, cy + s * 0.9); ctx.lineTo(cx + s * 0.4, cy + s * 0.9); ctx.lineTo(cx + s * 0.6, cy + s * 0.2); ctx.closePath(); ctx.stroke();
-    drawCatHead(cx, cy - 10, s * 0.7);
+    drawHead(cx, cy - 10, s * 0.7);
     ctx.beginPath(); ctx.arc(cx, cy - s * 0.75, 16, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
   } else if (type === 'fishbowl') {
     ctx.beginPath(); ctx.arc(cx + s * 0.2, cy + 10, s * 0.7, 0, Math.PI * 2); ctx.stroke();
-    drawCatHead(cx - s * 0.6, cy, s * 0.55);
+    drawHead(cx - s * 0.6, cy, s * 0.55);
     ctx.beginPath(); ctx.ellipse(cx + s * 0.2, cy + 10, 18, 10, 0, 0, Math.PI * 2); ctx.stroke();
   } else if (type === 'yarn') {
-    drawCatHead(cx - s * 0.3, cy - 10, s * 0.6);
+    drawHead(cx - s * 0.3, cy - 10, s * 0.6);
     ctx.beginPath(); ctx.arc(cx + s * 0.4, cy + s * 0.2, s * 0.4, 0, Math.PI * 2); ctx.stroke();
   } else {
     ctx.beginPath(); ctx.arc(cx, cy, s * 1.1, 0, Math.PI * 2); ctx.stroke();
@@ -725,45 +717,43 @@ function loadPage(type) {
       const a = (Math.PI / 4) * i;
       ctx.beginPath(); ctx.arc(cx + s * 0.6 * Math.cos(a), cy + s * 0.6 * Math.sin(a), s * 0.3, 0, Math.PI * 2); ctx.stroke();
     }
-    drawCatHead(cx, cy, s * 0.35);
+    drawHead(cx, cy, s * 0.35);
   }
 
   ctx.restore();
-  pushState();
-  playSound(640);
+  saveState();
+  playTone(640);
 }
 
-let currentCat = '😾';
-const mcv = document.getElementById('meme-cv'), mctx = mcv.getContext('2d');
-const mTop = document.getElementById('meme-top'), mBot = document.getElementById('meme-bot');
+let currentAvatar = '😾';
+const mcv = document.getElementById('m-cv'), mctx = mcv.getContext('2d');
+const mTop = document.getElementById('m-top'), mBot = document.getElementById('m-bot');
 
-function chooseCat(cat, el) {
-  document.querySelectorAll('#modal-meme .size-pill').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  currentCat = cat;
-  drawMemePreview();
-  playSound(520);
-}
-mTop.oninput = drawMemePreview;
-mBot.oninput = drawMemePreview;
-
-function fillMeme(top, bot) {
-  mTop.value = top; mBot.value = bot;
-  drawMemePreview();
-  playSound(600);
+function setMemeAvatar(av, btn) {
+  document.querySelectorAll('#mod-meme .sz-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentAvatar = av;
+  renderMeme();
+  playTone(520);
 }
 
-function drawMemePreview() {
+function quickMeme(t, b) {
+  mTop.value = t; mBot.value = b;
+  renderMeme();
+  playTone(600);
+}
+
+function renderMeme() {
   const w = mcv.width, h = mcv.height;
   mctx.fillStyle = '#ffedf2'; mctx.fillRect(0, 0, w, h);
-  if (currentCat === 'canvas') {
+  if (currentAvatar === 'canvas') {
     mctx.drawImage(cv, 0, 0, w, h);
   } else {
     mctx.font = '70px sans-serif';
     mctx.textAlign = 'center'; mctx.textBaseline = 'middle';
-    mctx.fillText(currentCat, w / 2, h / 2);
+    mctx.fillText(currentAvatar, w / 2, h / 2);
   }
-  function drawText(txt, y) {
+  function drawMemeText(txt, y) {
     if (!txt) return;
     mctx.save();
     mctx.font = '900 22px Impact, sans-serif';
@@ -773,109 +763,16 @@ function drawMemePreview() {
     mctx.fillText(txt.toUpperCase(), w / 2, y, w - 20);
     mctx.restore();
   }
-  drawText(mTop.value, 28);
-  drawText(mBot.value, h - 12);
+  drawMemeText(mTop.value, 28);
+  drawMemeText(mBot.value, h - 12);
 }
 
-document.getElementById('btn-apply-meme').onclick = () => {
-  closeModal('modal-meme');
+function applyMeme() {
+  closeModal('mod-meme');
   ctx.drawImage(mcv, 0, 0, cv.width, cv.height);
-  pushState();
-  playSound(700);
-};
-
-const paletteRow = document.getElementById('palette-row');
-
-function renderPaletteRow() {
-  paletteRow.innerHTML = '';
-
-  if (state.tool === 'stamp') {
-    stampList.forEach(s => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.className = `stamp-btn ${state.stamp === s ? 'active' : ''}`;
-      b.textContent = s;
-      b.onclick = () => {
-        document.querySelectorAll('.stamp-btn').forEach(x => x.classList.remove('active'));
-        b.classList.add('active');
-        state.stamp = s;
-        playSound(640);
-      };
-      paletteRow.appendChild(b);
-    });
-  } else if (state.tool === 'bgcolor') {
-    const wrap = document.createElement('div');
-    wrap.className = 'color-input-btn';
-    wrap.innerHTML = `<input type="color" value="${state.bgColor}">`;
-    wrap.querySelector('input').oninput = e => setBackground(e.target.value);
-    paletteRow.appendChild(wrap);
-
-    bgList.forEach(c => {
-      const sw = document.createElement('button');
-      sw.type = 'button';
-      sw.className = `swatch-btn ${state.bgColor === c ? 'active' : ''}`;
-      sw.style.background = c;
-      if (c === '#ffffff') sw.style.border = '2px solid #ccc';
-      sw.onclick = () => setBackground(c);
-      paletteRow.appendChild(sw);
-    });
-  } else {
-    const wrap = document.createElement('div');
-    wrap.className = 'color-input-btn';
-    wrap.title = 'Custom Color';
-    wrap.innerHTML = `<input type="color" value="${state.color}">`;
-    wrap.querySelector('    wrap.innerHTML = `<input type="color" value="${state.color}">`;
-    wrap.querySelector('input').oninput = e => {
-      state.color = e.target.value;
-      document.querySelectorAll('.swatch-btn').forEach(x => x.classList.remove('active'));
-    };
-    paletteRow.appendChild(wrap);
-
-    colorList.forEach(c => {
-      const sw = document.createElement('button');
-      sw.type = 'button';
-      sw.className = `swatch-btn ${state.color === c ? 'active' : ''}`;
-      sw.style.background = c;
-      if (c === '#ffffff') sw.style.border = '2px solid #ccc';
-      sw.onclick = () => {
-        document.querySelectorAll('.swatch-btn').forEach(x => x.classList.remove('active'));
-        sw.classList.add('active');
-        state.color = c;
-        playSound(520);
-      };
-      paletteRow.appendChild(sw);
-    });
-  }
+  saveState();
+  playTone(700);
 }
-
-function setBackground(col) {
-  state.bgColor = col;
-  ctx.fillStyle = col;
-  ctx.fillRect(0, 0, cv.width, cv.height);
-  pushState();
-  playSound(480);
-}
-
-document.querySelectorAll('.tool-btn').forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    state.tool = btn.dataset.tool;
-    renderPaletteRow();
-    playSound(580);
-  };
-});
-
-document.querySelectorAll('.size-pill').forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll('.size-pill').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    state.size = parseInt(btn.dataset.size, 10);
-    playSound(440);
-  };
-});
-
-renderPaletteRow();
 </script>
 </body>
 </html>
