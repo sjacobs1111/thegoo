@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LevelUp: Quest Hub & Regulation Toolkit</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --accent-green: #10b981;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #3b82f6;
+      --accent-amber: #f59e0b;
+      --accent-purple: #8b5cf6;
+      --accent-red: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --card-radius: 16px;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.5;
+      padding-bottom: 60px;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* HEADER & STATS */
+    header {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid var(--border-color);
+      border-radius: var(--card-radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green), var(--accent-purple));
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .player-info h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .player-tag {
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent-cyan);
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .sound-toggle-btn {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .sound-toggle-btn.active {
+      color: var(--accent-green);
+      border-color: var(--accent-green);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .stat-value.green { color: var(--accent-green); }
+    .stat-value.cyan { color: var(--accent-cyan); }
+    .stat-value.amber { color: var(--accent-amber); }
+
+    .xp-bar-container {
+      margin-top: 14px;
+    }
+
+    .xp-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .progress-bar-bg {
+      background: var(--bg-tertiary);
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+      border-radius: 999px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* NAVIGATION TABS */
+    .nav-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+      background: var(--bg-secondary);
+      padding: 6px;
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      background: var(--accent-blue);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    /* SECTION CARDS */
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--card-radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* ENERGY / REGULATION METER */
+    .meter-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .meter-btn {
+      background: var(--bg-primary);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .meter-btn .level-num {
+      font-size: 1.3rem;
+      font-weight: 900;
+    }
+
+    .meter-btn .level-text {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .meter-btn.l1:hover, .meter-btn.l1.active { border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1); }
+    .meter-btn.l2:hover, .meter-btn.l2.active { border-color: #06b6d4; color: #06b6d4; background: rgba(6, 182, 212, 0.1); }
+    .meter-btn.l3:hover, .meter-btn.l3.active { border-color: #f59e0b; color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
+    .meter-btn.l4:hover, .meter-btn.l4.active { border-color: #a855f7; color: #a855f7; background: rgba(168, 85, 247, 0.1); }
+    .meter-btn.l5:hover, .meter-btn.l5.active { border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+
+    .meter-guidance {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 16px;
+      border-left: 4px solid var(--accent-cyan);
+      margin-top: 10px;
+    }
+
+    .meter-guidance h4 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .meter-guidance p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .tactical-pause-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #000;
+      font-weight: 800;
+      font-size: 1.05rem;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      margin-top: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+      transition: all 0.2s;
+    }
+
+    .tactical-pause-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    }
+
+    /* QUESTS LIST */
+    .quest-category-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent-cyan);
+      font-weight: 700;
+      margin: 16px 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .quest-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .quest-item {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      transition: all 0.2s;
+    }
+
+    .quest-item:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .quest-item.completed {
+      border-color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.05);
+      opacity: 0.8;
+    }
+
+    .quest-item.completed .quest-title {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .quest-main {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .quest-checkbox {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 2px solid var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .quest-checkbox.checked {
+      background: var(--accent-green);
+      border-color: var(--accent-green);
+      color: #fff;
+    }
+
+    .quest-details {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .quest-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .quest-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .quest-rewards {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .reward-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .reward-badge.mins {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .reward-badge.xp {
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+    }
+
+    .add-quest-form {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .add-quest-input {
+      flex: 2;
+      min-width: 200px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+    }
+
+    .add-quest-select {
+      flex: 1;
+      min-width: 120px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-main);
+      border: none;
+      border-radius: 10px;
+      padding: 10px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: #475569;
+    }
+
+    /* GAMING VAULT & SESSION TIMER */
+    .vault-hero {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+      border: 2px dashed rgba(16, 185, 129, 0.4);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .vault-minutes-huge {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--accent-green);
+      line-height: 1;
+      margin: 10px 0;
+    }
+
+    .session-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .session-btn {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .session-btn:hover {
+      border-color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.1);
+    }
+
+    .session-timer-display {
+      background: #000;
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      display: none;
+      position: relative;
+    }
+
+    .timer-digits {
+      font-family: monospace;
+      font-size: 4rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: var(--accent-cyan);
+    }
+
+    .timer-digits.warning {
+      color: var(--accent-amber);
+      animation: pulse 1s infinite;
+    }
+
+    .timer-digits.critical {
+      color: var(--accent-red);
+      animation: pulse 0.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .timer-alert-box {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: none;
+    }
+
+    .timer-alert-box.warn {
+      display: block;
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid var(--accent-amber);
+      color: #fef08a;
+    }
+
+    .timer-alert-box.bridge {
+      display: block;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid var(--accent-green);
+      color: #a7f3d0;
+    }
+
+    .timer-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    /* MINDFULNESS / DBT SUBTABS */
+    .subtabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .subtab-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .subtab-btn.active {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: var(--accent-purple);
+      color: #c4b5fd;
+    }
+
+    .subpane {
+      display: none;
+    }
+
+    .subpane.active {
+      display: block;
+    }
+
+    /* S.T.O.P. TOOL */
+    .stop-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .stop-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .stop-letter {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--accent-blue);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .stop-card:nth-child(1) .stop-letter { background: #ef4444; }
+    .stop-card:nth-child(2) .stop-letter { background: #f59e0b; }
+    .stop-card:nth-child(3) .stop-letter { background: #06b6d4; }
+    .stop-card:nth-child(4) .stop-letter { background: #10b981; }
+
+    .stop-content h3 {
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+
+    .stop-content p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* PACED BREATHING ORB */
+    .breathing-box {
+      background: #000;
+      border-radius: 16px;
+      padding: 40px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .breath-orb-wrap {
+      width: 200px;
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .breath-orb {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #38bdf8, #0369a1);
+      box-shadow: 0 0 35px rgba(56, 189, 248, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #fff;
+      transition: all 4s ease-in-out;
+    }
+
+    .breath-orb.expand {
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, #34d399, #059669);
+      box-shadow: 0 0 50px rgba(52, 211, 153, 0.8);
+      transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .breath-orb.contract {
+      width: 90px;
+      height: 90px;
+      background: radial-gradient(circle, #818cf8, #4338ca);
+      box-shadow: 0 0 30px rgba(129, 140, 248, 0.5);
+      transition: all 7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .breath-prompt {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .breath-timer {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* TIPP CARDS */
+    .tipp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .tipp-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tipp-badge {
+      display: inline-block;
+      width: fit-content;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .tipp-card:nth-child(1) .tipp-badge { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+    .tipp-card:nth-child(2) .tipp-badge { background: rgba(244, 63, 94, 0.2); color: #f43f5e; }
+    .tipp-card:nth-child(3) .tipp-badge { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .tipp-card:nth-child(4) .tipp-badge { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+
+    .tipp-card h4 {
+      font-size: 1.05rem;
+    }
+
+    .tipp-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      flex: 1;
+    }
+
+    .tipp-action-btn {
+      background: var(--bg-tertiary);
+      border: none;
+      color: var(--text-main);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: all 0.2s;
+    }
+
+    .tipp-action-btn:hover {
+      background: #475569;
+    }
+
+    /* TACTICAL PAUSE OVERLAY */
+    .tactical-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .tactical-modal.show {
+      display: flex;
+    }
+
+    .tactical-box {
+      background: var(--bg-secondary);
+      border: 2px solid var(--accent-amber);
+      border-radius: 20px;
+      max-width: 550px;
+      width: 100%;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+
+    .tactical-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .tactical-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent-amber);
+      margin-bottom: 8px;
+    }
+
+    .tactical-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-main);
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .tactical-timer {
+      font-family: monospace;
+      font-size: 4rem;
+      font-weight: 900;
+      color: #fff;
+      margin: 16px 0;
+    }
+
+    .tactical-card-message {
+      background: var(--bg-primary);
+      border: 1px dashed var(--accent-amber);
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 0.95rem;
+      color: #fef08a;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .tactical-close-btn {
+      background: var(--accent-green);
+      color: #000;
+      font-weight: 800;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 1.05rem;
+      cursor: pointer;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 30px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .meter-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+      .meter-btn .level-text {
+        display: none;
+      }
+      .timer-digits, .tactical-timer {
+        font-size: 2.8rem;
+      }
+      .nav-tabs {
+        flex-wrap: wrap;
+      }
+      .tab-btn {
+        flex: 1 1 40%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- HEADER & CHARACTER STATUS -->
+  <header>
+    <div class="header-top">
+      <div class="player-info">
+        <h1>
+          <span>⚡ LevelUp Quest Hub</span>
+          <span class="player-tag">Hero Mode</span>
+        </h1>
+      </div>
+      <div>
+        <button id="soundToggle" class="sound-toggle-btn active" title="Toggle audio cues">🔊 Audio ON</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Banked Game Time</span>
+        <span id="statGameTime" class="stat-value green">0 min</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Hero Level</span>
+        <span id="statLevel" class="stat-value cyan">Level 1</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Total XP</span>
+        <span id="statXP" class="stat-value amber">0 XP</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Quests Cleared</span>
+        <span id="statQuestsDone" class="stat-value">0 / 0</span>
+      </div>
+    </div>
+
+    <div class="xp-bar-container">
+      <div class="xp-bar-labels">
+        <span id="xpLevelLabel">Progress to Next Level</span>
+        <span id="xpProgressText">0 / 100 XP</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div id="xpProgressBar" class="progress-bar-fill"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- QUICK ACCESS REGULATION / TACTICAL PAUSE -->
+  <div class="card" style="border-color: rgba(245, 158, 11, 0.4);">
+    <div class="card-header">
+      <h2 class="card-title">
+        <span>🌡️ Regulation Meter & Tactical Pause</span>
+      </h2>
+      <span style="font-size: 0.85rem; color: var(--text-muted);">Check in with your body</span>
+    </div>
+
+    <div class="meter-grid">
+      <button class="meter-btn l1 active" onclick="setRegulationLevel(1)">
+        <span class="level-num">1</span>
+        <span class="level-text">Cruising</span>
+      </button>
+      <button class="meter-btn l2" onclick="setRegulationLevel(2)">
+        <span class="level-num">2</span>
+        <span class="level-text">Working</span>
+      </button>
+      <button class="meter-btn l3" onclick="setRegulationLevel(3)">
+        <span class="level-num">3</span>
+        <span class="level-text">Friction</span>
+      </button>
+      <button class="meter-btn l4" onclick="setRegulationLevel(4)">
+        <span class="level-num">4</span>
+        <span class="level-text">Overload</span>
+      </button>
+      <button class="meter-btn l5" onclick="setRegulationLevel(5)">
+        <span class="level-num">5</span>
+        <span class="level-text">Critical</span>
+      </button>
+    </div>
+
+    <div id="meterGuidance" class="meter-guidance">
+      <h4 id="meterTitle" style="color: #10b981;">Level 1: Cruising & Regulated</h4>
+      <p id="meterDesc">Your brain and body feel calm and safe. Ready to tackle daily quests or enjoy free time!</p>
+    </div>
+
+    <button class="tactical-pause-btn" onclick="openTacticalPause()">
+      <span>🛡️ Take 5-Minute Tactical Pause (No Penalty)</span>
+    </button>
+  </div>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('questsTab')">⚔️ Daily Quests</button>
+    <button class="tab-btn" onclick="switchTab('vaultTab')">🎮 Game Time Vault</button>
+    <button class="tab-btn" onclick="switchTab('mindTab')">🧘 Mindfulness & DBT Power-Ups</button>
+  </nav>
+
+  <!-- TAB 1: DAILY QUESTS -->
+  <section id="questsTab" class="tab-pane active">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <span>🎯 Active Quests</span>
+        </h2>
+        <button class="btn-secondary" onclick="resetQuests()" style="font-size: 0.8rem; padding: 6px 12px;">🔄 New Day Reset</button>
+      </div>
+
+      <div class="quest-category-title">⚡ Daily Missions (Chores & Routine)</div>
+      <ul id="grindQuestList" class="quest-list"></ul>
+
+      <div class="quest-category-title">🧠 Mind Mastery (Regulation & Calm Practice)</div>
+      <ul id="mindQuestList" class="quest-list"></ul>
+
+      <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border-color);">
+        <h4 style="font-size: 0.95rem; margin-bottom: 10px;">➕ Add Custom Quest</h4>
+        <form class="add-quest-form" onsubmit="addCustomQuest(event)">
+          <input type="text" id="customQuestTitle" class="add-quest-input" placeholder="Quest Title (e.g. Put away clean laundry)" required>
+          <select id="customQuestTime" class="add-quest-select">
+            <option value="10">+10 Min Game Time</option>
+            <option value="15" selected>+15 Min Game Time</option>
+            <option value="20">+20 Min Game Time</option>
+            <option value="30">+30 Min Game Time</option>
+          </select>
+          <button type="submit" class="btn-secondary" style="background: var(--accent-blue);">Add Quest</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: GAME TIME VAULT & TIMER -->
+  <section id="vaultTab" class="tab-pane">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <span>🎮 Game Time Vault</span>
+        </h2>
+      </div>
+
+      <div class="vault-hero">
+        <div style="font-size: 1rem; color: var(--text-muted); font-weight: 600;">AVAILABLE BANKED GAMING TIME</div>
+        <div id="vaultMinutesDisplay" class="vault-minutes-huge">0</div>
+        <div style="font-size: 0.9rem; color: var(--text-muted);">Earn minutes by completing quests or using mindfulness tools!</div>
+      </div>
+
+      <h3 style="font-size: 1.05rem; margin-bottom: 12px;">Start a Game Session:</h3>
+      <div class="session-controls">
+        <button class="session-btn" onclick="startSession(15)">
+          <span style="font-size: 1.2rem;">⏱️ 15 Min</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Quick Run</span>
+        </button>
+        <button class="session-btn" onclick="startSession(30)">
+          <span style="font-size: 1.2rem;">⏱️ 30 Min</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Standard Match</span>
+        </button>
+        <button class="session-btn" onclick="startSession(45)">
+          <span style="font-size: 1.2rem;">⏱️ 45 Min</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Long Raid</span>
+        </button>
+      </div>
+
+      <!-- TIMER ACTIVE PANEL -->
+      <div id="sessionTimerDisplay" class="session-timer-display">
+        <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Gaming Session Active</div>
+        <div id="timerDigits" class="timer-digits">00:00</div>
+        
+        <div id="timerAlertBox" class="timer-alert-box"></div>
+
+        <div class="timer-actions">
+          <button class="btn-secondary" onclick="pauseOrResumeSession()" id="pauseTimerBtn">⏸️ Pause</button>
+          <button class="btn-secondary" onclick="endSessionEarly()" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">⏹️ End Early</button>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; padding: 16px; background: var(--bg-primary); border-radius: 12px; border: 1px solid var(--border-color);">
+        <h4 style="font-size: 0.95rem; margin-bottom: 8px; color: var(--accent-cyan);">🛡️ The "Safe Transition" Agreement:</h4>
+        <ul style="padding-left: 20px; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+          <li><strong>5-Minute Checkpoint Alert:</strong> The timer will notify you. Find your save spot or finish your current round.</li>
+          <li><strong>2-Minute Logoff Alert:</strong> Save your game and park your character.</li>
+          <li><strong>Clean Exit Bonus:</strong> Powering off peacefully gives a <strong>+25 XP Safe Transition Bonus</strong>!</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: MINDFULNESS & DBT POWER-UPS -->
+  <section id="mindTab" class="tab-pane">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <span>🧘 Mindfulness & DBT Power-Ups</span>
+        </h2>
+      </div>
+
+      <div class="subtabs">
+        <button class="subtab-btn active" onclick="switchSubtab('stopSubpane')">🛑 S.T.O.P. Skill</button>
+        <button class="subtab-btn" onclick="switchSubtab('breathSubpane')">🌬️ Paced Breathing (4-7)</button>
+        <button class="subtab-btn" onclick="switchSubtab('tippSubpane')">🧊 T.I.P.P. Emergency Reset</button>
+      </div>
+
+      <!-- S.T.O.P. SUBPANE -->
+      <div id="stopSubpane" class="subpane active">
+        <div class="stop-steps">
+          <div class="stop-card">
+            <div class="stop-letter">S</div>
+            <div class="stop-content">
+              <h3>Stop & Freeze</h3>
+              <p>Do not speak. Do not move. Freeze in place for 3 seconds. Let your hands relax at your side.</p>
+            </div>
+          </div>
+          <div class="stop-card">
+            <div class="stop-letter">T</div>
+            <div class="stop-content">
+              <h3>Take a Step Back</h3>
+              <p>Physically step one step backwards away from whatever triggered you. Give your nervous system breathing room.</p>
+            </div>
+          </div>
+          <div class="stop-card">
+            <div class="stop-letter">O</div>
+            <div class="stop-content">
+              <h3>Observe Body & Mind</h3>
+              <p>Check in: Are your hands clenched? Is your jaw tight? Is your breathing fast? Name what you feel: <em>"I feel angry/frustrated right now."</em></p>
+            </div>
+          </div>
+          <div class="stop-card">
+            <div class="stop-letter">P</div>
+            <div class="stop-content">
+              <h3>Proceed Mindfully</h3>
+              <p>Ask yourself: <em>"What action keeps my banked game time safe?"</em> (e.g. Taking a 5-minute pause or drinking cold water).</p>
+            </div>
+          </div>
+        </div>
+        <button class="btn-secondary" onclick="logStopPractice()" style="margin-top: 18px; width: 100%; background: var(--accent-blue);">
+          ✅ I Used the S.T.O.P. Skill (+15 Min Game Time, +50 XP)
+        </button>
+      </div>
+
+      <!-- PACED BREATHING SUBPANE -->
+      <div id="breathSubpane" class="subpane">
+        <div class="breathing-box">
+          <div class="breath-orb-wrap">
+            <div id="breathOrb" class="breath-orb">Inhale</div>
+          </div>
+          <div id="breathPrompt" class="breath-prompt">Ready to Begin</div>
+          <div id="breathTimer" class="breath-timer">Click below to start 2 minutes of 4-7 vagus nerve breathing</div>
+          
+          <button id="startBreathBtn" class="btn-secondary" onclick="toggleBreathing()" style="margin-top: 20px; background: var(--accent-green); color: #000; font-weight: 800;">
+            ▶️ Start Breathing Exercise
+          </button>
+        </div>
+      </div>
+
+      <!-- T.I.P.P. SUBPANE -->
+      <div id="tippSubpane" class="subpane">
+        <div class="tipp-grid">
+          <div class="tipp-card">
+            <span class="tipp-badge">T - Temperature</span>
+            <h4>Ice Water Reset</h4>
+            <p>Splash your face with ice-cold water or hold a cold washcloth over your eyes/cheeks for 30 seconds to activate the dive reflex.</p>
+            <button class="tipp-action-btn" onclick="startQuickCountdown(30, 'Ice Water Splash')">⏱️ 30s Cold Timer</button>
+          </div>
+          <div class="tipp-card">
+            <span class="tipp-badge">I - Intense Exercise</span>
+            <h4>60s Physical Burst</h4>
+            <p>Do 10 wall push-ups, 20 jumping jacks, or squeeze a stress ball hard to burn off adrenaline spikes.</p>
+            <button class="tipp-action-btn" onclick="startQuickCountdown(60, 'Burst Exercise')">⏱️ 60s Burst Timer</button>
+          </div>
+          <div class="tipp-card">
+            <span class="tipp-badge">P - Paced Breathing</span>
+            <h4>4 In, 7 Out</h4>
+            <p>Breathe in through nose for 4 seconds, breathe out through mouth slowly for 7 seconds. Long exhales shut down fight-or-flight.</p>
+            <button class="tipp-action-btn" onclick="switchSubtab('breathSubpane')">Go to Breathing Orb</button>
+          </div>
+          <div class="tipp-card">
+            <span class="tipp-badge">P - Paired Relaxation</span>
+            <h4>Squeeze & Release</h4>
+            <p>Clench your fists and shoulders as tight as you can for 5 seconds... then drop them completely limp like a noodle for 10 seconds.</p>
+            <button class="tipp-action-btn" onclick="startQuickCountdown(15, 'Squeeze & Release')">⏱️ 15s Guide</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TACTICAL PAUSE MODAL OVERLAY -->
+<div id="tacticalModal" class="tactical-modal">
+  <div class="tactical-box">
+    <div class="tactical-icon">🛡️</div>
+    <h2 class="tactical-title">5-MINUTE TACTICAL PAUSE</h2>
+    <div class="tactical-subtitle">No talking. No demands. Time to let the nervous system cool down.</div>
+    
+    <div id="tacticalCountdown" class="tactical-timer">05:00</div>
+
+    <div class="tactical-card-message">
+      <strong>Show this to Dad / Mom:</strong><br>
+      <em>"I am feeling overwhelmed and taking my 5-minute tactical cool-down. I will be ready to communicate as soon as the timer ends."</em>
+    </div>
+
+    <button class="tactical-close-btn" onclick="closeTacticalPause()">Done / I Feel Regulated (+20 XP)</button>
+  </div>
+</div>
+
+<footer>
+  LevelUp Hero Dashboard • Designed for DBT Skills, Sensory Regulation & Mindful Gaming Balance
+</footer>
+
+<script>
+  // AUDIO SYNTHESIZER (No external audio files needed)
+  let audioEnabled = true;
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+  function playTone(freq, type, duration, delay = 0) {
+    if (!audioEnabled) return;
+    try {
+      setTimeout(() => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      }, delay);
+    } catch (e) {
+      console.log('Audio init needed');
+    }
+  }
+
+  function playLevelUpChime() {
+    playTone(330, 'sine', 0.15, 0);
+    playTone(392, 'sine', 0.15, 120);
+    playTone(523, 'sine', 0.15, 240);
+    playTone(659, 'sine', 0.35, 360);
+  }
+
+  function playAlertChime() {
+    playTone(440, 'triangle', 0.2, 0);
+    playTone(440, 'triangle', 0.2, 250);
+  }
+
+  function playSoftClick() {
+    playTone(600, 'sine', 0.05, 0);
+  }
+
+  document.getElementById('soundToggle').addEventListener('click', function() {
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    audioEnabled = !audioEnabled;
+    this.classList.toggle('active', audioEnabled);
+    this.innerText = audioEnabled ? '🔊 Audio ON' : '🔇 Audio OFF';
+  });
+
+  // DATA STATE & LOCAL STORAGE
+  const defaultState = {
+    bankedMinutes: 15,
+    xp: 0,
+    level: 1,
+    regulationLevel: 1,
+    quests: [
+      { id: 1, type: 'grind', title: 'Morning Launch & Clothes Ready', mins: 10, xp: 40, done: false },
+      { id: 2, type: 'grind', title: '10-Minute Room Sweep (Floor Clear)', mins: 15, xp: 50, done: false },
+      { id: 3, type: 'grind', title: 'Homework or Learning Task Completed', mins: 20, xp: 75, done: false },
+      { id: 4, type: 'grind', title: 'Hygiene & Evening Routine (Teeth & Shower)', mins: 10, xp: 40, done: false },
+      { id: 5, type: 'mind', title: 'Do 1 Paced Breathing Session', mins: 10, xp: 35, done: false },
+      { id: 6, type: 'mind', title: 'Use S.T.O.P. or Take Tactical Pause Before Reacting', mins: 15, xp: 60, done: false }
+    ]
+  };
+
+  let state = JSON.parse(localStorage.getItem('levelup_state')) || defaultState;
+
+  function saveState() {
+    localStorage.setItem('levelup_state', JSON.stringify(state));
+    renderStats();
+  }
+
+  // RENDER STATS & XP
+  function renderStats() {
+    document.getElementById('statGameTime').innerText = `${state.bankedMinutes} min`;
+    document.getElementById('statXP').innerText = `${state.xp} XP`;
+    document.getElementById('vaultMinutesDisplay').innerText = state.bankedMinutes;
+
+    // Calculate level (100 XP per level)
+    state.level = Math.floor(state.xp / 100) + 1;
+    document.getElementById('statLevel').innerText = `Level ${state.level}`;
+
+    const currentLevelXP = state.xp % 100;
+    document.getElementById('xpProgressText').innerText = `${currentLevelXP} / 100 XP`;
+    document.getElementById('xpProgressBar').style.width = `${currentLevelXP}%`;
+
+    const doneCount = state.quests.filter(q => q.done).length;
+    document.getElementById('statQuestsDone').innerText = `${doneCount} / ${state.quests.length}`;
+  }
+
+  // REGULATION METER
+  const meterData = {
+    1: { title: "Level 1: Cruising & Regulated", color: "#10b981", desc: "Your nervous system is calm and safe. Ready to learn, complete tasks, or enjoy games." },
+    2: { title: "Level 2: Working & Alert", color: "#06b6d4", desc: "Focus is needed. Demands might feel a little boring or annoying, but your brain is in control." },
+    3: { title: "Level 3: Friction & Frustration (Intervention Zone)", color: "#f59e0b", desc: "⚠️ You feel tension, clenched fists, or anger rising. This is your cue! Use S.T.O.P. or tap Tactical Pause now before it becomes a meltdown." },
+    4: { title: "Level 4: Sensory / Emotional Overload", color: "#a855f7", desc: "Thinking brain is going offline. Zero demands, low lights, cold water splash, quiet space." },
+    5: { title: "Level 5: Critical Meltdown", color: "#ef4444", desc: "Fight-or-flight has taken over. Safety only. No talking, no lecturing. Time to let the storm pass." }
+  };
+
+  function setRegulationLevel(lvl) {
+    playSoftClick();
+    state.regulationLevel = lvl;
+    document.querySelectorAll('.meter-btn').forEach((btn, idx) => {
+      btn.classList.toggle('active', (idx + 1) === lvl);
+    });
+
+    const info = meterData[lvl];
+    const guidance = document.getElementById('meterGuidance');
+    guidance.style.borderLeftColor = info.color;
+    document.getElementById('meterTitle').innerText = info.title;
+    document.getElementById('meterTitle').style.color = info.color;
+    document.getElementById('meterDesc').innerText = info.desc;
+    saveState();
+  }
+
+  // TACTICAL PAUSE
+  let pauseTimerInterval = null;
+  let pauseSecondsLeft = 300;
+
+  function openTacticalPause() {
+    playAlertChime();
+    document.getElementById('tacticalModal').classList.add('show');
+    pauseSecondsLeft = 300;
+    updatePauseDisplay();
+    clearInterval(pauseTimerInterval);
+    pauseTimerInterval = setInterval(() => {
+      pauseSecondsLeft--;
+      updatePauseDisplay();
+      if (pauseSecondsLeft <= 0) {
+        clearInterval(pauseTimerInterval);
+        playLevelUpChime();
+      }
+    }, 1000);
+  }
+
+  function updatePauseDisplay() {
+    const m = Math.floor(pauseSecondsLeft / 60);
+    const s = pauseSecondsLeft % 60;
+    document.getElementById('tacticalCountdown').innerText = 
+      `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
+
+  function closeTacticalPause() {
+    clearInterval(pauseTimerInterval);
+    document.getElementById('tacticalModal').classList.remove('show');
+    state.xp += 20;
+    playLevelUpChime();
+    saveState();
+  }
+
+  // RENDER QUESTS
+  function renderQuests() {
+    const grindList = document.getElementById('grindQuestList');
+    const mindList = document.getElementById('mindQuestList');
+    grindList.innerHTML = '';
+    mindList.innerHTML = '';
+
+    state.quests.forEach(quest => {
+      const li = document.createElement('li');
+      li.className = `quest-item ${quest.done ? 'completed' : ''}`;
+      li.innerHTML = `
+        <div class="quest-main">
+          <div class="quest-checkbox ${quest.done ? 'checked' : ''}" onclick="toggleQuest(${quest.id})">
+            ${quest.done ? '✓' : ''}
+          </div>
+          <div class="quest-details">
+            <span class="quest-title">${quest.title}</span>
+            <span class="quest-subtitle">${quest.type === 'grind' ? 'Routine / Demand' : 'Mindfulness Skill'}</span>
+          </div>
+        </div>
+        <div class="quest-rewards">
+          <span class="reward-badge mins">+${quest.mins} Min</span>
+          <span class="reward-badge xp">+${quest.xp} XP</span>
+        </div>
+      `;
+
+      if (quest.type === 'grind') {
+        grindList.appendChild(li);
+      } else {
+        mindList.appendChild(li);
+      }
+    });
+  }
+
+  function toggleQuest(id) {
+    const quest = state.quests.find(q => q.id === id);
+    if (!quest) return;
+
+    quest.done = !quest.done;
+    if (quest.done) {
+      state.bankedMinutes += quest.mins;
+      state.xp += quest.xp;
+      playLevelUpChime();
+    } else {
+      state.bankedMinutes = Math.max(0, state.bankedMinutes - quest.mins);
+      state.xp = Math.max(0, state.xp - quest.xp);
+      playSoftClick();
+    }
+    saveState();
+    renderQuests();
+  }
+
+  function addCustomQuest(e) {
+    e.preventDefault();
+    const titleInput = document.getElementById('customQuestTitle');
+    const minsSelect = document.getElementById('customQuestTime');
+    const title = titleInput.value.trim();
+    const mins = parseInt(minsSelect.value, 10);
+    if (!title) return;
+
+    const newQuest = {
+      id: Date.now(),
+      type: 'grind',
+      title: title,
+      mins: mins,
+      xp: mins * 3,
+      done: false
+    };
+
+    state.quests.push(newQuest);
+    titleInput.value = '';
+    playSoftClick();
+    saveState();
+    renderQuests();
+  }
+
+  function resetQuests() {
+    if (confirm('Reset all quests for a new day? (Banked game time and XP will stay safe!)')) {
+      state.quests.forEach(q => q.done = false);
+      playSoftClick();
+      saveState();
+      renderQuests();
+    }
+  }
+
+  // LOG STOP PRACTICE
+  function logStopPractice() {
+    state.bankedMinutes += 15;
+    state.xp += 50;
+    playLevelUpChime();
+    saveState();
+    alert('Awesome job pausing with S.T.O.P.! +15 Minutes banked to your Game Time Vault.');
+  }
+
+  // TABS & SUBTABS
+  function switchTab(tabId) {
+    playSoftClick();
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+    
+    event.currentTarget.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+  }
+
+  function switchSubtab(subtabId) {
+    playSoftClick();
+    document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.subpane').forEach(pane => pane.classList.remove('active'));
+    
+    event.currentTarget.classList.add('active');
+    document.getElementById(subtabId).classList.add('active');
+  }
+
+  // PACED BREATHING
+  let breathInterval = null;
+  let isBreathingActive = false;
+  let breathPhase = 'idle'; // inhale (4s), exhale (7s)
+
+  function toggleBreathing() {
+    const btn = document.getElementById('startBreathBtn');
+    const orb = document.getElementById('breathOrb');
+    const prompt = document.getElementById('breathPrompt');
+    const timer = document.getElementById('breathTimer');
+
+    if (isBreathingActive) {
+      clearInterval(breathInterval);
+      isBreathingActive = false;
+      btn.innerText = '▶️ Start Breathing Exercise';
+      btn.style.background = 'var(--accent-green)';
+      orb.className = 'breath-orb';
+      orb.innerText = 'Rest';
+      prompt.innerText = 'Exercise Paused';
+      timer.innerText = 'Great effort! Take a breath.';
+      return;
+    }
+
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+
+    isBreathingActive = true;
+    btn.innerText = '⏹️ Stop Breathing';
+    btn.style.background = '#ef4444';
+
+    runBreathingCycle();
+  }
+
+  function runBreathingCycle() {
+    const orb = document.getElementById('breathOrb');
+    const prompt = document.getElementById('breathPrompt');
+    const timer = document.getElementById('breathTimer');
+
+    function cycle() {
+      if (!isBreathingActive) return;
+
+      // INHALE 4s
+      orb.className = 'breath-orb expand';
+      orb.innerText = 'Inhale';
+      prompt.innerText = 'Inhale deeply through your nose (4 sec)';
+      timer.innerText = 'Filling lungs with calm energy...';
+      playTone(392, 'sine', 0.2);
+
+      setTimeout(() => {
+        if (!isBreathingActive) return;
+        // EXHALE 7s
+        orb.className = 'breath-orb contract';
+        orb.innerText = 'Exhale';
+        prompt.innerText = 'Exhale very slowly through your mouth (7 sec)';
+        timer.innerText = 'Dropping shoulders, cooling down nervous system...';
+        playTone(330, 'sine', 0.2);
+      }, 4000);
+    }
+
+    cycle();
+    breathInterval = setInterval(cycle, 11000);
+  }
+
+  // QUICK COUNTDOWN (TIPP)
+  function startQuickCountdown(seconds, label) {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    playAlertChime();
+    let left = seconds;
+    const msg = prompt(`Starting ${label} timer for ${seconds} seconds. Press OK to start!`);
+    const interval = setInterval(() => {
+      left--;
+      if (left <= 0) {
+        clearInterval(interval);
+        playLevelUpChime();
+        state.xp += 15;
+        saveState();
+        alert(`Time is up for ${label}! Fantastic job cooling down. (+15 XP)`);
+      }
+    }, 1000);
+  }
+
+  // GAME SESSION TIMER & CHECKPOINTS
+  let sessionInterval = null;
+  let sessionSecondsLeft = 0;
+  let isSessionPaused = false;
+
+  function startSession(minutes) {
+    if (state.bankedMinutes < minutes) {
+      alert(`You only have ${state.bankedMinutes} minutes banked. Clear a quest or use a mindfulness skill to earn more time!`);
+      return;
+    }
+
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    state.bankedMinutes -= minutes;
+    saveState();
+
+    sessionSecondsLeft = minutes * 60;
+    document.getElementById('sessionTimerDisplay').style.display = 'block';
+    document.getElementById('timerAlertBox').style.display = 'none';
+    isSessionPaused = false;
+    document.getElementById('pauseTimerBtn').innerText = '⏸️ Pause';
+    updateSessionDisplay();
+
+    clearInterval(sessionInterval);
+    sessionInterval = setInterval(() => {
+      if (!isSessionPaused) {
+        sessionSecondsLeft--;
+        updateSessionDisplay();
+        checkSessionAlerts();
+
+        if (sessionSecondsLeft <= 0) {
+          clearInterval(sessionInterval);
+          handleSessionComplete();
+        }
+      }
+    }, 1000);
+
+    playLevelUpChime();
+  }
+
+  function updateSessionDisplay() {
+    const m = Math.floor(sessionSecondsLeft / 60);
+    const s = sessionSecondsLeft % 60;
+    const digits = document.getElementById('timerDigits');
+    digits.innerText = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+    if (sessionSecondsLeft <= 120) {
+      digits.className = 'timer-digits critical';
+    } else if (sessionSecondsLeft <= 300) {
+      digits.className = 'timer-digits warning';
+    } else {
+      digits.className = 'timer-digits';
+    }
+  }
+
+  function checkSessionAlerts() {
+    const alertBox = document.getElementById('timerAlertBox');
+
+    // 5-Minute Warning
+    if (sessionSecondsLeft === 300) {
+      playAlertChime();
+      alertBox.className = 'timer-alert-box warn';
+      alertBox.innerHTML = '⚠️ <strong>5-MINUTE WARNING:</strong> Find your next save point, conclude current match, or park your character!';
+    }
+    // 2-Minute Warning
+    else if (sessionSecondsLeft === 120) {
+      playAlertChime();
+      alertBox.className = 'timer-alert-box warn';
+      alertBox.innerHTML = '🚨 <strong>2-MINUTE WARNING:</strong> Save progress now and get ready to log off peacefully.';
+    }
+  }
+
+  function handleSessionComplete() {
+    playLevelUpChime();
+    const alertBox = document.getElementById('timerAlertBox');
+    alertBox.className = 'timer-alert-box bridge';
+    alertBox.innerHTML = `
+      🎉 <strong>Session Finished! Safe Transition Activated (+25 XP)!</strong><br>
+      Pick one bridge activity before starting your next task:<br>
+      1. 🥤 Chug a cold glass of water<br>
+      2. 🐕 Give Frankie a pet or say hi to Mom/Dad<br>
+      3. 🧘 2 big long sighs & shoulder rolls
+    `;
+    state.xp += 25;
+    saveState();
+  }
+
+  function pauseOrResumeSession() {
+    isSessionPaused = !isSessionPaused;
+    document.getElementById('pauseTimerBtn').innerText = isSessionPaused ? '▶️ Resume' : '⏸️ Pause';
+    playSoftClick();
+  }
+
+  function endSessionEarly() {
+    if (confirm('End gaming session early? Unused full minutes will be refunded to your vault.')) {
+      clearInterval(sessionInterval);
+      const refundedMins = Math.floor(sessionSecondsLeft / 60);
+      if (refundedMins > 0) {
+        state.bankedMinutes += refundedMins;
+      }
+      document.getElementById('sessionTimerDisplay').style.display = 'none';
+      saveState();
+      playSoftClick();
+    }
+  }
+
+  // INITIALIZE
+  renderStats();
+  renderQuests();
+  setRegulationLevel(1);
+</script>
+</body>
+</html>
