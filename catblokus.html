@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0d111d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Catris">
+  <title>Catris — The Cat Tetris</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --surface: #141a29;
+      --surface-2: #1e2638;
+      --border: #2d3748;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #f472b6;
+      --accent-glow: rgba(244, 114, 182, 0.4);
+      --board-bg: #080c14;
+      --grid-line: rgba(255, 255, 255, 0.04);
+
+      /* Cat Breed Colors */
+      --cat-I: #38bdf8; /* Longcat - Sky Blue */
+      --cat-J: #60a5fa; /* Russian Blue - Indigo */
+      --cat-L: #fb923c; /* Ginger Tabby - Orange */
+      --cat-O: #fbbf24; /* Golden Loaf - Amber */
+      --cat-S: #34d399; /* Mint Shorthair - Emerald */
+      --cat-T: #c084fc; /* Lavender Sploot - Purple */
+      --cat-Z: #f87171; /* Playful Calico - Coral Red */
+    }
+
+    [data-theme="light"] {
+      --bg: #faf5ef;
+      --surface: #ffffff;
+      --surface-2: #f3eae0;
+      --border: #e2d5c5;
+      --text: #2d241e;
+      --text-muted: #7c6f64;
+      --accent: #ec4899;
+      --accent-glow: rgba(236, 72, 153, 0.3);
+      --board-bg: #fffbf7;
+      --grid-line: rgba(0, 0, 0, 0.05);
+
+      --cat-I: #0284c7;
+      --cat-J: #2563eb;
+      --cat-L: #ea580c;
+      --cat-O: #d97706;
+      --cat-S: #059669;
+      --cat-T: #9333ea;
+      --cat-Z: #dc2626;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      touch-action: none;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex: 0 0 auto;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, #f472b6, #fb923c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .cat-paw-icon {
+      font-size: 1.1rem;
+      -webkit-text-fill-color: initial;
+    }
+
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .stat-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stat-label {
+      font-size: 0.58rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .stat-val {
+      font-size: 0.88rem;
+      color: var(--text);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .header-btns {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-icon {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .btn-icon:active {
+      transform: scale(0.92);
+    }
+
+    /* Game Play Area */
+    .game-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 6px;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Side Panels */
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 58px;
+      align-items: center;
+    }
+
+    .panel-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 4px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .panel-title {
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    canvas.mini-canvas {
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Board Canvas */
+    .board-wrapper {
+      position: relative;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #board-canvas {
+      display: block;
+      background: var(--board-bg);
+      touch-action: none;
+    }
+
+    /* Floating Particles (Hearts / Paws) */
+    .particle {
+      position: absolute;
+      pointer-events: none;
+      animation: float-up 0.8s forwards ease-out;
+      font-size: 1.2rem;
+      z-index: 40;
+    }
+
+    @keyframes float-up {
+      0% { transform: translateY(0) scale(0.6); opacity: 1; }
+      100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
+    }
+
+    /* Touch Control Pad */
+    .controls-container {
+      flex: 0 0 auto;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .dpad-cluster, .action-cluster {
+      display: grid;
+      gap: 6px;
+    }
+
+    .dpad-cluster {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 45px);
+    }
+
+    .action-cluster {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 45px);
+    }
+
+    .t-btn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.1s, transform 0.08s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .t-btn:active {
+      transform: scale(0.92);
+      background: var(--accent);
+      color: #0f172a;
+    }
+
+    .btn-rotate-cw {
+      background: linear-gradient(135deg, #f472b6, #fb923c);
+      color: #ffffff;
+      border: none;
+      font-size: 1.15rem;
+      font-weight: 900;
+    }
+    .btn-rotate-cw:active {
+      background: #ec4899;
+      color: #ffffff;
+    }
+
+    .btn-hard-drop {
+      color: #fbbf24;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+
+    .btn-hold {
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    /* Overlays */
+    .overlay-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(11, 15, 25, 0.88);
+      backdrop-filter: blur(5px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .overlay-screen.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .overlay-title {
+      font-size: 1.9rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      background: linear-gradient(135deg, #f472b6, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
+
+    .overlay-score-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, #f472b6, #fb923c);
+      color: #0b0f19;
+      border: none;
+      font-size: 1.05rem;
+      font-weight: 900;
+      padding: 12px 34px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 4px 18px rgba(244, 114, 182, 0.4);
+      transition: transform 0.1s;
+    }
+    .btn-start:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <header>
+    <div class="brand">
+      <h1><span class="cat-paw-icon">🐾</span> CATRIS</h1>
+    </div>
+    
+    <div class="stats-bar">
+      <div class="stat-pill">
+        <span class="stat-label">🐟 Fish</span>
+        <span class="stat-val" id="score-val">0</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">🐾 Lines</span>
+        <span class="stat-val" id="lines-val">0</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">🐱 Level</span>
+        <span class="stat-val" id="level-val">1</span>
+      </div>
+    </div>
+
+    <div class="header-btns">
+      <button class="btn-icon" id="btn-sound" title="Toggle Meows & Purrs">🔊</button>
+      <button class="btn-icon" id="btn-theme" title="Toggle Theme">🌙</button>
+      <button class="btn-icon" id="btn-pause" title="Pause Game">⏸</button>
+    </div>
+  </header>
+
+  <!-- Play Area -->
+  <div class="game-container">
+    <!-- Hold Box Left (Cat Box) -->
+    <div class="side-panel">
+      <div class="panel-box">
+        <span class="panel-title">📦 Box</span>
+        <canvas id="hold-canvas" class="mini-canvas" width="50" height="50"></canvas>
+      </div>
+      <div class="panel-box" style="margin-top:auto;">
+        <span class="panel-title">🏆 Best</span>
+        <span id="best-val" style="font-size:0.75rem; font-weight:800; color:var(--accent);">0</span>
+      </div>
+    </div>
+
+    <!-- Center Cat Board -->
+    <div class="board-wrapper">
+      <canvas id="board-canvas"></canvas>
+      
+      <!-- Start / Game Over / Pause Overlay -->
+      <div class="overlay-screen active" id="game-overlay">
+        <div class="overlay-title" id="overlay-title">🐱 CATRIS 🐾</div>
+        <div style="font-size:0.8rem; color:var(--text-muted); font-weight:600; text-align:center;">Stack the sleeping cats into cozy lines!</div>
+        <div class="overlay-score-card" id="overlay-stats" style="display:none;">
+          <span style="font-size:0.72rem; color:var(--text-muted); font-weight:700;">FISH CAUGHT</span>
+          <span id="final-score" style="font-size:1.4rem; font-weight:900; color:var(--accent);">0</span>
+        </div>
+        <button class="btn-start" id="btn-play">PLAY</button>
+      </div>
+    </div>
+
+    <!-- Next Queue Right (Upcoming Cats) -->
+    <div class="side-panel">
+      <div class="panel-box">
+        <span class="panel-title">Next</span>
+        <canvas id="next1-canvas" class="mini-canvas" width="50" height="50"></canvas>
+        <canvas id="next2-canvas" class="mini-canvas" width="50" height="42"></canvas>
+        <canvas id="next3-canvas" class="mini-canvas" width="50" height="42"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touch Controls -->
+  <div class="controls-container">
+    <!-- Left D-Pad: Shift & Drops -->
+    <div class="dpad-cluster">
+      <button class="t-btn btn-hard-drop" id="ctrl-hard" style="grid-column: 2; grid-row: 1;" title="Pounce (Hard Drop)">🐾 POUNCE</button>
+      <button class="t-btn" id="ctrl-left" style="grid-column: 1; grid-row: 2;" title="Move Left">◀</button>
+      <button class="t-btn" id="ctrl-soft" style="grid-column: 2; grid-row: 2;" title="Soft Drop">▼</button>
+      <button class="t-btn" id="ctrl-right" style="grid-column: 3; grid-row: 2;" title="Move Right">▶</button>
+    </div>
+
+    <!-- Right Cluster: Rotations & Box -->
+    <div class="action-cluster">
+      <button class="t-btn btn-hold" id="ctrl-hold" title="Put in Box (Hold)">📦 BOX</button>
+      <button class="t-btn" id="ctrl-ccw" title="Rotate Counter-Clockwise">⟲</button>
+      <button class="t-btn btn-rotate-cw" id="ctrl-cw" style="grid-column: span 2;" title="Rotate Clockwise">ROTATE ⟳</button>
+    </div>
+  </div>
+
+  <script>
+    /* Cat Piece Definitions with Head, Body, Tail Semantic Roles */
+    const CAT_PIECES = {
+      I: {
+        breed: 'Longcat',
+        color: '#38bdf8', // Sky Cyan
+        darkColor: '#0284c7',
+        earColor: '#f472b6',
+        bellyColor: '#bae6fd',
+        shapes: [
+          [[0,0,0,0], [1,1,1,1], [0,0,0,0], [0,0,0,0]],
+          [[0,0,1,0], [0,0,1,0], [0,0,1,0], [0,0,1,0]],
+          [[0,0,0,0], [0,0,0,0], [1,1,1,1], [0,0,0,0]],
+          [[0,1,0,0], [0,1,0,0], [0,1,0,0], [0,1,0,0]]
+        ]
+      },
+      J: {
+        breed: 'Russian Blue',
+        color: '#60a5fa', // Soft Blue
+        darkColor: '#2563eb',
+        earColor: '#f472b6',
+        bellyColor: '#bfdbfe',
+        shapes: [
+          [[1,0,0], [1,1,1], [0,0,0]],
+          [[0,1,1], [0,1,0], [0,1,0]],
+          [[0,0,0], [1,1,1], [0,0,1]],
+          [[0,1,0], [0,1,0], [1,1,0]]
+        ]
+      },
+      L: {
+        breed: 'Ginger Tabby',
+        color: '#fb923c', // Orange
+        darkColor: '#ea580c',
+        earColor: '#f87171',
+        bellyColor: '#fed7aa',
+        shapes: [
+          [[0,0,1], [1,1,1], [0,0,0]],
+          [[0,1,0], [0,1,0], [0,1,1]],
+          [[0,0,0], [1,1,1], [1,0,0]],
+          [[1,1,0], [0,1,0], [0,1,0]]
+        ]
+      },
+      O: {
+        breed: 'Chonky Loaf',
+        color: '#fbbf24', // Golden Amber
+        darkColor: '#d97706',
+        earColor: '#f87171',
+        bellyColor: '#fef08a',
+        shapes: [
+          [[1,1], [1,1]]
+        ]
+      },
+      S: {
+        breed: 'Mint Shorthair',
+        color: '#34d399', // Emerald Mint
+        darkColor: '#059669',
+        earColor: '#f472b6',
+        bellyColor: '#a7f3d0',
+        shapes: [
+          [[0,1,1], [1,1,0], [0,0,0]],
+          [[0,1,0], [0,1,1], [0,0,1]],
+          [[0,0,0], [0,1,1], [1,1,0]],
+          [[1,0,0], [1,1,0], [0,1,0]]
+        ]
+      },
+      T: {
+        breed: 'Sploot Cat',
+        color: '#c084fc', // Lavender
+        darkColor: '#9333ea',
+        earColor: '#f472b6',
+        bellyColor: '#e9d5ff',
+        shapes: [
+          [[0,1,0], [1,1,1], [0,0,0]],
+          [[0,1,0], [0,1,1], [0,1,0]],
+          [[0,0,0], [1,1,1], [0,1,0]],
+          [[0,1,0], [1,1,0], [0,1,0]]
+        ]
+      },
+      Z: {
+        breed: 'Playful Calico',
+        color: '#f87171', // Coral Red
+        darkColor: '#dc2626',
+        earColor: '#fbbf24',
+        bellyColor: '#fecaca',
+        shapes: [
+          [[1,1,0], [0,1,1], [0,0,0]],
+          [[0,0,1], [0,1,1], [0,1,0]],
+          [[0,0,0], [1,1,0], [0,1,1]],
+          [[0,1,0], [1,1,0], [1,0,0]]
+        ]
+      }
+    };
+
+    /* Standard SRS Wall Kick Offsets */
+    const WALL_KICKS_NORMAL = {
+      '0->1': [[0,0], [-1,0], [-1,1], [0,-2], [-1,-2]],
+      '1->0': [[0,0], [1,0], [1,-1], [0,2], [1,2]],
+      '1->2': [[0,0], [1,0], [1,-1], [0,2], [1,2]],
+      '2->1': [[0,0], [-1,0], [-1,1], [0,-2], [-1,-2]],
+      '2->3': [[0,0], [1,0], [1,1], [0,-2], [1,-2]],
+      '3->2': [[0,0], [-1,0], [-1,-1], [0,2], [-1,2]],
+      '3->0': [[0,0], [-1,0], [-1,-1], [0,2], [-1,2]],
+      '0->3': [[0,0], [1,0], [1,1], [0,-2], [1,-2]]
+    };
+
+    const WALL_KICKS_I = {
+      '0->1': [[0,0], [-2,0], [1,0], [-2,-1], [1,2]],
+      '1->0': [[0,0], [2,0], [-1,0], [2,1], [-1,-2]],
+      '1->2': [[0,0], [-1,0], [2,0], [-1,2], [2,-1]],
+      '2->1': [[0,0], [1,0], [-2,0], [1,-2], [-2,1]],
+      '2->3': [[0,0], [2,0], [-1,0], [2,1], [-1,-2]],
+      '3->2': [[0,0], [-2,0], [1,0], [-2,-1], [1,2]],
+      '3->0': [[0,0], [1,0], [-2,0], [1,-2], [-2,1]],
+      '0->3': [[0,0], [-1,0], [2,0], [-1,2], [2,-1]]
+    };
+
+    /* Cat Sound Synthesizer (Realistic Meows, Chirps & Purrs via Web Audio) */
+    class CatSoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      // Gentle Cat Step / Move
+      move() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(320, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(240, this.ctx.currentTime + 0.05);
+          gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.05);
+        } catch (e) {}
+      }
+      // Cat Chirp / Mrrp on Rotate
+      rotate() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          const t = this.ctx.currentTime;
+          osc.frequency.setValueAtTime(450, t);
+          osc.frequency.linearRampToValueAtTime(680, t + 0.07);
+          gain.gain.setValueAtTime(0.12, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(t + 0.08);
+        } catch (e) {}
+      }
+      // Cat Pounce Thud
+      pounce() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          const t = this.ctx.currentTime;
+          osc.frequency.setValueAtTime(180, t);
+          osc.frequency.exponentialRampToValueAtTime(60, t + 0.12);
+          gain.gain.setValueAtTime(0.2, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(t + 0.12);
+        } catch (e) {}
+      }
+      // Authentic Cat Meow on Line Clear!
+      meow(pitchMultiplier = 1.0) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          const t = this.ctx.currentTime;
+          const dur = 0.38;
+
+          // "m-e-o-w" frequency contour:
+          // start ~380Hz, glide up to ~740Hz, then glide down to ~480Hz
+          const f0 = 380 * pitchMultiplier;
+          const fPeak = 740 * pitchMultiplier;
+          const fEnd = 460 * pitchMultiplier;
+
+          osc.frequency.setValueAtTime(f0, t);
+          osc.frequency.linearRampToValueAtTime(fPeak, t + 0.14);
+          osc.frequency.exponentialRampToValueAtTime(fEnd, t + dur);
+
+          gain.gain.setValueAtTime(0.01, t);
+          gain.gain.linearRampToValueAtTime(0.22, t + 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+
+          osc.connect(gain);
