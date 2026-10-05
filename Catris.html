@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0d111d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Catris">
+  <title>Catris — The Cat Tetris</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --surface: #141a29;
+      --surface-2: #1e2638;
+      --border: #2d3748;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #f472b6;
+      --accent-glow: rgba(244, 114, 182, 0.4);
+      --board-bg: #080c14;
+      --grid-line: rgba(255, 255, 255, 0.04);
+
+      /* Cat Breed Colors */
+      --cat-I: #38bdf8; /* Longcat - Sky Blue */
+      --cat-J: #60a5fa; /* Russian Blue - Indigo */
+      --cat-L: #fb923c; /* Ginger Tabby - Orange */
+      --cat-O: #fbbf24; /* Golden Loaf - Amber */
+      --cat-S: #34d399; /* Mint Shorthair - Emerald */
+      --cat-T: #c084fc; /* Lavender Sploot - Purple */
+      --cat-Z: #f87171; /* Playful Calico - Coral Red */
+    }
+
+    [data-theme="light"] {
+      --bg: #faf5ef;
+      --surface: #ffffff;
+      --surface-2: #f3eae0;
+      --border: #e2d5c5;
+      --text: #2d241e;
+      --text-muted: #7c6f64;
+      --accent: #ec4899;
+      --accent-glow: rgba(236, 72, 153, 0.3);
+      --board-bg: #fffbf7;
+      --grid-line: rgba(0, 0, 0, 0.05);
+
+      --cat-I: #0284c7;
+      --cat-J: #2563eb;
+      --cat-L: #ea580c;
+      --cat-O: #d97706;
+      --cat-S: #059669;
+      --cat-T: #9333ea;
+      --cat-Z: #dc2626;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex: 0 0 auto;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      background: linear-gradient(135deg, #f472b6, #fb923c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .cat-paw-icon {
+      font-size: 1.1rem;
+      -webkit-text-fill-color: initial;
+    }
+
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .stat-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stat-label {
+      font-size: 0.58rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .stat-val {
+      font-size: 0.88rem;
+      color: var(--text);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .header-btns {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-icon {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .btn-icon:active {
+      transform: scale(0.92);
+    }
+
+    /* Game Play Area */
+    .game-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 6px;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Side Panels */
+    .side-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 58px;
+      align-items: center;
+    }
+
+    .panel-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 4px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .panel-title {
+      font-size: 0.62rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    canvas.mini-canvas {
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Board Canvas */
+    .board-wrapper {
+      position: relative;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #board-canvas {
+      display: block;
+      background: var(--board-bg);
+      touch-action: none;
+    }
+
+    /* Floating Particles (Hearts / Paws) */
+    .particle {
+      position: absolute;
+      pointer-events: none;
+      animation: float-up 0.8s forwards ease-out;
+      font-size: 1.2rem;
+      z-index: 40;
+    }
+
+    @keyframes float-up {
+      0% { transform: translateY(0) scale(0.6); opacity: 1; }
+      100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
+    }
+
+    /* Touch Control Pad */
+    .controls-container {
+      flex: 0 0 auto;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .dpad-cluster, .action-cluster {
+      display: grid;
+      gap: 6px;
+    }
+
+    .dpad-cluster {
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 45px);
+    }
+
+    .action-cluster {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 45px);
+    }
+
+    .t-btn {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 0.1s, transform 0.08s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .t-btn:active {
+      transform: scale(0.92);
+      background: var(--accent);
+      color: #0f172a;
+    }
+
+    .btn-rotate-cw {
+      background: linear-gradient(135deg, #f472b6, #fb923c);
+      color: #ffffff;
+      border: none;
+      font-size: 1.15rem;
+      font-weight: 900;
+    }
+    .btn-rotate-cw:active {
+      background: #ec4899;
+      color: #ffffff;
+    }
+
+    .btn-hard-drop {
+      color: #fbbf24;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+
+    .btn-hold {
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+
+    /* Overlays */
+    .overlay-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(11, 15, 25, 0.94);
+      backdrop-filter: blur(8px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      touch-action: manipulation;
+      cursor: pointer;
+    }
+    .overlay-screen.active {
+      display: flex;
+    }
+
+    .overlay-content {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
+      max-width: 320px;
+      width: 88%;
+      cursor: default;
+    }
+
+    .overlay-title {
+      font-size: 1.9rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      background: linear-gradient(135deg, #f472b6, #fbbf24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
+
+    .overlay-score-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .btn-start {
+      touch-action: manipulation;
+      background: linear-gradient(135deg, #f472b6, #fb923c);
+      color: #0b0f19;
+      border: none;
+      font-size: 1.2rem;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      padding: 14px 44px;
+      min-width: 180px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(244, 114, 182, 0.5);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .btn-start:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <header>
+    <div class="brand">
+      <h1><span class="cat-paw-icon">🐾</span> CATRIS</h1>
+    </div>
+    
+    <div class="stats-bar">
+      <div class="stat-pill">
+        <span class="stat-label">🐟 Fish</span>
+        <span class="stat-val" id="score-val">0</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">🐾 Lines</span>
+        <span class="stat-val" id="lines-val">0</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">🐱 Level</span>
+        <span class="stat-val" id="level-val">1</span>
+      </div>
+    </div>
+
+    <div class="header-btns">
+      <button class="btn-icon" id="btn-sound" title="Toggle Meows & Purrs">🔊</button>
+      <button class="btn-icon" id="btn-theme" title="Toggle Theme">🌙</button>
+      <button class="btn-icon" id="btn-pause" title="Pause Game">⏸</button>
+    </div>
+  </header>
+
+  <!-- Play Area -->
+  <div class="game-container">
+    <!-- Hold Box Left (Cat Box) -->
+    <div class="side-panel">
+      <div class="panel-box">
+        <span class="panel-title">📦 Box</span>
+        <canvas id="hold-canvas" class="mini-canvas" width="50" height="50"></canvas>
+      </div>
+      <div class="panel-box" style="margin-top:auto;">
+        <span class="panel-title">🏆 Best</span>
+        <span id="best-val" style="font-size:0.75rem; font-weight:800; color:var(--accent);">0</span>
+      </div>
+    </div>
+
+    <!-- Center Cat Board -->
+    <div class="board-wrapper">
+      <canvas id="board-canvas"></canvas>
+    </div>
+
+    <!-- Start / Game Over / Pause Overlay (Fixed Full Screen) -->
+    <div class="overlay-screen active" id="game-overlay">
+      <div class="overlay-content">
+        <div class="overlay-title" id="overlay-title">🐱 CATRIS 🐾</div>
+        <div style="font-size:0.85rem; color:var(--text-muted); font-weight:600; text-align:center; max-width:260px;">Stack the sleeping cats into cozy lines!</div>
+        <div class="overlay-score-card" id="overlay-stats" style="display:none;">
+          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">FISH CAUGHT</span>
+          <span id="final-score" style="font-size:1.5rem; font-weight:900; color:var(--accent);">0</span>
+        </div>
+        <button class="btn-start" id="btn-play" onclick="executeStartGame()">PLAY 🐾</button>
+        <span style="font-size:0.72rem; color:var(--text-muted); font-weight:600; margin-top:2px;">(or tap anywhere to start)</span>
+      </div>
+    </div>
+
+    <!-- Next Queue Right (Upcoming Cats) -->
+    <div class="side-panel">
+      <div class="panel-box">
+        <span class="panel-title">Next</span>
+        <canvas id="next1-canvas" class="mini-canvas" width="50" height="50"></canvas>
+        <canvas id="next2-canvas" class="mini-canvas" width="50" height="42"></canvas>
+        <canvas id="next3-canvas" class="mini-canvas" width="50" height="42"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touch Controls -->
+  <div class="controls-container">
+    <!-- Left D-Pad: Shift & Drops -->
+    <div class="dpad-cluster">
+      <button class="t-btn btn-hard-drop" id="ctrl-hard" style="grid-column: 2; grid-row: 1;" title="Pounce (Hard Drop)">🐾 POUNCE</button>
+      <button class="t-btn" id="ctrl-left" style="grid-column: 1; grid-row: 2;" title="Move Left">◀</button>
+      <button class="t-btn" id="ctrl-soft" style="grid-column: 2; grid-row: 2;" title="Soft Drop">▼</button>
+      <button class="t-btn" id="ctrl-right" style="grid-column: 3; grid-row: 2;" title="Move Right">▶</button>
+    </div>
+
+    <!-- Right Cluster: Rotations & Box -->
+    <div class="action-cluster">
+      <button class="t-btn btn-hold" id="ctrl-hold" title="Put in Box (Hold)">📦 BOX</button>
+      <button class="t-btn" id="ctrl-ccw" title="Rotate Counter-Clockwise">⟲</button>
+      <button class="t-btn btn-rotate-cw" id="ctrl-cw" style="grid-column: span 2;" title="Rotate Clockwise">ROTATE ⟳</button>
+    </div>
+  </div>
+
+  <script>
+    /* Cat Piece Definitions with Head, Body, Tail Semantic Roles */
+    const CAT_PIECES = {
+      I: {
+        breed: 'Longcat',
+        color: '#38bdf8', // Sky Cyan
+        darkColor: '#0284c7',
+        earColor: '#f472b6',
+        bellyColor: '#bae6fd',
+        shapes: [
+          [[0,0,0,0], [1,1,1,1], [0,0,0,0], [0,0,0,0]],
+          [[0,0,1,0], [0,0,1,0], [0,0,1,0], [0,0,1,0]],
+          [[0,0,0,0], [0,0,0,0], [1,1,1,1], [0,0,0,0]],
+          [[0,1,0,0], [0,1,0,0], [0,1,0,0], [0,1,0,0]]
+        ]
+      },
+      J: {
+        breed: 'Russian Blue',
+        color: '#60a5fa', // Soft Blue
+        darkColor: '#2563eb',
+        earColor: '#f472b6',
+        bellyColor: '#bfdbfe',
+        shapes: [
+          [[1,0,0], [1,1,1], [0,0,0]],
+          [[0,1,1], [0,1,0], [0,1,0]],
+          [[0,0,0], [1,1,1], [0,0,1]],
+          [[0,1,0], [0,1,0], [1,1,0]]
+        ]
+      },
+      L: {
+        breed: 'Ginger Tabby',
+        color: '#fb923c', // Orange
+        darkColor: '#ea580c',
+        earColor: '#f87171',
+        bellyColor: '#fed7aa',
+        shapes: [
+          [[0,0,1], [1,1,1], [0,0,0]],
+          [[0,1,0], [0,1,0], [0,1,1]],
+          [[0,0,0], [1,1,1], [1,0,0]],
+          [[1,1,0], [0,1,0], [0,1,0]]
+        ]
+      },
+      O: {
+        breed: 'Chonky Loaf',
+        color: '#fbbf24', // Golden Amber
+        darkColor: '#d97706',
+        earColor: '#f87171',
+        bellyColor: '#fef08a',
+        shapes: [
+          [[1,1], [1,1]]
+        ]
+      },
+      S: {
+        breed: 'Mint Shorthair',
+        color: '#34d399', // Emerald Mint
+        darkColor: '#059669',
+        earColor: '#f472b6',
+        bellyColor: '#a7f3d0',
+        shapes: [
+          [[0,1,1], [1,1,0], [0,0,0]],
+          [[0,1,0], [0,1,1], [0,0,1]],
+          [[0,0,0], [0,1,1], [1,1,0]],
+          [[1,0,0], [1,1,0], [0,1,0]]
+        ]
+      },
+      T: {
+        breed: 'Sploot Cat',
+        color: '#c084fc', // Lavender
+        darkColor: '#9333ea',
+        earColor: '#f472b6',
+        bellyColor: '#e9d5ff',
+        shapes: [
+          [[0,1,0], [1,1,1], [0,0,0]],
+          [[0,1,0], [0,1,1], [0,1,0]],
+          [[0,0,0], [1,1,1], [0,1,0]],
+          [[0,1,0], [1,1,0], [0,1,0]]
+        ]
+      },
+      Z: {
+        breed: 'Playful Calico',
+        color: '#f87171', // Coral Red
+        darkColor: '#dc2626',
+        earColor: '#fbbf24',
+        bellyColor: '#fecaca',
+        shapes: [
+          [[1,1,0], [0,1,1], [0,0,0]],
+          [[0,0,1], [0,1,1], [0,1,0]],
+          [[0,0,0], [1,1,0], [0,1,1]],
+          [[0,1,0], [1,1,0], [1,0,0]]
+        ]
+      }
+    };
+
+    /* Standard SRS Wall Kick Offsets */
+    const WALL_KICKS_NORMAL = {
+      '0->1': [[0,0], [-1,0], [-1,1], [0,-2], [-1,-2]],
+      '1->0': [[0,0], [1,0], [1,-1], [0,2], [1,2]],
+      '1->2': [[0,0], [1,0], [1,-1], [0,2], [1,2]],
+      '2->1': [[0,0], [-1,0], [-1,1], [0,-2], [-1,-2]],
+      '2->3': [[0,0], [1,0], [1,1], [0,-2], [1,-2]],
+      '3->2': [[0,0], [-1,0], [-1,-1], [0,2], [-1,2]],
+      '3->0': [[0,0], [-1,0], [-1,-1], [0,2], [-1,2]],
+      '0->3': [[0,0], [1,0], [1,1], [0,-2], [1,-2]]
+    };
+
+    const WALL_KICKS_I = {
+      '0->1': [[0,0], [-2,0], [1,0], [-2,-1], [1,2]],
+      '1->0': [[0,0], [2,0], [-1,0], [2,1], [-1,-2]],
+      '1->2': [[0,0], [-1,0], [2,0], [-1,2], [2,-1]],
+      '2->1': [[0,0], [1,0], [-2,0], [1,-2], [-2,1]],
+      '2->3': [[0,0], [2,0], [-1,0], [2,1], [-1,-2]],
+      '3->2': [[0,0], [-2,0], [1,0], [-2,-1], [1,2]],
+      '3->0': [[0,0], [1,0], [-2,0], [1,-2], [-2,1]],
+      '0->3': [[0,0], [-1,0], [2,0], [-1,2], [2,-1]]
+    };
+
+    /* Cat Sound Synthesizer (Realistic Meows, Chirps & Purrs via Web Audio) */
+    class CatSoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        try {
+          if (!this.ctx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (AudioContext) this.ctx = new AudioContext();
+          }
+          if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume().catch(() => {});
+          }
+        } catch (e) {
+          // Audio disabled or blocked by browser policy
+        }
+      }
+      // Gentle Cat Step / Move
+      move() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(320, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(240, this.ctx.currentTime + 0.05);
+          gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.05);
+        } catch (e) {}
+      }
+      // Cat Chirp / Mrrp on Rotate
+      rotate() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          const t = this.ctx.currentTime;
+          osc.frequency.setValueAtTime(450, t);
+          osc.frequency.linearRampToValueAtTime(680, t + 0.07);
+          gain.gain.setValueAtTime(0.12, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(t + 0.08);
+        } catch (e) {}
+      }
+      // Cat Pounce Thud
+      pounce() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          const t = this.ctx.currentTime;
+          osc.frequency.setValueAtTime(180, t);
+          osc.frequency.exponentialRampToValueAtTime(60, t + 0.12);
+          gain.gain.setValueAtTime(0.2, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(t + 0.12);
+        } catch (e) {}
+      }
+      // Authentic Cat Meow on Line Clear!
+      meow(pitchMultiplier = 1.0) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          const t = this.ctx.currentTime;
+          const dur = 0.38;
+
+          // "m-e-o-w" frequency contour:
+          // start ~380Hz, glide up to ~740Hz, then glide down to ~480Hz
+          const f0 = 380 * pitchMultiplier;
+          const fPeak = 740 * pitchMultiplier;
+          const fEnd = 460 * pitchMultiplier;
+
+          osc.frequency.setValueAtTime(f0, t);
+          osc.frequency.linearRampToValueAtTime(fPeak, t + 0.14);
+          osc.frequency.exponentialRampToValueAtTime(fEnd, t + dur);
+
+          gain.gain.setValueAtTime(0.01, t);
+          gain.gain.linearRampToValueAtTime(0.22, t + 0.08);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(t + dur);
+        } catch (e) {}
+      }
+      // Enthusiastic Purr & Happy Meow on 4-line Catris!
+      catrisPurr() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          this.meow(1.15);
+          setTimeout(() => this.meow(1.3), 120);
+
+          // Deep Purring Rumble
+          const osc = this.ctx.createOscillator();
+          const mod = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const modGain = this.ctx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(85, this.ctx.currentTime);
+
+          // Tremolo LFO for purr texture
+          mod.type = 'sawtooth';
+          mod.frequency.setValueAtTime(26, this.ctx.currentTime);
+          modGain.gain.setValueAtTime(40, this.ctx.currentTime);
+
+          mod.connect(modGain);
+          modGain.connect(osc.frequency);
+
+          gain.gain.setValueAtTime(0.22, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.65);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          mod.start();
+          osc.stop(this.ctx.currentTime + 0.65);
+          mod.stop(this.ctx.currentTime + 0.65);
+        } catch (e) {}
+      }
+      // Sad Mew on Game Over
+      sadMew() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          const t = this.ctx.currentTime;
+          osc.frequency.setValueAtTime(520, t);
+          osc.frequency.exponentialRampToValueAtTime(260, t + 0.55);
+          gain.gain.setValueAtTime(0.18, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.55);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(t + 0.55);
+        } catch (e) {}
+      }
+    }
+    const catSound = new CatSoundEngine();
+
+    /* Board & Game State */
+    const COLS = 10;
+    const ROWS = 20;
+    let grid = Array(ROWS).fill(null).map(() => Array(COLS).fill(0));
+
+    let score = 0;
+    let lines = 0;
+    let level = 1;
+    let highScore = parseInt(localStorage.getItem('catris_high_score') || '0', 10);
+    document.getElementById('best-val').textContent = highScore;
+
+    let bag = [];
+    let nextQueue = [];
+    let holdPiece = null;
+    let canHold = true;
+
+    let currentPiece = null; // { type, rot, r, c }
+    let isGameOver = false;
+    let isPaused = false;
+    let isPlaying = false;
+
+    let dropCounter = 0;
+    let dropInterval = 1000;
+    let lastTime = 0;
+    let lockTimer = 0;
+    let isLocking = false;
+
+    /* Canvas Elements */
+    const boardCanvas = document.getElementById('board-canvas');
+    const ctx = boardCanvas.getContext('2d');
+    const holdCanvas = document.getElementById('hold-canvas');
+    const holdCtx = holdCanvas.getContext('2d');
+    const next1Canvas = document.getElementById('next1-canvas');
+    const next1Ctx = next1Canvas.getContext('2d');
+    const next2Canvas = document.getElementById('next2-canvas');
+    const next2Ctx = next2Canvas.getContext('2d');
+    const next3Canvas = document.getElementById('next3-canvas');
+    const next3Ctx = next3Canvas.getContext('2d');
+
+    let blockSize = 24;
+
+    function resizeBoard() {
+      const availableH = window.innerHeight - 170;
+      const availableW = window.innerWidth - 130;
+      
+      const maxBlockH = Math.floor(availableH / ROWS);
+      const maxBlockW = Math.floor(availableW / COLS);
+      blockSize = Math.max(14, Math.min(maxBlockH, maxBlockW, 28));
+
+      boardCanvas.width = blockSize * COLS;
+      boardCanvas.height = blockSize * ROWS;
+      draw();
+    }
+    window.addEventListener('resize', resizeBoard);
+
+    /* 7-Bag Randomizer */
+    function fillBag() {
+      const types = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
+      for (let i = types.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [types[i], types[j]] = [types[j], types[i]];
+      }
+      bag.push(...types);
+    }
+
+    function getNextPiece() {
+      if (bag.length < 7) fillBag();
+      return bag.shift();
+    }
+
+    function spawnPiece(type = null) {
+      const pieceType = type || nextQueue.shift();
+      while (nextQueue.length < 4) {
+        nextQueue.push(getNextPiece());
+      }
+
+      currentPiece = {
+        type: pieceType,
+        rot: 0,
+        r: 0,
+        c: Math.floor((COLS - CAT_PIECES[pieceType].shapes[0][0].length) / 2)
+      };
+
+      canHold = true;
+      isLocking = false;
+      lockTimer = 0;
+
+      if (collides(currentPiece.r, currentPiece.c, currentPiece.rot)) {
+        triggerGameOver();
+      }
+
+      renderPreviews();
+    }
+
+    function collides(rOffset, cOffset, rot, type = currentPiece?.type) {
+      if (!type) return false;
+      const shape = CAT_PIECES[type].shapes[rot];
+      for (let r = 0; r < shape.length; r++) {
+        for (let c = 0; c < shape[r].length; c++) {
+          if (shape[r][c]) {
+            const br = r + rOffset;
+            const bc = c + cOffset;
+            if (bc < 0 || bc >= COLS || br >= ROWS) return true;
+            if (br >= 0 && grid[br][bc] !== 0) return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function getGhostRow() {
+      if (!currentPiece) return 0;
+      let ghostR = currentPiece.r;
+      while (!collides(ghostR + 1, currentPiece.c, currentPiece.rot)) {
+        ghostR++;
+      }
+      return ghostR;
+    }
+
+    /* Cat Controls with SRS */
+    function moveLeft() {
+      if (!isPlaying || isPaused || isGameOver || !currentPiece) return;
+      if (!collides(currentPiece.r, currentPiece.c - 1, currentPiece.rot)) {
+        currentPiece.c--;
+        catSound.move();
+        if (isLocking) lockTimer = 0;
+        draw();
+      }
+    }
+
+    function moveRight() {
+      if (!isPlaying || isPaused || isGameOver || !currentPiece) return;
+      if (!collides(currentPiece.r, currentPiece.c + 1, currentPiece.rot)) {
+        currentPiece.c++;
+        catSound.move();
+        if (isLocking) lockTimer = 0;
+        draw();
+      }
+    }
+
+    function softDrop() {
+      if (!isPlaying || isPaused || isGameOver || !currentPiece) return;
+      if (!collides(currentPiece.r + 1, currentPiece.c, currentPiece.rot)) {
+        currentPiece.r++;
+        score += 1;
+        updateStats();
+        draw();
+      } else {
+        lockPiece();
+      }
+    }
+
+    function hardDrop() {
+      if (!isPlaying || isPaused || isGameOver || !currentPiece) return;
+      const ghostR = getGhostRow();
+      const dropDistance = ghostR - currentPiece.r;
+      currentPiece.r = ghostR;
+      score += dropDistance * 2;
+      updateStats();
+      catSound.pounce();
+      window.navigator?.vibrate?.(15);
+      lockPiece();
+    }
+
+    function rotatePiece(direction) {
+      if (!isPlaying || isPaused || isGameOver || !currentPiece) return;
+      const numRot = CAT_PIECES[currentPiece.type].shapes.length;
+      if (numRot === 1) return;
+
+      const oldRot = currentPiece.rot;
+      const newRot = (oldRot + direction + numRot) % numRot;
+      const kickKey = `${oldRot}->${newRot}`;
+      const kicks = (currentPiece.type === 'I') ? WALL_KICKS_I[kickKey] : WALL_KICKS_NORMAL[kickKey];
+
+      if (kicks) {
+        for (let [dx, dy] of kicks) {
+          const newC = currentPiece.c + dx;
+          const newR = currentPiece.r - dy;
+          if (!collides(newR, newC, newRot)) {
+            currentPiece.c = newC;
+            currentPiece.r = newR;
+            currentPiece.rot = newRot;
+            catSound.rotate();
+            if (isLocking) lockTimer = 0;
+            draw();
+            return;
+          }
+        }
+      }
+    }
+
+    function holdCurrentPiece() {
+      if (!isPlaying || isPaused || isGameOver || !currentPiece || !canHold) return;
+      catSound.rotate();
+      canHold = false;
+      const prevHold = holdPiece;
+      holdPiece = currentPiece.type;
+      renderPreviews();
+
+      if (prevHold) {
+        spawnPiece(prevHold);
+      } else {
+        spawnPiece();
+      }
+      draw();
+    }
+
+    /* Lock Piece & Cat Lines */
+    function lockPiece() {
+      const shape = CAT_PIECES[currentPiece.type].shapes[currentPiece.rot];
+      const pInfo = CAT_PIECES[currentPiece.type];
+
+      // Identify head block (first non-zero block) and tail block (last block)
+      let filledBlocks = [];
+      for (let r = 0; r < shape.length; r++) {
+        for (let c = 0; c < shape[r].length; c++) {
+          if (shape[r][c]) filledBlocks.push({ r, c });
+        }
+      }
+
+      filledBlocks.forEach((b, idx) => {
+        const br = currentPiece.r + b.r;
+        const bc = currentPiece.c + b.c;
+        if (br >= 0 && br < ROWS && bc >= 0 && bc < COLS) {
+          // Store cell metadata: color, role ('head', 'body', 'tail')
+          let role = 'body';
+          if (idx === 0) role = 'head';
+          else if (idx === filledBlocks.length - 1) role = 'tail';
+          grid[br][bc] = {
+            color: pInfo.color,
+            earColor: pInfo.earColor,
+            bellyColor: pInfo.bellyColor,
+            role: role
+          };
+        }
+      });
+
+      checkLines();
+      spawnPiece();
+      draw();
+    }
+
+    function checkLines() {
+      let linesCleared = 0;
+      for (let r = ROWS - 1; r >= 0; r--) {
+        if (grid[r].every(cell => cell !== 0)) {
+          grid.splice(r, 1);
+          grid.unshift(Array(COLS).fill(0));
+          linesCleared++;
+          r++;
+        }
+      }
+
+      if (linesCleared > 0) {
+        lines += linesCleared;
+        const lineScores = [0, 100, 300, 500, 800];
+        score += lineScores[linesCleared] * level;
+
+        level = Math.floor(lines / 10) + 1;
+        dropInterval = Math.max(90, 1000 - (level - 1) * 85);
+
+        if (linesCleared === 4) {
+          catSound.catrisPurr();
+          window.navigator?.vibrate?.([25, 45, 25]);
+          spawnFloatingParticle('🐱✨');
+        } else {
+          catSound.meow();
+          window.navigator?.vibrate?.(18);
+          spawnFloatingParticle('🐾');
+        }
+
+        updateStats();
+      }
+    }
+
+    function spawnFloatingParticle(symbol) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.textContent = symbol;
+      p.style.left = `${50 + (Math.random() * 40 - 20)}%`;
+      p.style.top = '40%';
+      document.querySelector('.board-wrapper').appendChild(p);
+      setTimeout(() => p.remove(), 850);
+    }
+
+    function updateStats() {
+      document.getElementById('score-val').textContent = score;
+      document.getElementById('lines-val').textContent = lines;
+      document.getElementById('level-val').textContent = level;
+
+      if (score > highScore) {
+        highScore = score;
+        localStorage.setItem('catris_high_score', highScore);
+        document.getElementById('best-val').textContent = highScore;
+      }
+    }
+
+    function triggerGameOver() {
+      isGameOver = true;
+      isPlaying = false;
+      catSound.sadMew();
+      window.navigator?.vibrate?.([100, 50, 150]);
+
+      document.getElementById('overlay-title').textContent = 'GAME OVER 😿';
+      document.getElementById('final-score').textContent = score;
+      document.getElementById('overlay-stats').style.display = 'flex';
+      document.getElementById('btn-play').textContent = 'PLAY AGAIN 🐾';
+      document.getElementById('game-overlay').classList.add('active');
+    }
+
+    function startGame() {
+      grid = Array(ROWS).fill(null).map(() => Array(COLS).fill(0));
+      score = 0;
+      lines = 0;
+      level = 1;
+      dropInterval = 1000;
+      isGameOver = false;
+      isPaused = false;
+      isPlaying = true;
+      holdPiece = null;
+      canHold = true;
+      bag = [];
+      nextQueue = [];
+
+      for (let i = 0; i < 4; i++) {
+        nextQueue.push(getNextPiece());
+      }
+
+      updateStats();
+      document.getElementById('game-overlay').classList.remove('active');
+      spawnPiece();
+      lastTime = performance.now();
+      requestAnimationFrame(gameLoop);
+    }
+
+    /* Game Loop */
+    function gameLoop(time) {
+      if (!isPlaying || isPaused || isGameOver) return;
+      const deltaTime = time - lastTime;
+      lastTime = time;
+
+      dropCounter += deltaTime;
+      if (dropCounter > dropInterval) {
+        dropCounter = 0;
+        if (!collides(currentPiece.r + 1, currentPiece.c, currentPiece.rot)) {
+          currentPiece.r++;
+          isLocking = false;
+        } else {
+          isLocking = true;
+        }
+      }
+
+      if (isLocking) {
+        lockTimer += deltaTime;
+        if (lockTimer >= 500) {
+          lockPiece();
+        }
+      }
+
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    /* ========================================================
+       CAT BLOCK & CAT PIECE RENDERING
+       Draws ears, sleeping faces, paws, and tails on tetrominoes
+       ======================================================== */
+    function drawCatBlock(cContext, x, y, size, catColor, earColor, role = 'body', isGhost = false) {
+      const radius = Math.floor(size * 0.22);
+
+      if (isGhost) {
+        cContext.strokeStyle = catColor;
+        cContext.lineWidth = 1.5;
+        // Outline block with ears
+        cContext.strokeRect(x + 1, y + 1, size - 2, size - 2);
+        if (role === 'head') {
+          // Ghost ears
+          cContext.beginPath();
+          cContext.moveTo(x + 2, y + 1);
+          cContext.lineTo(x + size*0.3, y - size*0.25);
+          cContext.lineTo(x + size*0.5, y + 1);
+          cContext.stroke();
+
+          cContext.beginPath();
+          cContext.moveTo(x + size*0.5, y + 1);
+          cContext.lineTo(x + size*0.7, y - size*0.25);
+          cContext.lineTo(x + size - 2, y + 1);
+          cContext.stroke();
+        }
+        return;
+      }
+
+      // Rounded Cat Body Block
+      cContext.fillStyle = catColor;
+      cContext.beginPath();
+      cContext.roundRect ? cContext.roundRect(x, y, size, size, radius) : cContext.fillRect(x, y, size, size);
+      cContext.fill();
+
+      // Soft Highlight Fur Shine
+      cContext.fillStyle = 'rgba(255, 255, 255, 0.35)';
+      cContext.beginPath();
+      cContext.roundRect ? cContext.roundRect(x + 2, y + 2, size - 4, size * 0.25, 2) : cContext.fillRect(x + 2, y + 2, size - 4, 3);
+      cContext.fill();
+
+      // Feline Features depending on Block Role
+      if (role === 'head') {
+        // --- CAT EARS ---
+        cContext.fillStyle = catColor;
+        // Left Ear
+        cContext.beginPath();
+        cContext.moveTo(x + 2, y + 2);
+        cContext.lineTo(x + size * 0.25, y - size * 0.32);
+        cContext.lineTo(x + size * 0.45, y + 2);
+        cContext.fill();
+        // Right Ear
+        cContext.beginPath();
+        cContext.moveTo(x + size * 0.55, y + 2);
+        cContext.lineTo(x + size * 0.75, y - size * 0.32);
+        cContext.lineTo(x + size - 2, y + 2);
+        cContext.fill();
+
+        // Inner Pink Ears
+        cContext.fillStyle = earColor || '#f472b6';
+        cContext.beginPath();
+        cContext.moveTo(x + size * 0.1, y + 1);
+        cContext.lineTo(x + size * 0.25, y - size * 0.2);
+        cContext.lineTo(x + size * 0.38, y + 1);
+        cContext.fill();
+
+        cContext.beginPath();
+        cContext.moveTo(x + size * 0.62, y + 1);
+        cContext.lineTo(x + size * 0.75, y - size * 0.2);
+        cContext.lineTo(x + size * 0.9, y + 1);
+        cContext.fill();
+
+        // --- CUTE SLEEPING / SMILING FACE ---
+        cContext.strokeStyle = '#1e293b';
+        cContext.lineWidth = Math.max(1, size * 0.07);
+
+        // Eyes: Happy Sleepy Arches ^ ^
+        const eyeY = y + size * 0.45;
+        // Left eye
+        cContext.beginPath();
+        cContext.arc(x + size * 0.32, eyeY, size * 0.12, Math.PI, 0);
+        cContext.stroke();
+        // Right eye
+        cContext.beginPath();
+        cContext.arc(x + size * 0.68, eyeY, size * 0.12, Math.PI, 0);
+        cContext.stroke();
+
+        // Tiny Pink Nose
+        cContext.fillStyle = earColor || '#f472b6';
+        cContext.beginPath();
+        cContext.arc(x + size * 0.5, y + size * 0.6, size * 0.08, 0, Math.PI * 2);
+        cContext.fill();
+
+        // Whiskers > <
+        cContext.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+        cContext.lineWidth = 1;
+        // Left whiskers
+        cContext.beginPath();
+        cContext.moveTo(x + size * 0.22, y + size * 0.55);
+        cContext.lineTo(x + size * 0.05, y + size * 0.5);
+        cContext.moveTo(x + size * 0.22, y + size * 0.65);
+        cContext.lineTo(x + size * 0.05, y + size * 0.7);
+        // Right whiskers
+        cContext.moveTo(x + size * 0.78, y + size * 0.55);
+        cContext.lineTo(x + size * 0.95, y + size * 0.5);
+        cContext.moveTo(x + size * 0.78, y + size * 0.65);
+        cContext.lineTo(x + size * 0.95, y + size * 0.7);
+        cContext.stroke();
+
+      } else if (role === 'tail') {
+        // --- CURLED CAT TAIL ---
+        cContext.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        cContext.lineWidth = Math.max(1.5, size * 0.12);
+        cContext.beginPath();
+        cContext.arc(x + size * 0.5, y + size * 0.5, size * 0.28, 0.5 * Math.PI, 1.8 * Math.PI);
+        cContext.stroke();
+
+        // Fluffy tail tip
+        cContext.fillStyle = '#ffffff';
+        cContext.beginPath();
+        cContext.arc(x + size * 0.5 + size * 0.25, y + size * 0.45, size * 0.1, 0, Math.PI * 2);
+        cContext.fill();
+
+      } else {
+        // --- CUTE PAWS (TOE BEANS) ---
+        cContext.fillStyle = 'rgba(255, 255, 255, 0.45)';
+        // Left paw
+        cContext.beginPath();
+        cContext.arc(x + size * 0.35, y + size * 0.75, size * 0.12, 0, Math.PI * 2);
+        cContext.fill();
+        // Right paw
+        cContext.beginPath();
+        cContext.arc(x + size * 0.65, y + size * 0.75, size * 0.12, 0, Math.PI * 2);
+        cContext.fill();
+
+        // Tiny Pink Toe Bean Center
+        cContext.fillStyle = earColor || '#f472b6';
+        cContext.beginPath();
+        cContext.arc(x + size * 0.35, y + size * 0.75, size * 0.05, 0, Math.PI * 2);
+        cContext.arc(x + size * 0.65, y + size * 0.75, size * 0.05, 0, Math.PI * 2);
+        cContext.fill();
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, boardCanvas.width, boardCanvas.height);
+
+      const isDark = document.body.getAttribute('data-theme') === 'dark';
+      ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)';
+      ctx.lineWidth = 1;
+
+      // Draw Grid & Locked Cats
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          ctx.strokeRect(c * blockSize, r * blockSize, blockSize, blockSize);
+          const cell = grid[r][c];
+          if (cell !== 0) {
+            drawCatBlock(ctx, c * blockSize, r * blockSize, blockSize, cell.color, cell.earColor, cell.role);
+          }
+        }
+      }
+
+      // Draw Falling Cat Piece (and Ghost)
+      if (currentPiece && !isGameOver) {
+        const pInfo = CAT_PIECES[currentPiece.type];
+        const shape = pInfo.shapes[currentPiece.rot];
+
+        let filledBlocks = [];
+        for (let r = 0; r < shape.length; r++) {
+          for (let c = 0; c < shape[r].length; c++) {
+            if (shape[r][c]) filledBlocks.push({ r, c });
+          }
+        }
+
+        // Ghost Cat
+        const ghostR = getGhostRow();
+        filledBlocks.forEach((b, idx) => {
+          const br = ghostR + b.r;
+          const bc = currentPiece.c + b.c;
+          if (br >= 0 && br < ROWS) {
+            let role = (idx === 0) ? 'head' : (idx === filledBlocks.length - 1 ? 'tail' : 'body');
+            drawCatBlock(ctx, bc * blockSize, br * blockSize, blockSize, pInfo.color, pInfo.earColor, role, true);
+          }
+        });
+
+        // Active Falling Cat
+        filledBlocks.forEach((b, idx) => {
+          const br = currentPiece.r + b.r;
+          const bc = currentPiece.c + b.c;
+          if (br >= 0 && br < ROWS) {
+            let role = (idx === 0) ? 'head' : (idx === filledBlocks.length - 1 ? 'tail' : 'body');
+            drawCatBlock(ctx, bc * blockSize, br * blockSize, blockSize, pInfo.color, pInfo.earColor, role, false);
+          }
+        });
+      }
+    }
+
+    /* Mini Cat Previews for Box & Next */
+    function drawMiniCatPiece(cContext, type, canvasW, canvasH) {
+      cContext.clearRect(0, 0, canvasW, canvasH);
+      if (!type) return;
+
+      const pInfo = CAT_PIECES[type];
+      const shape = pInfo.shapes[0];
+      const mSize = 10;
+      const rows = shape.length;
+      const cols = shape[0].length;
+      const startX = Math.floor((canvasW - cols * mSize) / 2);
+      const startY = Math.floor((canvasH - rows * mSize) / 2) + 2;
+
+      let filledBlocks = [];
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (shape[r][c]) filledBlocks.push({ r, c });
+        }
+      }
+
+      filledBlocks.forEach((b, idx) => {
+        let role = (idx === 0) ? 'head' : (idx === filledBlocks.length - 1 ? 'tail' : 'body');
+        drawCatBlock(cContext, startX + b.c * mSize, startY + b.r * mSize, mSize, pInfo.color, pInfo.earColor, role);
+      });
+    }
+
+    function renderPreviews() {
+      drawMiniCatPiece(holdCtx, holdPiece, holdCanvas.width, holdCanvas.height);
+      drawMiniCatPiece(next1Ctx, nextQueue[0], next1Canvas.width, next1Canvas.height);
+      drawMiniCatPiece(next2Ctx, nextQueue[1], next2Canvas.width, next2Canvas.height);
+      drawMiniCatPiece(next3Ctx, nextQueue[2], next3Canvas.width, next3Canvas.height);
+    }
+
+    /* Controls with Auto-Repeat (DAS) */
+    function attachRepeatingButton(btn, actionFn) {
+      let intervalId = null;
+      let timeoutId = null;
+
+      const start = (e) => {
+        e.preventDefault();
+        catSound.init();
+        actionFn();
+        timeoutId = setTimeout(() => {
+          intervalId = setInterval(actionFn, 65);
+        }, 180);
+      };
+
+      const stop = (e) => {
+        e?.preventDefault();
+        clearTimeout(timeoutId);
+        clearInterval(intervalId);
+      };
+
+      btn.addEventListener('touchstart', start, { passive: false });
+      btn.addEventListener('touchend', stop);
+      btn.addEventListener('touchcancel', stop);
+      btn.addEventListener('mousedown', start);
+      btn.addEventListener('mouseup', stop);
+      btn.addEventListener('mouseleave', stop);
+    }
+
+    attachRepeatingButton(document.getElementById('ctrl-left'), moveLeft);
+    attachRepeatingButton(document.getElementById('ctrl-right'), moveRight);
+    attachRepeatingButton(document.getElementById('ctrl-soft'), softDrop);
+
+    function bindTouchButton(id, actionFn) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      let handled = false;
+      el.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handled = true;
+        catSound.init();
+        actionFn();
+        setTimeout(() => { handled = false; }, 300);
+      }, { passive: false });
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (handled) return;
+        catSound.init();
+        actionFn();
+      });
+    }
+
+    bindTouchButton('ctrl-hard', hardDrop);
+    bindTouchButton('ctrl-cw', () => rotatePiece(1));
+    bindTouchButton('ctrl-ccw', () => rotatePiece(-1));
+    bindTouchButton('ctrl-hold', holdCurrentPiece);
+
+    /* Keyboard Controls */
+    window.addEventListener('keydown', (e) => {
+      catSound.init();
+      switch (e.code) {
+        case 'ArrowLeft': moveLeft(); break;
+        case 'ArrowRight': moveRight(); break;
+        case 'ArrowDown': softDrop(); break;
+        case 'ArrowUp':
+        case 'KeyX': rotatePiece(1); break;
+        case 'KeyZ': rotatePiece(-1); break;
+        case 'Space': hardDrop(); break;
+        case 'KeyC':
+        case 'ShiftLeft': holdCurrentPiece(); break;
+        case 'KeyP': togglePause(); break;
+      }
+    });
+
+    /* Touch Gestures on Board */
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    boardCanvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      catSound.init();
+      const t = e.touches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+      touchStartTime = performance.now();
+    }, { passive: false });
+
+    boardCanvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      const t = e.touches[0];
+      const dx = t.clientX - touchStartX;
+      const dy = t.clientY - touchStartY;
+
+      if (Math.abs(dx) > blockSize) {
+        if (dx > 0) moveRight();
+        else moveLeft();
+        touchStartX = t.clientX;
+      }
+      if (dy > blockSize * 1.5) {
+        softDrop();
+        touchStartY = t.clientY;
+      }
+    }, { passive: false });
+
+    boardCanvas.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      const dt = performance.now() - touchStartTime;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - touchStartX;
+      const dy = t.clientY - touchStartY;
+
+      if (dt < 220 && Math.abs(dx) < 15 && Math.abs(dy) < 15) {
+        rotatePiece(1);
+      }
+    }, { passive: false });
+
+    /* Header Buttons */
+    function togglePause() {
+      if (!isPlaying || isGameOver) return;
+      isPaused = !isPaused;
+      document.getElementById('btn-pause').textContent = isPaused ? '▶' : '⏸';
+      if (isPaused) {
+        document.getElementById('overlay-title').textContent = 'CAT NAP 💤';
+        document.getElementById('overlay-stats').style.display = 'none';
+        document.getElementById('btn-play').textContent = 'WAKE UP 🐾';
+        document.getElementById('game-overlay').classList.add('active');
+      } else {
+        document.getElementById('game-overlay').classList.remove('active');
+        lastTime = performance.now();
+        requestAnimationFrame(gameLoop);
+      }
+    }
+
+    bindTouchButton('btn-pause', togglePause);
+
+    document.getElementById('btn-sound').addEventListener('click', () => {
+      catSound.enabled = !catSound.enabled;
+      document.getElementById('btn-sound').textContent = catSound.enabled ? '🔊' : '🔇';
+    });
+
+    document.getElementById('btn-theme').addEventListener('click', () => {
+      const cur = document.body.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.body.setAttribute('data-theme', next);
+      localStorage.setItem('catris_theme', next);
+      document.getElementById('btn-theme').textContent = next === 'dark' ? '🌙' : '☀️';
+      draw();
+      renderPreviews();
+    });
+
+    const btnPlay = document.getElementById('btn-play');
+    const gameOverlay = document.getElementById('game-overlay');
+
+    function executeStartGame() {
+      try {
+        catSound.init();
+      } catch (e) {}
+      
+      if (isPaused) {
+        togglePause();
+      } else {
+        startGame();
+      }
+    }
+
+    // Attach to both the button AND the entire overlay (so tapping anywhere starts!)
+    btnPlay.addEventListener('click', (e) => {
+      e.stopPropagation();
+      executeStartGame();
+    });
+    btnPlay.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      executeStartGame();
+    }, { passive: false });
+
+    // Also tap overlay to start
+    gameOverlay.addEventListener('click', (e) => {
+      executeStartGame();
+    });
+    gameOverlay.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      executeStartGame();
+    }, { passive: false });
+
+    // Theme Restore
+    const savedTheme = localStorage.getItem('catris_theme') || 'dark';
+    document.body.setAttribute('data-theme', savedTheme);
+    document.getElementById('btn-theme').textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+
+    resizeBoard();
+    draw();
+  </script>
+</body>
+</html>
