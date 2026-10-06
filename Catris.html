@@ -549,22 +549,30 @@ Catris.html
 
   <!-- Play Area -->
   <div class="game-container">
+    <!-- Hold Box Left (Cat Box) -->
+    <div class="side-panel">
+      <div class="panel-box">
+        <span class="panel-title">📦 Box</span>
+        <canvas id="hold-canvas" class="mini-canvas" width="50" height="50"></canvas>
+      </div>
+      <div class="panel-box" style="margin-top:auto;">
+        <span class="panel-title">🏆 Best</span>
+        <span id="best-val" style="font-size:0.75rem; font-weight:800; color:var(--accent);">0</span>
+      </div>
+    </div>
+
     <!-- Center Cat Board -->
     <div class="board-wrapper">
       <canvas id="board-canvas"></canvas>
     </div>
 
-    <!-- Side Panel Right (Next Cats & Best Score) -->
+    <!-- Next Queue Right (Upcoming Cats) -->
     <div class="side-panel">
       <div class="panel-box">
         <span class="panel-title">Next</span>
         <canvas id="next1-canvas" class="mini-canvas" width="50" height="50"></canvas>
         <canvas id="next2-canvas" class="mini-canvas" width="50" height="42"></canvas>
         <canvas id="next3-canvas" class="mini-canvas" width="50" height="42"></canvas>
-      </div>
-      <div class="panel-box" style="margin-top:auto;">
-        <span class="panel-title">🏆 Best</span>
-        <span id="best-val" style="font-size:0.78rem; font-weight:800; color:var(--accent);">0</span>
       </div>
     </div>
   </div>
@@ -579,10 +587,11 @@ Catris.html
       <button class="t-btn" id="ctrl-right" style="grid-column: 3; grid-row: 2;" title="Move Right">▶</button>
     </div>
 
-    <!-- Right Cluster: Rotations -->
-    <div class="action-cluster" style="display: flex; gap: 8px;">
-      <button class="t-btn" id="ctrl-ccw" style="flex: 1;" title="Rotate Counter-Clockwise">⟲</button>
-      <button class="t-btn btn-rotate-cw" id="ctrl-cw" style="flex: 1.8;" title="Rotate Clockwise">ROTATE ⟳</button>
+    <!-- Right Cluster: Rotations & Box -->
+    <div class="action-cluster">
+      <button class="t-btn btn-hold" id="ctrl-hold" title="Put in Box (Hold)">📦 BOX</button>
+      <button class="t-btn" id="ctrl-ccw" title="Rotate Counter-Clockwise">⟲</button>
+      <button class="t-btn btn-rotate-cw" id="ctrl-cw" style="grid-column: span 2;" title="Rotate Clockwise">ROTATE ⟳</button>
     </div>
   </div>
 
@@ -1161,8 +1170,8 @@ Catris.html
 
     const boardCanvas = document.getElementById('board-canvas');
     const ctx = boardCanvas.getContext('2d');
-    const holdCanvas = document.getElementById('hold-canvas'); // removed
-    const holdCtx = holdCanvas ? holdCanvas.getContext('2d') : null;
+    const holdCanvas = document.getElementById('hold-canvas');
+    const holdCtx = holdCanvas.getContext('2d');
     const next1Canvas = document.getElementById('next1-canvas');
     const next1Ctx = next1Canvas.getContext('2d');
     const next2Canvas = document.getElementById('next2-canvas');
@@ -1174,7 +1183,7 @@ Catris.html
 
     function resizeBoard() {
       const availableH = window.innerHeight - 170;
-      const availableW = window.innerWidth - 78;
+      const availableW = window.innerWidth - 130;
       
       const maxBlockH = Math.floor(availableH / ROWS);
       const maxBlockW = Math.floor(availableW / COLS);
@@ -1509,6 +1518,7 @@ Catris.html
        CAT BLOCK DRAWING SYSTEM (Adapts to all 5 themes)
        ======================================================== */
     function drawCatBlock(cContext, x, y, size, catColor, earColor, role = 'body', isGhost = false) {
+      cContext.save();
       const radius = Math.floor(size * 0.22);
       const style = currentTheme.catStyle || 'cute';
 
@@ -1526,6 +1536,7 @@ Catris.html
           cContext.lineTo(x + size - 2, y + 1);
           cContext.stroke();
         }
+        cContext.restore();
         return;
       }
 
@@ -1684,18 +1695,26 @@ Catris.html
         cContext.arc(x + size * 0.65, y + size * 0.75, size * 0.05, 0, Math.PI * 2);
         cContext.fill();
       }
+      cContext.restore();
     }
 
     function draw() {
       ctx.clearRect(0, 0, boardCanvas.width, boardCanvas.height);
 
-      ctx.strokeStyle = currentTheme.id === 'cyber' ? 'rgba(0, 240, 255, 0.08)' : 'rgba(255, 255, 255, 0.04)';
+      // 1. Clean, isolated grid lines (can NEVER be corrupted by piece styles)
+      ctx.save();
+      ctx.strokeStyle = (currentTheme.id === 'cyber') ? 'rgba(0, 240, 255, 0.08)' : 'rgba(255, 255, 255, 0.04)';
       ctx.lineWidth = 1;
-
-      // Draw Grid & Locked Cats
       for (let r = 0; r < ROWS; r++) {
         for (let c = 0; c < COLS; c++) {
           ctx.strokeRect(c * blockSize, r * blockSize, blockSize, blockSize);
+        }
+      }
+      ctx.restore();
+
+      // 2. Draw settled/locked cat blocks
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
           const cell = grid[r][c];
           if (cell !== 0) {
             drawCatBlock(ctx, c * blockSize, r * blockSize, blockSize, cell.color, cell.earColor, cell.role);
@@ -1703,7 +1722,7 @@ Catris.html
         }
       }
 
-      // Draw Falling Cat Piece (and Ghost)
+      // 3. Draw Ghost Cat (Landing Projection) & Active Falling Cat
       if (currentPiece && !isGameOver) {
         const pInfo = currentTheme.pieces[currentPiece.type];
         const shape = PIECE_SHAPES[currentPiece.type][currentPiece.rot];
@@ -1715,7 +1734,16 @@ Catris.html
           }
         }
 
-        // Ghost piece removed per user preference
+        // Ghost Cat Projection
+        const ghostR = getGhostRow();
+        filledBlocks.forEach((b, idx) => {
+          const br = ghostR + b.r;
+          const bc = currentPiece.c + b.c;
+          if (br >= 0 && br < ROWS) {
+            let role = (idx === 0) ? 'head' : (idx === filledBlocks.length - 1 ? 'tail' : 'body');
+            drawCatBlock(ctx, bc * blockSize, br * blockSize, blockSize, pInfo.color, pInfo.earColor, role, true);
+          }
+        });
 
         // Active Falling Cat
         filledBlocks.forEach((b, idx) => {
@@ -1755,7 +1783,7 @@ Catris.html
     }
 
     function renderPreviews() {
-      // hold canvas removed
+      drawMiniCatPiece(holdCtx, holdPiece, holdCanvas.width, holdCanvas.height);
       drawMiniCatPiece(next1Ctx, nextQueue[0], next1Canvas.width, next1Canvas.height);
       drawMiniCatPiece(next2Ctx, nextQueue[1], next2Canvas.width, next2Canvas.height);
       drawMiniCatPiece(next3Ctx, nextQueue[2], next3Canvas.width, next3Canvas.height);
@@ -1814,6 +1842,7 @@ Catris.html
     }
 
     bindTouchButton('ctrl-hard', hardDrop);
+    bindTouchButton('ctrl-hold', holdCurrentPiece);
     bindTouchButton('ctrl-cw', () => rotatePiece(1));
     bindTouchButton('ctrl-ccw', () => rotatePiece(-1));
     
