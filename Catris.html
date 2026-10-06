@@ -1,3 +1,7 @@
+
+Catris.html
+
+100%
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,36 +24,16 @@
       --accent-glow: rgba(244, 114, 182, 0.4);
       --board-bg: #080c14;
       --grid-line: rgba(255, 255, 255, 0.04);
+      --board-glow: rgba(244, 114, 182, 0.15);
 
-      /* Cat Breed Colors */
-      --cat-I: #38bdf8; /* Longcat - Sky Blue */
-      --cat-J: #60a5fa; /* Russian Blue - Indigo */
-      --cat-L: #fb923c; /* Ginger Tabby - Orange */
-      --cat-O: #fbbf24; /* Golden Loaf - Amber */
-      --cat-S: #34d399; /* Mint Shorthair - Emerald */
-      --cat-T: #c084fc; /* Lavender Sploot - Purple */
-      --cat-Z: #f87171; /* Playful Calico - Coral Red */
-    }
-
-    [data-theme="light"] {
-      --bg: #faf5ef;
-      --surface: #ffffff;
-      --surface-2: #f3eae0;
-      --border: #e2d5c5;
-      --text: #2d241e;
-      --text-muted: #7c6f64;
-      --accent: #ec4899;
-      --accent-glow: rgba(236, 72, 153, 0.3);
-      --board-bg: #fffbf7;
-      --grid-line: rgba(0, 0, 0, 0.05);
-
-      --cat-I: #0284c7;
-      --cat-J: #2563eb;
-      --cat-L: #ea580c;
-      --cat-O: #d97706;
-      --cat-S: #059669;
-      --cat-T: #9333ea;
-      --cat-Z: #dc2626;
+      /* Theme 1: Calico Default */
+      --cat-I: #38bdf8;
+      --cat-J: #60a5fa;
+      --cat-L: #fb923c;
+      --cat-O: #fbbf24;
+      --cat-S: #34d399;
+      --cat-T: #c084fc;
+      --cat-Z: #f87171;
     }
 
     * {
@@ -70,7 +54,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      transition: background-color 0.2s, color 0.2s;
+      transition: background-color 0.25s, color 0.25s;
     }
 
     /* Header */
@@ -95,17 +79,12 @@
       font-size: 1.15rem;
       font-weight: 900;
       letter-spacing: 0.08em;
-      background: linear-gradient(135deg, #f472b6, #fb923c);
+      background: linear-gradient(135deg, var(--accent), #fb923c);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       display: flex;
       align-items: center;
       gap: 4px;
-    }
-
-    .cat-paw-icon {
-      font-size: 1.1rem;
-      -webkit-text-fill-color: initial;
     }
 
     .stats-bar {
@@ -158,9 +137,12 @@
       font-size: 0.95rem;
       cursor: pointer;
       touch-action: manipulation;
+      transition: transform 0.1s, background 0.15s;
     }
     .btn-icon:active {
       transform: scale(0.92);
+      background: var(--accent);
+      color: #0b0f19;
     }
 
     /* Game Play Area */
@@ -219,7 +201,7 @@
       background: var(--surface);
       border: 2px solid var(--border);
       border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 20px var(--board-glow);
       overflow: hidden;
       display: flex;
       align-items: center;
@@ -232,18 +214,18 @@
       touch-action: none;
     }
 
-    /* Floating Particles (Hearts / Paws) */
+    /* Floating Particles */
     .particle {
       position: absolute;
       pointer-events: none;
-      animation: float-up 0.8s forwards ease-out;
-      font-size: 1.2rem;
+      animation: float-up 0.85s forwards ease-out;
+      font-size: 1.3rem;
       z-index: 40;
     }
 
     @keyframes float-up {
       0% { transform: translateY(0) scale(0.6); opacity: 1; }
-      100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
+      100% { transform: translateY(-45px) scale(1.3); opacity: 0; }
     }
 
     /* Touch Control Pad */
@@ -290,12 +272,12 @@
     .t-btn:active {
       transform: scale(0.92);
       background: var(--accent);
-      color: #0f172a;
+      color: #0b0f19;
     }
 
     .btn-rotate-cw {
-      background: linear-gradient(135deg, #f472b6, #fb923c);
-      color: #ffffff;
+      background: linear-gradient(135deg, var(--accent), #fb923c);
+      color: #0b0f19;
       border: none;
       font-size: 1.15rem;
       font-weight: 900;
@@ -308,7 +290,7 @@
     .btn-hard-drop {
       color: #fbbf24;
       font-weight: 900;
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
     .btn-hold {
@@ -317,7 +299,7 @@
       letter-spacing: 0.04em;
     }
 
-    /* Overlays */
+    /* Full-Screen Overlays (Modals) */
     .overlay-screen {
       position: fixed;
       top: 0;
@@ -332,7 +314,7 @@
       justify-content: center;
       z-index: 9999;
       touch-action: manipulation;
-      cursor: pointer;
+      padding: 16px;
     }
     .overlay-screen.active {
       display: flex;
@@ -342,59 +324,200 @@
       background: var(--surface);
       border: 2px solid var(--border);
       border-radius: 16px;
-      padding: 24px 28px;
+      padding: 24px 26px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
-      max-width: 320px;
-      width: 88%;
-      cursor: default;
+      gap: 14px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65);
+      max-width: 330px;
+      width: 90%;
+      text-align: center;
     }
 
     .overlay-title {
-      font-size: 1.9rem;
+      font-size: 1.85rem;
       font-weight: 900;
       letter-spacing: 0.06em;
-      background: linear-gradient(135deg, #f472b6, #fbbf24);
+      background: linear-gradient(135deg, var(--accent), #fbbf24);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-align: center;
     }
 
     .overlay-score-card {
-      background: var(--surface);
+      background: var(--surface-2);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 12px 22px;
+      padding: 10px 20px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      text-align: center;
+      gap: 3px;
+      width: 100%;
     }
 
     .btn-start {
       touch-action: manipulation;
-      background: linear-gradient(135deg, #f472b6, #fb923c);
+      background: linear-gradient(135deg, var(--accent), #fb923c);
       color: #0b0f19;
       border: none;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 900;
       letter-spacing: 0.05em;
       padding: 14px 44px;
       min-width: 180px;
       border-radius: 999px;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(244, 114, 182, 0.5);
-      transition: transform 0.1s, box-shadow 0.1s;
+      box-shadow: 0 4px 20px var(--accent-glow);
+      transition: transform 0.1s;
     }
     .btn-start:active {
       transform: scale(0.95);
     }
+
+    /* Leaderboard Styling */
+    .lb-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0;
+      font-size: 0.82rem;
+    }
+    .lb-table th {
+      color: var(--text-muted);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .lb-table td {
+      padding: 7px 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .lb-rank {
+      font-weight: 900;
+      color: var(--accent);
+      width: 32px;
+    }
+    .lb-initials {
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--text);
+    }
+    .lb-score {
+      font-weight: 900;
+      text-align: right;
+      color: #fbbf24;
+      font-variant-numeric: tabular-nums;
+    }
+    .lb-meta {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .initials-input-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 10px 0;
+    }
+    .initials-box {
+      width: 48px;
+      height: 54px;
+      background: var(--surface-2);
+      border: 2px solid var(--accent);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1.8rem;
+      font-weight: 900;
+      text-align: center;
+      text-transform: uppercase;
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    /* Theme Picker Grid */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      width: 100%;
+      max-height: 52vh;
+      overflow-y: auto;
+      padding: 4px 2px;
+    }
+
+    .theme-card {
+      background: var(--surface-2);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: left;
+    }
+    .theme-card.active {
+      border-color: var(--accent);
+      background: rgba(244, 114, 182, 0.12);
+      box-shadow: 0 0 14px var(--accent-glow);
+    }
+
+    .theme-card-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .theme-card-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .theme-card-desc {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .theme-swatches {
+      display: flex;
+      gap: 3px;
+    }
+    .swatch-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .btn-secondary {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .btn-secondary:active {
+      background: var(--border);
+    }
+
+    .sync-status {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
   </style>
 </head>
-<body data-theme="dark">
+<body data-theme="calico">
 
   <header>
     <div class="brand">
@@ -417,8 +540,9 @@
     </div>
 
     <div class="header-btns">
+      <button class="btn-icon" id="btn-theme" title="Select Cat Theme (5 Options)">🎨</button>
+      <button class="btn-icon" id="btn-leaderboard" title="Top 5 High Scores">🏆</button>
       <button class="btn-icon" id="btn-sound" title="Toggle Meows & Purrs">🔊</button>
-      <button class="btn-icon" id="btn-theme" title="Toggle Theme">🌙</button>
       <button class="btn-icon" id="btn-pause" title="Pause Game">⏸</button>
     </div>
   </header>
@@ -440,20 +564,6 @@
     <!-- Center Cat Board -->
     <div class="board-wrapper">
       <canvas id="board-canvas"></canvas>
-    </div>
-
-    <!-- Start / Game Over / Pause Overlay (Fixed Full Screen) -->
-    <div class="overlay-screen active" id="game-overlay">
-      <div class="overlay-content">
-        <div class="overlay-title" id="overlay-title">🐱 CATRIS 🐾</div>
-        <div style="font-size:0.85rem; color:var(--text-muted); font-weight:600; text-align:center; max-width:260px;">Stack the sleeping cats into cozy lines!</div>
-        <div class="overlay-score-card" id="overlay-stats" style="display:none;">
-          <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">FISH CAUGHT</span>
-          <span id="final-score" style="font-size:1.5rem; font-weight:900; color:var(--accent);">0</span>
-        </div>
-        <button class="btn-start" id="btn-play" onclick="executeStartGame()">PLAY 🐾</button>
-        <span style="font-size:0.72rem; color:var(--text-muted); font-weight:600; margin-top:2px;">(or tap anywhere to start)</span>
-      </div>
     </div>
 
     <!-- Next Queue Right (Upcoming Cats) -->
@@ -485,97 +595,262 @@
     </div>
   </div>
 
+  <!-- 1. Start / Pause / Game Over Screen (Fixed Full Screen Modal) -->
+  <div class="overlay-screen active" id="game-overlay">
+    <div class="overlay-content">
+      <div class="overlay-title" id="overlay-title">🐱 CATRIS 🐾</div>
+      <div style="font-size:0.85rem; color:var(--text-muted); font-weight:600; text-align:center;" id="overlay-msg">Stack the sleeping cats into cozy lines!</div>
+      <div class="overlay-score-card" id="overlay-stats" style="display:none;">
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">FISH CAUGHT</span>
+        <span id="final-score" style="font-size:1.5rem; font-weight:900; color:var(--accent);">0</span>
+      </div>
+      <button class="btn-start" id="btn-play">PLAY 🐾</button>
+      <span style="font-size:0.72rem; color:var(--text-muted); font-weight:600; margin-top:2px;">(or tap anywhere to start)</span>
+    </div>
+  </div>
+
+  <!-- 2. New High Score Initials Prompt Modal -->
+  <div class="overlay-screen" id="initials-overlay">
+    <div class="overlay-content">
+      <div class="overlay-title" style="font-size:1.6rem;">🏆 NEW TOP 5! 🐾</div>
+      <div style="font-size:0.85rem; color:var(--text-muted); font-weight:700;" id="high-score-rank-text">You earned Rank #1!</div>
+      <div style="font-size:1.5rem; font-weight:900; color:#fbbf24;" id="high-score-val-text">14,250 pts</div>
+      
+      <div style="margin:4px 0;">
+        <span style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">ENTER YOUR 3 INITIALS:</span>
+        <div class="initials-input-container">
+          <input type="text" id="input-initials" class="initials-box" maxlength="3" autofocus placeholder="CAT" autocomplete="off" autocapitalize="characters">
+        </div>
+      </div>
+
+      <button class="btn-start" id="btn-save-initials">SAVE INITIALS 🐾</button>
+    </div>
+  </div>
+
+  <!-- 3. Top 5 Leaderboard Modal -->
+  <div class="overlay-screen" id="leaderboard-overlay">
+    <div class="overlay-content" style="max-width:340px;">
+      <div class="overlay-title" style="font-size:1.5rem;">🏆 TOP 5 HEROES 🐾</div>
+      <div class="sync-status" id="lb-sync-status">🟢 Synced Across Devices</div>
+
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th style="text-align:left;">Rank</th>
+            <th style="text-align:left;">Hero</th>
+            <th style="text-align:right;">Fish</th>
+            <th style="text-align:right;">Level</th>
+          </tr>
+        </thead>
+        <tbody id="lb-table-body">
+          <!-- Filled dynamically -->
+        </tbody>
+      </table>
+
+      <div style="display:flex; gap:8px; width:100%; margin-top:4px;">
+        <button class="btn-secondary" id="btn-sync-lb" style="flex:1;">🔄 Refresh</button>
+        <button class="btn-secondary" id="btn-close-lb" style="flex:1;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Theme Selection Modal (5 Options) -->
+  <div class="overlay-screen" id="theme-overlay">
+    <div class="overlay-content" style="max-width:340px;">
+      <div class="overlay-title" style="font-size:1.5rem;">🎨 SELECT CAT THEME</div>
+      <div style="font-size:0.75rem; color:var(--text-muted); font-weight:600;">Choose your favorite cat design & colors:</div>
+
+      <div class="theme-grid" id="theme-grid-container">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <button class="btn-secondary" id="btn-close-theme" style="width:100%; margin-top:6px;">Done</button>
+    </div>
+  </div>
+
   <script>
-    /* Cat Piece Definitions with Head, Body, Tail Semantic Roles */
-    const CAT_PIECES = {
-      I: {
-        breed: 'Longcat',
-        color: '#38bdf8', // Sky Cyan
-        darkColor: '#0284c7',
-        earColor: '#f472b6',
-        bellyColor: '#bae6fd',
-        shapes: [
-          [[0,0,0,0], [1,1,1,1], [0,0,0,0], [0,0,0,0]],
-          [[0,0,1,0], [0,0,1,0], [0,0,1,0], [0,0,1,0]],
-          [[0,0,0,0], [0,0,0,0], [1,1,1,1], [0,0,0,0]],
-          [[0,1,0,0], [0,1,0,0], [0,1,0,0], [0,1,0,0]]
-        ]
+    /* ========================================================
+       5 DISTINCT CAT THEMES (Colors, Styles, & Personalities)
+       ======================================================== */
+    const CAT_THEMES = {
+      calico: {
+        id: 'calico',
+        name: 'Cozy Calico ☕',
+        desc: 'Beloved pastel sleeping cats, pink ears, & toe beans',
+        bg: '#0b0f19',
+        surface: '#141a29',
+        surface2: '#1e2638',
+        border: '#2d3748',
+        text: '#f8fafc',
+        accent: '#f472b6',
+        boardBg: '#080c14',
+        catStyle: 'cute', // cute arched eyes, pink inner ears, toe beans
+        swatches: ['#38bdf8', '#fb923c', '#fbbf24', '#34d399', '#c084fc'],
+        pieces: {
+          I: { color: '#38bdf8', earColor: '#f472b6', bellyColor: '#bae6fd', breed: 'Longcat' },
+          J: { color: '#60a5fa', earColor: '#f472b6', bellyColor: '#bfdbfe', breed: 'Russian Blue' },
+          L: { color: '#fb923c', earColor: '#f87171', bellyColor: '#fed7aa', breed: 'Ginger Tabby' },
+          O: { color: '#fbbf24', earColor: '#f87171', bellyColor: '#fef08a', breed: 'Golden Loaf' },
+          S: { color: '#34d399', earColor: '#f472b6', bellyColor: '#a7f3d0', breed: 'Mint Shorthair' },
+          T: { color: '#c084fc', earColor: '#f472b6', bellyColor: '#e9d5ff', breed: 'Lavender Sploot' },
+          Z: { color: '#f87171', earColor: '#fbbf24', bellyColor: '#fecaca', breed: 'Playful Calico' }
+        }
       },
-      J: {
-        breed: 'Russian Blue',
-        color: '#60a5fa', // Soft Blue
-        darkColor: '#2563eb',
-        earColor: '#f472b6',
-        bellyColor: '#bfdbfe',
-        shapes: [
-          [[1,0,0], [1,1,1], [0,0,0]],
-          [[0,1,1], [0,1,0], [0,1,0]],
-          [[0,0,0], [1,1,1], [0,0,1]],
-          [[0,1,0], [0,1,0], [1,1,0]]
-        ]
+      cyber: {
+        id: 'cyber',
+        name: 'Cyber Neko ⚡',
+        desc: 'Neon synthwave cats with glowing visors & circuits',
+        bg: '#04060d',
+        surface: '#0b101e',
+        surface2: '#141c30',
+        border: '#1f2e4d',
+        text: '#f8fafc',
+        accent: '#00f0ff',
+        boardBg: '#020308',
+        catStyle: 'cyber', // glowing visor eyes, neon ear tips, circuit traces
+        swatches: ['#00f0ff', '#ff007f', '#ff7700', '#ffe600', '#39ff14'],
+        pieces: {
+          I: { color: '#00f0ff', earColor: '#ff007f', bellyColor: '#a5f3fc', breed: 'Laser Noodle' },
+          J: { color: '#3b82f6', earColor: '#00f0ff', bellyColor: '#93c5fd', breed: 'Glitch Cat' },
+          L: { color: '#ff7700', earColor: '#ffe600', bellyColor: '#fdba74', breed: 'Solar Flare' },
+          O: { color: '#ffe600', earColor: '#ff0055', bellyColor: '#fef08a', breed: 'Cyber Chonk' },
+          S: { color: '#39ff14', earColor: '#00f0ff', bellyColor: '#86efac', breed: 'Matrix Neko' },
+          T: { color: '#b026ff', earColor: '#00f0ff', bellyColor: '#d8b4fe', breed: 'Synthwave Purr' },
+          Z: { color: '#ff0055', earColor: '#ffe600', bellyColor: '#fca5a5', breed: 'Overdrive' }
+        }
       },
-      L: {
-        breed: 'Ginger Tabby',
-        color: '#fb923c', // Orange
-        darkColor: '#ea580c',
-        earColor: '#f87171',
-        bellyColor: '#fed7aa',
-        shapes: [
-          [[0,0,1], [1,1,1], [0,0,0]],
-          [[0,1,0], [0,1,0], [0,1,1]],
-          [[0,0,0], [1,1,1], [1,0,0]],
-          [[1,1,0], [0,1,0], [0,1,0]]
-        ]
+      bakery: {
+        id: 'bakery',
+        name: 'Bakery Kitties 🥐',
+        desc: 'Freshly baked loaf cats, baguettes, & pat of butter',
+        bg: '#140e0a',
+        surface: '#1f1712',
+        surface2: '#2c211b',
+        border: '#453328',
+        text: '#fdf6ee',
+        accent: '#f59e0b',
+        boardBg: '#0d0806',
+        catStyle: 'bread', // toasted bread crust, pat of butter, baker smile
+        swatches: ['#d97706', '#ea580c', '#f59e0b', '#10b981', '#a855f7'],
+        pieces: {
+          I: { color: '#d97706', earColor: '#fbbf24', bellyColor: '#fef3c7', breed: 'Baguette Longcat' },
+          J: { color: '#6366f1', earColor: '#c7d2fe', bellyColor: '#e0e7ff', breed: 'Blueberry Danish' },
+          L: { color: '#ea580c', earColor: '#fcd34d', bellyColor: '#ffedd5', breed: 'Toasted Brioche' },
+          O: { color: '#f59e0b', earColor: '#fef08a', bellyColor: '#fef9c3', breed: 'Milk Loaf (Butter)' },
+          S: { color: '#10b981', earColor: '#a7f3d0', bellyColor: '#d1fae5', breed: 'Matcha Melonpan' },
+          T: { color: '#a855f7', earColor: '#e9d5ff', bellyColor: '#f3e8ff', breed: 'Taro Bun' },
+          Z: { color: '#ec4899', earColor: '#fbcfe8', bellyColor: '#fce7f3', breed: 'Strawberry Roll' }
+        }
       },
-      O: {
-        breed: 'Chonky Loaf',
-        color: '#fbbf24', // Golden Amber
-        darkColor: '#d97706',
-        earColor: '#f87171',
-        bellyColor: '#fef08a',
-        shapes: [
-          [[1,1], [1,1]]
-        ]
+      royal: {
+        id: 'royal',
+        name: 'Royal Aristocats 👑',
+        desc: 'Aristocratic felines with jewel tones & gold crowns',
+        bg: '#070c14',
+        surface: '#0d1726',
+        surface2: '#15243a',
+        border: '#20395c',
+        text: '#f8fafc',
+        accent: '#fbbf24',
+        boardBg: '#04080e',
+        catStyle: 'royal', // jeweled eyes, golden tiara/collar, pedigree markings
+        swatches: ['#fed7aa', '#38bdf8', '#eab308', '#059669', '#7c3aed'],
+        pieces: {
+          I: { color: '#fed7aa', earColor: '#1e3a8a', bellyColor: '#ffedd5', breed: 'Seal-Point Siamese' },
+          J: { color: '#475569', earColor: '#38bdf8', bellyColor: '#94a3b8', breed: 'Noble Russian' },
+          L: { color: '#d97706', earColor: '#f59e0b', bellyColor: '#fef3c7', breed: 'Royal Bengal' },
+          O: { color: '#eab308', earColor: '#fef08a', bellyColor: '#fef9c3', breed: 'Imperial Persian' },
+          S: { color: '#059669', earColor: '#34d399', bellyColor: '#a7f3d0', breed: 'Emerald Jade' },
+          T: { color: '#7c3aed', earColor: '#c084fc', bellyColor: '#ddd6fe', breed: 'Amethyst Prince' },
+          Z: { color: '#b91c1c', earColor: '#fbbf24', bellyColor: '#fecaca', breed: 'Ruby Empress' }
+        }
       },
-      S: {
-        breed: 'Mint Shorthair',
-        color: '#34d399', // Emerald Mint
-        darkColor: '#059669',
-        earColor: '#f472b6',
-        bellyColor: '#a7f3d0',
-        shapes: [
-          [[0,1,1], [1,1,0], [0,0,0]],
-          [[0,1,0], [0,1,1], [0,0,1]],
-          [[0,0,0], [0,1,1], [1,1,0]],
-          [[1,0,0], [1,1,0], [0,1,0]]
-        ]
-      },
-      T: {
-        breed: 'Sploot Cat',
-        color: '#c084fc', // Lavender
-        darkColor: '#9333ea',
-        earColor: '#f472b6',
-        bellyColor: '#e9d5ff',
-        shapes: [
-          [[0,1,0], [1,1,1], [0,0,0]],
-          [[0,1,0], [0,1,1], [0,1,0]],
-          [[0,0,0], [1,1,1], [0,1,0]],
-          [[0,1,0], [1,1,0], [0,1,0]]
-        ]
-      },
-      Z: {
-        breed: 'Playful Calico',
-        color: '#f87171', // Coral Red
-        darkColor: '#dc2626',
-        earColor: '#fbbf24',
-        bellyColor: '#fecaca',
-        shapes: [
-          [[1,1,0], [0,1,1], [0,0,0]],
-          [[0,0,1], [0,1,1], [0,1,0]],
-          [[0,0,0], [1,1,0], [0,1,1]],
-          [[0,1,0], [1,1,0], [1,0,0]]
-        ]
+      pixel: {
+        id: 'pixel',
+        name: 'Retro 8-Bit 👾',
+        desc: 'Arcade pixel-art alley cats & chunky square eyes',
+        bg: '#0d0d0d',
+        surface: '#181818',
+        surface2: '#242424',
+        border: '#383838',
+        text: '#ffffff',
+        accent: '#22d3ee',
+        boardBg: '#050505',
+        catStyle: 'pixel', // chunky 8-bit square eyes, pixel ears, arcade feel
+        swatches: ['#22d3ee', '#3b82f6', '#f97316', '#facc15', '#22c55e'],
+        pieces: {
+          I: { color: '#22d3ee', earColor: '#f472b6', bellyColor: '#a5f3fc', breed: 'Pixel Tom' },
+          J: { color: '#3b82f6', earColor: '#93c5fd', bellyColor: '#bfdbfe', breed: 'Alley Blue' },
+          L: { color: '#f97316', earColor: '#fdba74', bellyColor: '#fed7aa', breed: 'Stray Ginger' },
+          O: { color: '#facc15', earColor: '#fef08a', bellyColor: '#fef9c3', breed: 'Chonky 8-Bit' },
+          S: { color: '#22c55e', earColor: '#86efac', bellyColor: '#bbf7d0', breed: 'Junkyard Green' },
+          T: { color: '#a855f7', earColor: '#d8b4fe', bellyColor: '#e9d5ff', breed: 'Ghost Alley' },
+          Z: { color: '#ef4444', earColor: '#fca5a5', bellyColor: '#fecaca', breed: 'Street Red' }
+        }
       }
+    };
+
+    let currentTheme = CAT_THEMES[localStorage.getItem('catris_theme') || 'calico'] || CAT_THEMES.calico;
+
+    function applyTheme(themeKey) {
+      currentTheme = CAT_THEMES[themeKey] || CAT_THEMES.calico;
+      localStorage.setItem('catris_theme', currentTheme.id);
+
+      const r = document.documentElement;
+      r.style.setProperty('--bg', currentTheme.bg);
+      r.style.setProperty('--surface', currentTheme.surface);
+      r.style.setProperty('--surface-2', currentTheme.surface2);
+      r.style.setProperty('--border', currentTheme.border);
+      r.style.setProperty('--text', currentTheme.text);
+      r.style.setProperty('--accent', currentTheme.accent);
+      r.style.setProperty('--board-bg', currentTheme.boardBg);
+
+      renderThemeModal();
+      draw();
+      renderPreviews();
+    }
+
+    /* SRS Shapes for all 7 Tetrominoes */
+    const PIECE_SHAPES = {
+      I: [
+        [[0,0,0,0], [1,1,1,1], [0,0,0,0], [0,0,0,0]],
+        [[0,0,1,0], [0,0,1,0], [0,0,1,0], [0,0,1,0]],
+        [[0,0,0,0], [0,0,0,0], [1,1,1,1], [0,0,0,0]],
+        [[0,1,0,0], [0,1,0,0], [0,1,0,0], [0,1,0,0]]
+      ],
+      J: [
+        [[1,0,0], [1,1,1], [0,0,0]],
+        [[0,1,1], [0,1,0], [0,1,0]],
+        [[0,0,0], [1,1,1], [0,0,1]],
+        [[0,1,0], [0,1,0], [1,1,0]]
+      ],
+      L: [
+        [[0,0,1], [1,1,1], [0,0,0]],
+        [[0,1,0], [0,1,0], [0,1,1]],
+        [[0,0,0], [1,1,1], [1,0,0]],
+        [[1,1,0], [0,1,0], [0,1,0]]
+      ],
+      O: [
+        [[1,1], [1,1]]
+      ],
+      S: [
+        [[0,1,1], [1,1,0], [0,0,0]],
+        [[0,1,0], [0,1,1], [0,0,1]],
+        [[0,0,0], [0,1,1], [1,1,0]],
+        [[1,0,0], [1,1,0], [0,1,0]]
+      ],
+      T: [
+        [[0,1,0], [1,1,1], [0,0,0]],
+        [[0,1,0], [0,1,1], [0,1,0]],
+        [[0,0,0], [1,1,1], [0,0,0]],
+        [[0,1,0], [1,1,0], [0,1,0]]
+      ],
+      Z: [
+        [[1,1,0], [0,1,1], [0,0,0]],
+        [[0,0,1], [0,1,1], [0,1,0]],
+        [[0,0,0], [1,1,0], [0,1,1]],
+        [[0,1,0], [1,1,0], [1,0,0]]
+      ]
     };
 
     /* Standard SRS Wall Kick Offsets */
@@ -601,7 +876,116 @@
       '0->3': [[0,0], [-1,0], [2,0], [-1,2], [2,-1]]
     };
 
-    /* Cat Sound Synthesizer (Realistic Meows, Chirps & Purrs via Web Audio) */
+    /* ========================================================
+       TOP 5 HIGH SCORES & CROSS-DEVICE CLOUD SYNC
+       ======================================================== */
+    const DEFAULT_LEADERBOARD = [
+      { initials: 'NEK', score: 10000, level: 5, date: 'Oct 1' },
+      { initials: 'MEW', score: 7500, level: 4, date: 'Oct 2' },
+      { initials: 'PAW', score: 5000, level: 3, date: 'Oct 3' },
+      { initials: 'KIT', score: 3000, level: 2, date: 'Oct 4' },
+      { initials: 'CAT', score: 1500, level: 1, date: 'Oct 5' }
+    ];
+
+    // Shared Cloud Sync Endpoint (KVdb free public key for sjacobs1111/thegoo)
+    const CLOUD_SYNC_URL = 'https://kvdb.io/2uQ7wX9yK3mNpFtL8vR4bZ/catris_top5_v1';
+
+    let leaderboard = [];
+    try {
+      leaderboard = JSON.parse(localStorage.getItem('catris_leaderboard')) || DEFAULT_LEADERBOARD;
+    } catch (e) {
+      leaderboard = DEFAULT_LEADERBOARD;
+    }
+
+    let pendingHighScore = null;
+
+    function qualifiesForTop5(checkScore) {
+      if (checkScore <= 0) return false;
+      if (leaderboard.length < 5) return true;
+      return checkScore > leaderboard[leaderboard.length - 1].score;
+    }
+
+    function getRankForScore(checkScore) {
+      for (let i = 0; i < leaderboard.length; i++) {
+        if (checkScore > leaderboard[i].score) return i + 1;
+      }
+      return leaderboard.length + 1;
+    }
+
+    function saveLocalLeaderboard() {
+      try {
+        localStorage.setItem('catris_leaderboard', JSON.stringify(leaderboard));
+      } catch (e) {}
+    }
+
+    async function syncCloudLeaderboard() {
+      const syncStatusEl = document.getElementById('lb-sync-status');
+      try {
+        syncStatusEl.textContent = '🔄 Syncing with cloud...';
+        const res = await fetch(CLOUD_SYNC_URL, { cache: 'no-store' });
+        if (res.ok) {
+          const remoteData = await res.json();
+          if (Array.isArray(remoteData) && remoteData.length > 0) {
+            // Merge remote and local
+            const merged = [...leaderboard, ...remoteData];
+            merged.sort((a, b) => b.score - a.score);
+            
+            // Deduplicate
+            const unique = [];
+            const seen = new Set();
+            for (let entry of merged) {
+              const k = `${entry.initials}_${entry.score}`;
+              if (!seen.has(k)) {
+                seen.add(k);
+                unique.push(entry);
+              }
+            }
+            leaderboard = unique.slice(0, 5);
+            saveLocalLeaderboard();
+            renderLeaderboardTable();
+            syncStatusEl.textContent = '🟢 Synced Across Devices';
+            return;
+          }
+        }
+      } catch (e) {
+        // Offline or network error
+      }
+      syncStatusEl.textContent = '⚪ Offline (Saved on this phone)';
+    }
+
+    async function pushScoreToCloud(entry) {
+      try {
+        // Push full leaderboard to cloud
+        await fetch(CLOUD_SYNC_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(leaderboard)
+        });
+      } catch (e) {}
+    }
+
+    function renderLeaderboardTable() {
+      const tbody = document.getElementById('lb-table-body');
+      tbody.innerHTML = '';
+      leaderboard.forEach((entry, idx) => {
+        const tr = document.createElement('tr');
+        const medals = ['🥇', '🥈', '🥉', '4', '5'];
+        tr.innerHTML = `
+          <td class="lb-rank">${medals[idx]}</td>
+          <td class="lb-initials">${entry.initials}</td>
+          <td class="lb-score">${entry.score.toLocaleString()}</td>
+          <td class="lb-meta">Lv ${entry.level || 1} • ${entry.date || 'Today'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Update Best score in side panel
+      if (leaderboard[0]) {
+        document.getElementById('best-val').textContent = leaderboard[0].score;
+      }
+    }
+
+    /* Cat Sound Synthesizer (100% Fail-Safe Web Audio) */
     class CatSoundEngine {
       constructor() {
         this.ctx = null;
@@ -616,11 +1000,8 @@
           if (this.ctx && this.ctx.state === 'suspended') {
             this.ctx.resume().catch(() => {});
           }
-        } catch (e) {
-          // Audio disabled or blocked by browser policy
-        }
+        } catch (e) {}
       }
-      // Gentle Cat Step / Move
       move() {
         if (!this.enabled) return;
         this.init();
@@ -639,7 +1020,6 @@
           osc.stop(this.ctx.currentTime + 0.05);
         } catch (e) {}
       }
-      // Cat Chirp / Mrrp on Rotate
       rotate() {
         if (!this.enabled) return;
         this.init();
@@ -659,7 +1039,6 @@
           osc.stop(t + 0.08);
         } catch (e) {}
       }
-      // Cat Pounce Thud
       pounce() {
         if (!this.enabled) return;
         this.init();
@@ -679,7 +1058,6 @@
           osc.stop(t + 0.12);
         } catch (e) {}
       }
-      // Authentic Cat Meow on Line Clear!
       meow(pitchMultiplier = 1.0) {
         if (!this.enabled) return;
         this.init();
@@ -691,8 +1069,6 @@
           const t = this.ctx.currentTime;
           const dur = 0.38;
 
-          // "m-e-o-w" frequency contour:
-          // start ~380Hz, glide up to ~740Hz, then glide down to ~480Hz
           const f0 = 380 * pitchMultiplier;
           const fPeak = 740 * pitchMultiplier;
           const fEnd = 460 * pitchMultiplier;
@@ -711,7 +1087,6 @@
           osc.stop(t + dur);
         } catch (e) {}
       }
-      // Enthusiastic Purr & Happy Meow on 4-line Catris!
       catrisPurr() {
         if (!this.enabled) return;
         this.init();
@@ -720,7 +1095,6 @@
           this.meow(1.15);
           setTimeout(() => this.meow(1.3), 120);
 
-          // Deep Purring Rumble
           const osc = this.ctx.createOscillator();
           const mod = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
@@ -729,7 +1103,6 @@
           osc.type = 'sine';
           osc.frequency.setValueAtTime(85, this.ctx.currentTime);
 
-          // Tremolo LFO for purr texture
           mod.type = 'sawtooth';
           mod.frequency.setValueAtTime(26, this.ctx.currentTime);
           modGain.gain.setValueAtTime(40, this.ctx.currentTime);
@@ -748,7 +1121,6 @@
           mod.stop(this.ctx.currentTime + 0.65);
         } catch (e) {}
       }
-      // Sad Mew on Game Over
       sadMew() {
         if (!this.enabled) return;
         this.init();
@@ -771,7 +1143,7 @@
     }
     const catSound = new CatSoundEngine();
 
-    /* Board & Game State */
+    /* Board & Game Engine */
     const COLS = 10;
     const ROWS = 20;
     let grid = Array(ROWS).fill(null).map(() => Array(COLS).fill(0));
@@ -779,15 +1151,13 @@
     let score = 0;
     let lines = 0;
     let level = 1;
-    let highScore = parseInt(localStorage.getItem('catris_high_score') || '0', 10);
-    document.getElementById('best-val').textContent = highScore;
 
     let bag = [];
     let nextQueue = [];
     let holdPiece = null;
     let canHold = true;
 
-    let currentPiece = null; // { type, rot, r, c }
+    let currentPiece = null;
     let isGameOver = false;
     let isPaused = false;
     let isPlaying = false;
@@ -798,7 +1168,6 @@
     let lockTimer = 0;
     let isLocking = false;
 
-    /* Canvas Elements */
     const boardCanvas = document.getElementById('board-canvas');
     const ctx = boardCanvas.getContext('2d');
     const holdCanvas = document.getElementById('hold-canvas');
@@ -826,7 +1195,6 @@
     }
     window.addEventListener('resize', resizeBoard);
 
-    /* 7-Bag Randomizer */
     function fillBag() {
       const types = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'];
       for (let i = types.length - 1; i > 0; i--) {
@@ -851,7 +1219,7 @@
         type: pieceType,
         rot: 0,
         r: 0,
-        c: Math.floor((COLS - CAT_PIECES[pieceType].shapes[0][0].length) / 2)
+        c: Math.floor((COLS - PIECE_SHAPES[pieceType][0][0].length) / 2)
       };
 
       canHold = true;
@@ -867,7 +1235,7 @@
 
     function collides(rOffset, cOffset, rot, type = currentPiece?.type) {
       if (!type) return false;
-      const shape = CAT_PIECES[type].shapes[rot];
+      const shape = PIECE_SHAPES[type][rot];
       for (let r = 0; r < shape.length; r++) {
         for (let c = 0; c < shape[r].length; c++) {
           if (shape[r][c]) {
@@ -890,7 +1258,6 @@
       return ghostR;
     }
 
-    /* Cat Controls with SRS */
     function moveLeft() {
       if (!isPlaying || isPaused || isGameOver || !currentPiece) return;
       if (!collides(currentPiece.r, currentPiece.c - 1, currentPiece.rot)) {
@@ -937,7 +1304,7 @@
 
     function rotatePiece(direction) {
       if (!isPlaying || isPaused || isGameOver || !currentPiece) return;
-      const numRot = CAT_PIECES[currentPiece.type].shapes.length;
+      const numRot = PIECE_SHAPES[currentPiece.type].length;
       if (numRot === 1) return;
 
       const oldRot = currentPiece.rot;
@@ -978,12 +1345,10 @@
       draw();
     }
 
-    /* Lock Piece & Cat Lines */
     function lockPiece() {
-      const shape = CAT_PIECES[currentPiece.type].shapes[currentPiece.rot];
-      const pInfo = CAT_PIECES[currentPiece.type];
+      const shape = PIECE_SHAPES[currentPiece.type][currentPiece.rot];
+      const pInfo = currentTheme.pieces[currentPiece.type];
 
-      // Identify head block (first non-zero block) and tail block (last block)
       let filledBlocks = [];
       for (let r = 0; r < shape.length; r++) {
         for (let c = 0; c < shape[r].length; c++) {
@@ -995,7 +1360,6 @@
         const br = currentPiece.r + b.r;
         const bc = currentPiece.c + b.c;
         if (br >= 0 && br < ROWS && bc >= 0 && bc < COLS) {
-          // Store cell metadata: color, role ('head', 'body', 'tail')
           let role = 'body';
           if (idx === 0) role = 'head';
           else if (idx === filledBlocks.length - 1) role = 'tail';
@@ -1060,12 +1424,6 @@
       document.getElementById('score-val').textContent = score;
       document.getElementById('lines-val').textContent = lines;
       document.getElementById('level-val').textContent = level;
-
-      if (score > highScore) {
-        highScore = score;
-        localStorage.setItem('catris_high_score', highScore);
-        document.getElementById('best-val').textContent = highScore;
-      }
     }
 
     function triggerGameOver() {
@@ -1074,11 +1432,30 @@
       catSound.sadMew();
       window.navigator?.vibrate?.([100, 50, 150]);
 
-      document.getElementById('overlay-title').textContent = 'GAME OVER 😿';
-      document.getElementById('final-score').textContent = score;
-      document.getElementById('overlay-stats').style.display = 'flex';
-      document.getElementById('btn-play').textContent = 'PLAY AGAIN 🐾';
-      document.getElementById('game-overlay').classList.add('active');
+      // Check if qualifies for Top 5 Leaderboard!
+      if (qualifiesForTop5(score)) {
+        pendingHighScore = {
+          score: score,
+          level: level,
+          lines: lines,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        };
+        const rank = getRankForScore(score);
+        document.getElementById('high-score-rank-text').textContent = `🐾 You earned Rank #${rank}!`;
+        document.getElementById('high-score-val-text').textContent = `${score.toLocaleString()} pts`;
+        
+        const lastInit = localStorage.getItem('catris_last_initials') || 'CAT';
+        document.getElementById('input-initials').value = lastInit;
+        
+        document.getElementById('initials-overlay').classList.add('active');
+      } else {
+        document.getElementById('overlay-title').textContent = 'GAME OVER 😿';
+        document.getElementById('overlay-msg').textContent = 'Good effort! Want to try again?';
+        document.getElementById('final-score').textContent = score;
+        document.getElementById('overlay-stats').style.display = 'flex';
+        document.getElementById('btn-play').textContent = 'PLAY AGAIN 🐾';
+        document.getElementById('game-overlay').classList.add('active');
+      }
     }
 
     function startGame() {
@@ -1101,12 +1478,15 @@
 
       updateStats();
       document.getElementById('game-overlay').classList.remove('active');
+      document.getElementById('initials-overlay').classList.remove('active');
+      document.getElementById('leaderboard-overlay').classList.remove('active');
+      document.getElementById('theme-overlay').classList.remove('active');
+
       spawnPiece();
       lastTime = performance.now();
       requestAnimationFrame(gameLoop);
     }
 
-    /* Game Loop */
     function gameLoop(time) {
       if (!isPlaying || isPaused || isGameOver) return;
       const deltaTime = time - lastTime;
@@ -1135,142 +1515,179 @@
     }
 
     /* ========================================================
-       CAT BLOCK & CAT PIECE RENDERING
-       Draws ears, sleeping faces, paws, and tails on tetrominoes
+       CAT BLOCK DRAWING SYSTEM (Adapts to all 5 themes)
        ======================================================== */
     function drawCatBlock(cContext, x, y, size, catColor, earColor, role = 'body', isGhost = false) {
       const radius = Math.floor(size * 0.22);
+      const style = currentTheme.catStyle || 'cute';
 
       if (isGhost) {
         cContext.strokeStyle = catColor;
         cContext.lineWidth = 1.5;
-        // Outline block with ears
         cContext.strokeRect(x + 1, y + 1, size - 2, size - 2);
         if (role === 'head') {
-          // Ghost ears
           cContext.beginPath();
           cContext.moveTo(x + 2, y + 1);
-          cContext.lineTo(x + size*0.3, y - size*0.25);
-          cContext.lineTo(x + size*0.5, y + 1);
-          cContext.stroke();
-
-          cContext.beginPath();
-          cContext.moveTo(x + size*0.5, y + 1);
-          cContext.lineTo(x + size*0.7, y - size*0.25);
+          cContext.lineTo(x + size * 0.3, y - size * 0.25);
+          cContext.lineTo(x + size * 0.5, y + 1);
+          cContext.moveTo(x + size * 0.5, y + 1);
+          cContext.lineTo(x + size * 0.7, y - size * 0.25);
           cContext.lineTo(x + size - 2, y + 1);
           cContext.stroke();
         }
         return;
       }
 
-      // Rounded Cat Body Block
+      // Base Body Block
       cContext.fillStyle = catColor;
-      cContext.beginPath();
-      cContext.roundRect ? cContext.roundRect(x, y, size, size, radius) : cContext.fillRect(x, y, size, size);
-      cContext.fill();
+      if (style === 'pixel') {
+        cContext.fillRect(x, y, size, size);
+      } else {
+        cContext.beginPath();
+        cContext.roundRect ? cContext.roundRect(x, y, size, size, radius) : cContext.fillRect(x, y, size, size);
+        cContext.fill();
+      }
 
-      // Soft Highlight Fur Shine
-      cContext.fillStyle = 'rgba(255, 255, 255, 0.35)';
-      cContext.beginPath();
-      cContext.roundRect ? cContext.roundRect(x + 2, y + 2, size - 4, size * 0.25, 2) : cContext.fillRect(x + 2, y + 2, size - 4, 3);
-      cContext.fill();
+      // Shine / Fur Highlight
+      cContext.fillStyle = (style === 'cyber') ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.35)';
+      if (style === 'pixel') {
+        cContext.fillRect(x + 2, y + 2, size - 4, 2);
+      } else {
+        cContext.beginPath();
+        cContext.roundRect ? cContext.roundRect(x + 2, y + 2, size - 4, size * 0.25, 2) : cContext.fillRect(x + 2, y + 2, size - 4, 3);
+        cContext.fill();
+      }
 
-      // Feline Features depending on Block Role
+      // Role-specific features
       if (role === 'head') {
-        // --- CAT EARS ---
+        // --- EARS ---
         cContext.fillStyle = catColor;
-        // Left Ear
-        cContext.beginPath();
-        cContext.moveTo(x + 2, y + 2);
-        cContext.lineTo(x + size * 0.25, y - size * 0.32);
-        cContext.lineTo(x + size * 0.45, y + 2);
-        cContext.fill();
-        // Right Ear
-        cContext.beginPath();
-        cContext.moveTo(x + size * 0.55, y + 2);
-        cContext.lineTo(x + size * 0.75, y - size * 0.32);
-        cContext.lineTo(x + size - 2, y + 2);
-        cContext.fill();
+        if (style === 'pixel') {
+          // Blocky Pixel Ears
+          cContext.fillRect(x + 2, y - 4, 5, 5);
+          cContext.fillRect(x + size - 7, y - 4, 5, 5);
+          cContext.fillStyle = earColor;
+          cContext.fillRect(x + 3, y - 3, 3, 3);
+          cContext.fillRect(x + size - 6, y - 3, 3, 3);
+        } else {
+          // Pointed Ears
+          cContext.beginPath();
+          cContext.moveTo(x + 2, y + 2);
+          cContext.lineTo(x + size * 0.25, y - size * 0.32);
+          cContext.lineTo(x + size * 0.45, y + 2);
+          cContext.moveTo(x + size * 0.55, y + 2);
+          cContext.lineTo(x + size * 0.75, y - size * 0.32);
+          cContext.lineTo(x + size - 2, y + 2);
+          cContext.fill();
 
-        // Inner Pink Ears
-        cContext.fillStyle = earColor || '#f472b6';
-        cContext.beginPath();
-        cContext.moveTo(x + size * 0.1, y + 1);
-        cContext.lineTo(x + size * 0.25, y - size * 0.2);
-        cContext.lineTo(x + size * 0.38, y + 1);
-        cContext.fill();
+          // Inner Pink/Accent Ear
+          cContext.fillStyle = earColor;
+          cContext.beginPath();
+          cContext.moveTo(x + size * 0.1, y + 1);
+          cContext.lineTo(x + size * 0.25, y - size * 0.2);
+          cContext.lineTo(x + size * 0.38, y + 1);
+          cContext.moveTo(x + size * 0.62, y + 1);
+          cContext.lineTo(x + size * 0.75, y - size * 0.2);
+          cContext.lineTo(x + size * 0.9, y + 1);
+          cContext.fill();
+        }
 
-        cContext.beginPath();
-        cContext.moveTo(x + size * 0.62, y + 1);
-        cContext.lineTo(x + size * 0.75, y - size * 0.2);
-        cContext.lineTo(x + size * 0.9, y + 1);
-        cContext.fill();
+        // --- SPECIAL THEME HEAD ACCENTS ---
+        if (style === 'bread') {
+          // Pat of golden butter melting on head!
+          cContext.fillStyle = '#fef08a';
+          cContext.fillRect(x + size * 0.36, y - size * 0.12, size * 0.28, size * 0.2);
+          cContext.strokeStyle = '#ca8a04';
+          cContext.lineWidth = 0.8;
+          cContext.strokeRect(x + size * 0.36, y - size * 0.12, size * 0.28, size * 0.2);
+        } else if (style === 'royal') {
+          // Golden tiara / crown on head
+          cContext.fillStyle = '#fbbf24';
+          cContext.beginPath();
+          cContext.moveTo(x + size * 0.35, y + 1);
+          cContext.lineTo(x + size * 0.35, y - size * 0.22);
+          cContext.lineTo(x + size * 0.5, y - size * 0.08);
+          cContext.lineTo(x + size * 0.65, y - size * 0.22);
+          cContext.lineTo(x + size * 0.65, y + 1);
+          cContext.fill();
+        }
 
-        // --- CUTE SLEEPING / SMILING FACE ---
-        cContext.strokeStyle = '#1e293b';
-        cContext.lineWidth = Math.max(1, size * 0.07);
+        // --- EYES & FACE ---
+        if (style === 'cyber') {
+          // Glowing Neon Visor Bars
+          cContext.fillStyle = '#00f0ff';
+          cContext.fillRect(x + size * 0.2, y + size * 0.42, size * 0.26, size * 0.14);
+          cContext.fillRect(x + size * 0.54, y + size * 0.42, size * 0.26, size * 0.14);
+        } else if (style === 'pixel') {
+          // Chunky 8-Bit Pixel Eyes
+          cContext.fillStyle = '#000000';
+          cContext.fillRect(x + size * 0.25, y + size * 0.4, 3, 3);
+          cContext.fillRect(x + size * 0.65, y + size * 0.4, 3, 3);
+        } else if (style === 'royal') {
+          // Jeweled Almond Eyes
+          cContext.fillStyle = '#1e3a8a';
+          cContext.beginPath();
+          cContext.arc(x + size * 0.32, y + size * 0.48, size * 0.1, 0, Math.PI * 2);
+          cContext.arc(x + size * 0.68, y + size * 0.48, size * 0.1, 0, Math.PI * 2);
+          cContext.fill();
+          cContext.fillStyle = '#ffffff';
+          cContext.beginPath();
+          cContext.arc(x + size * 0.3, y + size * 0.45, size * 0.04, 0, Math.PI * 2);
+          cContext.arc(x + size * 0.66, y + size * 0.45, size * 0.04, 0, Math.PI * 2);
+          cContext.fill();
+        } else {
+          // Happy Sleeping Curves ^ ^
+          cContext.strokeStyle = '#1e293b';
+          cContext.lineWidth = Math.max(1, size * 0.07);
+          const eyeY = y + size * 0.46;
+          cContext.beginPath();
+          cContext.arc(x + size * 0.32, eyeY, size * 0.12, Math.PI, 0);
+          cContext.moveTo(x + size * 0.8, eyeY);
+          cContext.arc(x + size * 0.68, eyeY, size * 0.12, Math.PI, 0);
+          cContext.stroke();
 
-        // Eyes: Happy Sleepy Arches ^ ^
-        const eyeY = y + size * 0.45;
-        // Left eye
-        cContext.beginPath();
-        cContext.arc(x + size * 0.32, eyeY, size * 0.12, Math.PI, 0);
-        cContext.stroke();
-        // Right eye
-        cContext.beginPath();
-        cContext.arc(x + size * 0.68, eyeY, size * 0.12, Math.PI, 0);
-        cContext.stroke();
+          // Tiny Nose & Whiskers
+          cContext.fillStyle = earColor;
+          cContext.beginPath();
+          cContext.arc(x + size * 0.5, y + size * 0.6, size * 0.08, 0, Math.PI * 2);
+          cContext.fill();
 
-        // Tiny Pink Nose
-        cContext.fillStyle = earColor || '#f472b6';
-        cContext.beginPath();
-        cContext.arc(x + size * 0.5, y + size * 0.6, size * 0.08, 0, Math.PI * 2);
-        cContext.fill();
-
-        // Whiskers > <
-        cContext.strokeStyle = 'rgba(0, 0, 0, 0.4)';
-        cContext.lineWidth = 1;
-        // Left whiskers
-        cContext.beginPath();
-        cContext.moveTo(x + size * 0.22, y + size * 0.55);
-        cContext.lineTo(x + size * 0.05, y + size * 0.5);
-        cContext.moveTo(x + size * 0.22, y + size * 0.65);
-        cContext.lineTo(x + size * 0.05, y + size * 0.7);
-        // Right whiskers
-        cContext.moveTo(x + size * 0.78, y + size * 0.55);
-        cContext.lineTo(x + size * 0.95, y + size * 0.5);
-        cContext.moveTo(x + size * 0.78, y + size * 0.65);
-        cContext.lineTo(x + size * 0.95, y + size * 0.7);
-        cContext.stroke();
+          cContext.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+          cContext.lineWidth = 0.8;
+          cContext.beginPath();
+          cContext.moveTo(x + size * 0.22, y + size * 0.56);
+          cContext.lineTo(x + size * 0.05, y + size * 0.5);
+          cContext.moveTo(x + size * 0.22, y + size * 0.66);
+          cContext.lineTo(x + size * 0.05, y + size * 0.72);
+          cContext.moveTo(x + size * 0.78, y + size * 0.56);
+          cContext.lineTo(x + size * 0.95, y + size * 0.5);
+          cContext.moveTo(x + size * 0.78, y + size * 0.66);
+          cContext.lineTo(x + size * 0.95, y + size * 0.72);
+          cContext.stroke();
+        }
 
       } else if (role === 'tail') {
-        // --- CURLED CAT TAIL ---
+        // --- CURLED TAIL ---
         cContext.strokeStyle = 'rgba(255, 255, 255, 0.5)';
         cContext.lineWidth = Math.max(1.5, size * 0.12);
         cContext.beginPath();
         cContext.arc(x + size * 0.5, y + size * 0.5, size * 0.28, 0.5 * Math.PI, 1.8 * Math.PI);
         cContext.stroke();
 
-        // Fluffy tail tip
         cContext.fillStyle = '#ffffff';
         cContext.beginPath();
-        cContext.arc(x + size * 0.5 + size * 0.25, y + size * 0.45, size * 0.1, 0, Math.PI * 2);
+        cContext.arc(x + size * 0.75, y + size * 0.45, size * 0.1, 0, Math.PI * 2);
         cContext.fill();
 
       } else {
-        // --- CUTE PAWS (TOE BEANS) ---
+        // --- PAWS (TOE BEANS) ---
         cContext.fillStyle = 'rgba(255, 255, 255, 0.45)';
-        // Left paw
         cContext.beginPath();
         cContext.arc(x + size * 0.35, y + size * 0.75, size * 0.12, 0, Math.PI * 2);
-        cContext.fill();
-        // Right paw
-        cContext.beginPath();
         cContext.arc(x + size * 0.65, y + size * 0.75, size * 0.12, 0, Math.PI * 2);
         cContext.fill();
 
-        // Tiny Pink Toe Bean Center
-        cContext.fillStyle = earColor || '#f472b6';
+        cContext.fillStyle = earColor;
         cContext.beginPath();
         cContext.arc(x + size * 0.35, y + size * 0.75, size * 0.05, 0, Math.PI * 2);
         cContext.arc(x + size * 0.65, y + size * 0.75, size * 0.05, 0, Math.PI * 2);
@@ -1281,8 +1698,7 @@
     function draw() {
       ctx.clearRect(0, 0, boardCanvas.width, boardCanvas.height);
 
-      const isDark = document.body.getAttribute('data-theme') === 'dark';
-      ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.04)' : 'rgba(0, 0, 0, 0.04)';
+      ctx.strokeStyle = currentTheme.id === 'cyber' ? 'rgba(0, 240, 255, 0.08)' : 'rgba(255, 255, 255, 0.04)';
       ctx.lineWidth = 1;
 
       // Draw Grid & Locked Cats
@@ -1298,8 +1714,8 @@
 
       // Draw Falling Cat Piece (and Ghost)
       if (currentPiece && !isGameOver) {
-        const pInfo = CAT_PIECES[currentPiece.type];
-        const shape = pInfo.shapes[currentPiece.rot];
+        const pInfo = currentTheme.pieces[currentPiece.type];
+        const shape = PIECE_SHAPES[currentPiece.type][currentPiece.rot];
 
         let filledBlocks = [];
         for (let r = 0; r < shape.length; r++) {
@@ -1331,13 +1747,12 @@
       }
     }
 
-    /* Mini Cat Previews for Box & Next */
     function drawMiniCatPiece(cContext, type, canvasW, canvasH) {
       cContext.clearRect(0, 0, canvasW, canvasH);
       if (!type) return;
 
-      const pInfo = CAT_PIECES[type];
-      const shape = pInfo.shapes[0];
+      const pInfo = currentTheme.pieces[type];
+      const shape = PIECE_SHAPES[type][0];
       const mSize = 10;
       const rows = shape.length;
       const cols = shape[0].length;
@@ -1364,7 +1779,7 @@
       drawMiniCatPiece(next3Ctx, nextQueue[2], next3Canvas.width, next3Canvas.height);
     }
 
-    /* Controls with Auto-Repeat (DAS) */
+    /* Controls with DAS */
     function attachRepeatingButton(btn, actionFn) {
       let intervalId = null;
       let timeoutId = null;
@@ -1481,13 +1896,45 @@
       }
     }, { passive: false });
 
-    /* Header Buttons */
+    /* Start / Pause / Play Trigger */
+    function executeStartGame() {
+      try {
+        catSound.init();
+      } catch (e) {}
+      
+      if (isPaused) {
+        togglePause();
+      } else {
+        startGame();
+      }
+    }
+
+    const btnPlay = document.getElementById('btn-play');
+    const gameOverlay = document.getElementById('game-overlay');
+
+    btnPlay.addEventListener('click', (e) => {
+      e.stopPropagation();
+      executeStartGame();
+    });
+    btnPlay.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      executeStartGame();
+    }, { passive: false });
+
+    gameOverlay.addEventListener('click', (e) => {
+      if (e.target === gameOverlay || e.target.closest('.overlay-content')) {
+        executeStartGame();
+      }
+    });
+
     function togglePause() {
       if (!isPlaying || isGameOver) return;
       isPaused = !isPaused;
       document.getElementById('btn-pause').textContent = isPaused ? '▶' : '⏸';
       if (isPaused) {
         document.getElementById('overlay-title').textContent = 'CAT NAP 💤';
+        document.getElementById('overlay-msg').textContent = 'The cats are taking a quick snooze.';
         document.getElementById('overlay-stats').style.display = 'none';
         document.getElementById('btn-play').textContent = 'WAKE UP 🐾';
         document.getElementById('game-overlay').classList.add('active');
@@ -1505,58 +1952,112 @@
       document.getElementById('btn-sound').textContent = catSound.enabled ? '🔊' : '🔇';
     });
 
-    document.getElementById('btn-theme').addEventListener('click', () => {
-      const cur = document.body.getAttribute('data-theme');
-      const next = cur === 'dark' ? 'light' : 'dark';
-      document.body.setAttribute('data-theme', next);
-      localStorage.setItem('catris_theme', next);
-      document.getElementById('btn-theme').textContent = next === 'dark' ? '🌙' : '☀️';
-      draw();
-      renderPreviews();
-    });
+    /* ========================================================
+       THEME MODAL CONTROLS
+       ======================================================== */
+    const themeOverlay = document.getElementById('theme-overlay');
+    const themeGridContainer = document.getElementById('theme-grid-container');
 
-    const btnPlay = document.getElementById('btn-play');
-    const gameOverlay = document.getElementById('game-overlay');
+    function renderThemeModal() {
+      themeGridContainer.innerHTML = '';
+      Object.values(CAT_THEMES).forEach(th => {
+        const card = document.createElement('div');
+        card.className = `theme-card ${th.id === currentTheme.id ? 'active' : ''}`;
+        
+        let swatchesHtml = th.swatches.map(c => `<span class="swatch-dot" style="background:${c}"></span>`).join('');
 
-    function executeStartGame() {
-      try {
-        catSound.init();
-      } catch (e) {}
-      
-      if (isPaused) {
-        togglePause();
-      } else {
-        startGame();
-      }
+        card.innerHTML = `
+          <div class="theme-card-info">
+            <span class="theme-card-title">${th.name}</span>
+            <span class="theme-card-desc">${th.desc}</span>
+          </div>
+          <div class="theme-swatches">${swatchesHtml}</div>
+        `;
+
+        card.addEventListener('click', () => {
+          applyTheme(th.id);
+        });
+
+        themeGridContainer.appendChild(card);
+      });
     }
 
-    // Attach to both the button AND the entire overlay (so tapping anywhere starts!)
-    btnPlay.addEventListener('click', (e) => {
-      e.stopPropagation();
-      executeStartGame();
+    document.getElementById('btn-theme').addEventListener('click', () => {
+      renderThemeModal();
+      themeOverlay.classList.add('active');
     });
-    btnPlay.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      executeStartGame();
-    }, { passive: false });
 
-    // Also tap overlay to start
-    gameOverlay.addEventListener('click', (e) => {
-      executeStartGame();
+    document.getElementById('btn-close-theme').addEventListener('click', () => {
+      themeOverlay.classList.remove('active');
     });
-    gameOverlay.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      executeStartGame();
-    }, { passive: false });
 
-    // Theme Restore
-    const savedTheme = localStorage.getItem('catris_theme') || 'dark';
-    document.body.setAttribute('data-theme', savedTheme);
-    document.getElementById('btn-theme').textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+    /* ========================================================
+       LEADERBOARD & INITIALS MODAL CONTROLS
+       ======================================================== */
+    const leaderboardOverlay = document.getElementById('leaderboard-overlay');
+    const initialsOverlay = document.getElementById('initials-overlay');
+    const inputInitials = document.getElementById('input-initials');
 
+    document.getElementById('btn-leaderboard').addEventListener('click', () => {
+      renderLeaderboardTable();
+      leaderboardOverlay.classList.add('active');
+      syncCloudLeaderboard();
+    });
+
+    document.getElementById('btn-close-lb').addEventListener('click', () => {
+      leaderboardOverlay.classList.remove('active');
+    });
+
+    document.getElementById('btn-sync-lb').addEventListener('click', () => {
+      syncCloudLeaderboard();
+    });
+
+    // Save Initials Button
+    document.getElementById('btn-save-initials').addEventListener('click', () => {
+      commitInitialsScore();
+    });
+
+    inputInitials.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        commitInitialsScore();
+      }
+    });
+
+    function commitInitialsScore() {
+      let init = (inputInitials.value || 'CAT').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 3);
+      if (!init) init = 'CAT';
+
+      localStorage.setItem('catris_last_initials', init);
+
+      if (pendingHighScore) {
+        const newEntry = {
+          initials: init,
+          score: pendingHighScore.score,
+          level: pendingHighScore.level,
+          lines: pendingHighScore.lines,
+          date: pendingHighScore.date
+        };
+
+        leaderboard.push(newEntry);
+        leaderboard.sort((a, b) => b.score - a.score);
+        leaderboard = leaderboard.slice(0, 5);
+        saveLocalLeaderboard();
+        pushScoreToCloud(newEntry);
+        pendingHighScore = null;
+      }
+
+      initialsOverlay.classList.remove('active');
+      renderLeaderboardTable();
+      leaderboardOverlay.classList.add('active');
+    }
+
+    // Initialize
+    applyTheme(localStorage.getItem('catris_theme') || 'calico');
+    renderLeaderboardTable();
+    syncCloudLeaderboard(); // fetch global scores in background
     resizeBoard();
     draw();
   </script>
 </body>
 </html>
+Displaying Catris.html.
