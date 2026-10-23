@@ -1,9 +1,11 @@
+index.html
+100%
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crash Course US History — Gia's Interactive Study Hub</title>
+  <title>Crash Course US History — Gia's Interactive Study Hub (Unit 1: Episodes 1–5)</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,14 +69,14 @@
     <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 shadow-2xl">
       <div class="flex items-start justify-between gap-4 mb-3">
         <div>
-          <span id="modalEpBadge" class="inline-block text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 mb-2">Episode Preview</span>
+          <span id="modalEpBadge" class="inline-block text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 mb-2">Unit 2 Preview</span>
           <h3 id="modalEpTitle" class="text-xl font-bold text-white">Episode Title</h3>
         </div>
         <button id="closeModalBtn" type="button" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition" aria-label="Close modal">✕</button>
       </div>
       <p id="modalEpDesc" class="text-sm text-slate-300 leading-relaxed mb-4"></p>
       <div class="bg-slate-800/70 border border-slate-700/80 rounded-xl p-3.5 mb-5 text-xs text-slate-300 space-y-1.5">
-        <div class="font-semibold text-amber-300">What Will Be Unlocked When Generated:</div>
+        <div class="font-semibold text-amber-300">Coming in Unit 2 (Episodes 6–10):</div>
         <div>• Dedicated Google Doc Study Guide in Gia's Drive Folder</div>
         <div>• 8-Question "Shock Pen" Interactive Quiz + Short-Answer Check</div>
         <div>• Flip Flashcards, Timeline Sorter &amp; Mystery Document Challenge</div>
@@ -100,7 +102,7 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-base sm:text-lg font-bold text-white tracking-tight">Crash Course US History Hub</h1>
-            <span class="hidden sm:inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30">Gia's Edition</span>
+            <span class="hidden sm:inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30">Gia's Edition • Unit 1 Complete</span>
           </div>
           <p class="text-xs text-slate-400">Interactive Docs, Shock Pen Quizzes, Flashcards &amp; Primary Sources</p>
         </div>
@@ -116,7 +118,7 @@
 
         <!-- Overall Mastery Pill -->
         <div class="hidden md:flex items-center gap-2 bg-slate-800/90 border border-slate-700 px-3 py-1.5 rounded-xl text-xs">
-          <span class="text-teal-300 font-semibold">Ep. 1 Mastery:</span>
+          <span id="headerMasteryLabel" class="text-teal-300 font-semibold">Ep. 1 Mastery:</span>
           <div class="w-20 h-2 bg-slate-700 rounded-full overflow-hidden">
             <div id="headerMasteryBar" class="h-full bg-gradient-to-r from-teal-400 to-emerald-400 transition-all duration-300" style="width: 0%"></div>
           </div>
@@ -147,34 +149,44 @@
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
         <div class="flex items-center justify-between mb-3">
           <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300">Unit 1: Colonial Era</h2>
-          <span class="text-[11px] font-semibold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded-md">1 / 5 Active</span>
+          <span class="text-[11px] font-semibold text-emerald-300 bg-emerald-400/15 border border-emerald-500/30 px-2 py-0.5 rounded-md">5 / 5 Unlocked</span>
         </div>
 
         <div id="episodeListContainer" class="space-y-2">
           <!-- Populated by JS -->
         </div>
+
+        <div class="mt-4 pt-3 border-t border-slate-800">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Up Next: Unit 2 Preview</span>
+            <span class="text-[10px] text-slate-400">Eps 6–8</span>
+          </div>
+          <div id="upcomingEpisodeListContainer" class="space-y-1.5">
+            <!-- Populated by JS -->
+          </div>
+        </div>
       </div>
 
       <!-- Direct Document & Video Resources Card -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Episode 1 Resources</h3>
-        <a href="https://docs.google.com/document/d/1BMyvlgHxU2unarDT3i3UkiixvLzi5KMCYU9mOewOKFg/edit?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between w-full p-3 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 text-blue-200 transition group">
+        <h3 id="sidebarResourceHeading" class="text-xs font-bold uppercase tracking-wider text-slate-400">Episode 1 Resources</h3>
+        <a id="sidebarDocLink" href="https://docs.google.com/document/d/1BMyvlgHxU2unarDT3i3UkiixvLzi5KMCYU9mOewOKFg/edit?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between w-full p-3 rounded-xl bg-blue-500/15 hover:bg-blue-500/25 border border-blue-500/30 text-blue-200 transition group">
           <div class="flex items-center gap-2.5">
             <span class="text-lg">📄</span>
             <div>
-              <div class="text-xs font-bold text-white group-hover:text-blue-200">Open Ep. 1 Google Doc</div>
+              <div id="sidebarDocLabel" class="text-xs font-bold text-white group-hover:text-blue-200">Open Ep. 1 Google Doc</div>
               <div class="text-[11px] text-blue-300/80">Full Printable Study Guide</div>
             </div>
           </div>
           <span class="text-xs">↗</span>
         </a>
 
-        <a href="https://www.youtube.com/watch?v=6E9WU9TGrec" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between w-full p-3 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-200 transition group">
+        <a id="sidebarVideoLink" href="https://www.youtube.com/watch?v=6E9WU9TGrec" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between w-full p-3 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-200 transition group">
           <div class="flex items-center gap-2.5">
             <span class="text-lg">▶️</span>
             <div>
-              <div class="text-xs font-bold text-white group-hover:text-red-200">Watch Episode 1 Video</div>
-              <div class="text-[11px] text-red-300/80">YouTube • 11 mins 20 secs</div>
+              <div id="sidebarVideoLabel" class="text-xs font-bold text-white group-hover:text-red-200">Watch Episode 1 Video</div>
+              <div id="sidebarVideoSub" class="text-[11px] text-red-300/80">YouTube • 11:20</div>
             </div>
           </div>
           <span class="text-xs">↗</span>
@@ -185,7 +197,7 @@
             <span class="text-lg">🗂️</span>
             <div>
               <div class="text-xs font-bold text-white">All Study Guides Folder</div>
-              <div class="text-[11px] text-slate-400">Google Drive Master Folder</div>
+              <div class="text-[11px] text-slate-400">Google Drive Master Folder (Eps 1–5)</div>
             </div>
           </div>
           <span class="text-xs">↗</span>
@@ -195,7 +207,7 @@
       <!-- Progress Breakdown Card -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
         <div class="flex items-center justify-between">
-          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Gia's Ep. 1 Checklist</h3>
+          <h3 id="sidebarChecklistTitle" class="text-xs font-bold uppercase tracking-wider text-slate-400">Gia's Ep. 1 Checklist</h3>
           <button id="resetAllProgressBtn" type="button" class="text-[11px] text-slate-400 hover:text-rose-400 transition">Reset</button>
         </div>
         <div class="space-y-2 text-xs">
@@ -217,7 +229,7 @@
           </div>
           <div class="flex items-center justify-between p-2 rounded-lg bg-slate-800/60">
             <span class="text-slate-300">🕵️ Mystery Docs Solved</span>
-            <span id="statMystery" class="font-bold text-purple-300">0 / 3</span>
+            <span id="statMystery" class="font-bold text-purple-300">0 / 2</span>
           </div>
         </div>
       </div>
@@ -232,12 +244,12 @@
         <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent"></div>
         <div class="absolute inset-0 p-5 sm:p-7 flex flex-col justify-end">
           <div class="flex flex-wrap items-center gap-2 mb-2">
-            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-slate-950">EPISODE #1</span>
-            <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800/90 text-slate-200 border border-slate-700">15th–17th Centuries</span>
+            <span id="heroEpBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-400 text-slate-950">EPISODE #1</span>
+            <span id="heroEraBadge" class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800/90 text-slate-200 border border-slate-700">15th–17th Centuries</span>
             <span class="px-2.5 py-0.5 rounded-full text-xs font-medium bg-teal-500/20 text-teal-300 border border-teal-500/30">Early High School Edition</span>
           </div>
-          <h2 class="text-xl sm:text-3xl font-extrabold text-white leading-tight">The Black Legend, Native Americans, and Spaniards</h2>
-          <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl">
+          <h2 id="heroEpTitle" class="text-xl sm:text-3xl font-extrabold text-white leading-tight">The Black Legend, Native Americans, and Spaniards</h2>
+          <p id="heroEpDesc" class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl">
             Before the United States was either united or states: explore pre-Columbian Indigenous societies, Spanish conquistadors, Popé's 1680 Pueblo Revolt, and how England spun the "Black Legend."
           </p>
         </div>
@@ -252,7 +264,7 @@
           <span>⚡</span> <span>Shock Pen Quiz</span>
         </button>
         <button type="button" data-tab="flashcards" class="tab-btn flex-1 min-w-[130px] py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
-          <span>🃏</span> <span>Flashcards (11)</span>
+          <span>🃏</span> <span id="tabFlashcardsLabel">Flashcards (11)</span>
         </button>
         <button type="button" data-tab="timeline" class="tab-btn flex-1 min-w-[130px] py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 text-slate-300 hover:text-white hover:bg-slate-800">
           <span>⏳</span> <span>Timeline Game</span>
@@ -264,23 +276,21 @@
 
       <!-- ================= TAB 1: STUDY GUIDE & NOTES ================= -->
       <section id="tab-guide" class="tab-panel space-y-6">
-        <!-- Top Action Bar -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 class="text-base font-bold text-white">Interactive Study Guide Reader</h3>
+            <h3 id="guideHeaderTitle" class="text-base font-bold text-white">Interactive Study Guide Reader</h3>
             <p class="text-xs text-slate-400">Check off each section as you read to earn Awesome Points (+15 pts each), or open the full Google Doc!</p>
           </div>
           <div class="flex flex-wrap items-center gap-2">
             <button id="markAllReadBtn" type="button" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-teal-500/20 text-teal-300 border border-teal-500/30 hover:bg-teal-500/30 transition">
               ✓ Mark All Sections Read
             </button>
-            <a href="https://docs.google.com/document/d/1BMyvlgHxU2unarDT3i3UkiixvLzi5KMCYU9mOewOKFg/edit?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-blue-600 text-white hover:bg-blue-500 transition">
+            <a id="guideOpenDocBtn" href="https://docs.google.com/document/d/1BMyvlgHxU2unarDT3i3UkiixvLzi5KMCYU9mOewOKFg/edit?usp=drivesdk" target="_blank" rel="noopener noreferrer" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-blue-600 text-white hover:bg-blue-500 transition">
               📄 Open in Google Docs ↗
             </a>
           </div>
         </div>
 
-        <!-- Study Guide Sections Container -->
         <div id="guideSectionsContainer" class="space-y-4">
           <!-- Rendered by JS -->
         </div>
@@ -289,8 +299,8 @@
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
           <div class="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h3 class="text-base font-bold text-white">📝 Gia's Episode 1 Quick Notes</h3>
-              <p class="text-xs text-slate-400">Jot down questions, favorite jokes, or key takeaways—automatically saved in your browser.</p>
+              <h3 id="notesHeaderTitle" class="text-base font-bold text-white">📝 Gia's Episode 1 Quick Notes</h3>
+              <p class="text-xs text-slate-400">Jot down questions, favorite jokes, or key takeaways—automatically saved per episode in your browser.</p>
             </div>
             <div class="flex items-center gap-2">
               <button id="copyNotesBtn" type="button" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
@@ -301,18 +311,17 @@
               </button>
             </div>
           </div>
-          <textarea id="studentNotesInput" rows="4" placeholder="Type your notes for Episode 1 here (e.g., Why did the Pueblo Revolt succeed in 1680? What is the Black Legend?)..." class="w-full rounded-xl bg-slate-950 border border-slate-800 p-3.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400"></textarea>
+          <textarea id="studentNotesInput" rows="4" placeholder="Type your notes for this episode here..." class="w-full rounded-xl bg-slate-950 border border-slate-800 p-3.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-400"></textarea>
         </div>
       </section>
 
       <!-- ================= TAB 2: SHOCK PEN QUIZ ================= -->
       <section id="tab-quiz" class="tab-panel hidden space-y-6">
-        <!-- Shock Pen Status Header -->
         <div id="quizHeaderCard" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4">
           <div class="space-y-1">
             <div class="flex items-center gap-2">
               <span class="text-xl">⚡</span>
-              <h3 class="text-lg font-bold text-white">The "Avoid the Shock Pen" Episode 1 Quiz</h3>
+              <h3 id="quizHeaderTitle" class="text-lg font-bold text-white">The "Avoid the Shock Pen" Episode 1 Quiz</h3>
             </div>
             <p class="text-xs text-slate-400">Answer all 8 multiple-choice questions (+25 Awesome Pts each) and check your brain on the 2 short-answer prompts below!</p>
           </div>
@@ -335,12 +344,10 @@
           </div>
         </div>
 
-        <!-- Multiple Choice Questions Container -->
         <div id="quizQuestionsContainer" class="space-y-4">
           <!-- Rendered by JS -->
         </div>
 
-        <!-- Short-Answer Brain Check Prompts -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
           <div>
             <span class="text-xs font-bold uppercase tracking-wider text-teal-300">Bonus Short-Answer Check</span>
@@ -435,9 +442,9 @@
             </div>
           </div>
 
-          <!-- Quick Grid of All 11 Terms -->
+          <!-- Quick Grid of All Terms -->
           <div class="pt-4 border-t border-slate-800">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Quick-Jump All 11 Terms</h4>
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Quick-Jump Episode Flashcards</h4>
             <div id="fcMiniGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
               <!-- Populated by JS -->
             </div>
@@ -450,8 +457,8 @@
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 class="text-lg font-bold text-white">⏳ Put History in Order: Episode 1 Timeline Challenge</h3>
-              <p class="text-xs text-slate-400">Click the events below in chronological order from <strong>earliest (#1)</strong> to <strong>latest (#7)</strong>—or toggle "Study Mode" to view the full timeline with dates!</p>
+              <h3 class="text-lg font-bold text-white">⏳ Put History in Order: Timeline Challenge</h3>
+              <p class="text-xs text-slate-400">Click the events below in chronological order from <strong>earliest (#1)</strong> to <strong>latest</strong>—or toggle "Study Mode" to view the full timeline with dates!</p>
             </div>
             <div class="flex items-center gap-2">
               <button id="toggleTimelineModeBtn" type="button" class="px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-500/30 transition">
@@ -463,18 +470,15 @@
             </div>
           </div>
 
-          <!-- Game Progress Banner -->
           <div id="timelineStatusBanner" class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex flex-wrap items-center justify-between gap-2 text-xs">
-            <span id="timelinePromptText" class="text-slate-200 font-medium">Step 1 of 7: Click the <strong>earliest</strong> historical event from the pool below!</span>
+            <span id="timelinePromptText" class="text-slate-200 font-medium">Click the <strong>earliest</strong> historical event from the pool below!</span>
             <span id="timelineScoreBadge" class="font-bold text-amber-300">Placed: 0 / 7</span>
           </div>
 
-          <!-- Placed Timeline Slots -->
           <div id="timelinePlacedContainer" class="space-y-2">
             <!-- Populated by JS -->
           </div>
 
-          <!-- Unplaced Pool -->
           <div id="timelinePoolWrapper" class="pt-3 border-t border-slate-800">
             <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2.5">Unplaced Events Pool (Click Next Earliest Event):</h4>
             <div id="timelinePoolContainer" class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
@@ -498,7 +502,6 @@
             </div>
           </div>
 
-          <!-- Mystery Document Display Card -->
           <div id="mysteryCardContainer" class="space-y-4">
             <!-- Populated by JS -->
           </div>
@@ -509,477 +512,708 @@
   </div>
 
   <script>
-    // ==================== DATA STORE ====================
-    const EPISODES = [
-      {
+    // ==================== MULTI-EPISODE DATA STORE (UNIT 1: EPISODES 1-5) ====================
+    const EPISODES_DATA = {
+      1: {
         id: 1,
         number: "01",
+        era: "15th–17th Centuries",
         title: "The Black Legend, Native Americans, and Spaniards",
-        active: true,
         duration: "11:20",
         youtubeUrl: "https://www.youtube.com/watch?v=6E9WU9TGrec",
         docUrl: "https://docs.google.com/document/d/1BMyvlgHxU2unarDT3i3UkiixvLzi5KMCYU9mOewOKFg/edit?usp=drivesdk",
-        desc: "Pre-Columbian Indigenous societies, Spanish exploration in Florida and the Southwest, the Pueblo Revolt of 1680, Bartolomé de las Casas, and the Black Legend."
+        desc: "Before the United States was either united or states: explore pre-Columbian Indigenous societies, Spanish conquistadors, Popé's 1680 Pueblo Revolt, and how England spun the 'Black Legend.'",
+        sections: [
+          {
+            id: "sec-tldr",
+            badge: "Section 1 • 60-Second Overview",
+            title: "The 'Wait For It...' TL;DR & Pre-Columbian North America",
+            content: `<p class="text-sm text-slate-200 leading-relaxed mb-3">Before the United States was either <em>united</em> or <em>states</em> (and before John Green could declare Alaskan statehood illegitimate), millions of Indigenous people lived across North America. While North America didn't have classical empires with monumental stone architecture, metalwork, gunpowder, wheels, written scripts, or large domesticated animals like the Aztecs or Incas, Indigenous societies had <strong>sustainable farming, complex political alliances, and continent-wide trade networks</strong>.</p>
+            <ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>The "Octadecimation":</strong> About <strong>2 to 10 million</strong> people lived within present-day U.S. borders (and up to 75 million across the Americas). European diseases like smallpox and influenza killed roughly <strong>8 in 10 (80%)</strong>—eight times worse than a 1-in-10 "decimation."</li>
+              <li><strong>Civilizations Rose &amp; Fell Before Columbus:</strong> Around <strong>1200 CE</strong>, the <a href="https://www.britannica.com/topic/Indigenous-peoples-of-the-American-Southwest/Pueblo-peoples" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Ancestral Puebloans</a> (Zuni and Hopi ancestors) built multi-family canyon cliff dwellings before abandoning them during a severe drought.</li>
+              <li><strong>Why "Primitive" Is a Bad Word:</strong> Calling societies without wheels or beepers "primitive" falsely assumes humanity moves on a linear escalator from "less evolved" to "more evolved."</li>
+            </ul>`
+          },
+          {
+            id: "sec-thoughtbubble",
+            badge: "Section 2 • Thought Bubble Spotlight",
+            title: "Indigenous Worldviews: Confederacies, Matrilineal Clans & Shared Land",
+            content: `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">1. Regional Adaptation &amp; Leagues</div><p class="text-slate-300">West Coast tribes fished and hunted sea mammals; Great Plains tribes hunted buffalo. Tribes united into alliances like the <a href="https://www.britannica.com/topic/Haudenosaunee-Confederacy" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Haudenosaunee (Iroquois) Confederacy</a> ("Great League of Peace").</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">2. Using Land vs. Owning Land</div><p class="text-slate-300">Village leaders assigned families plots to cultivate, but land was a common resource for survival—never permanent private real estate.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">3. Matrilineal Families &amp; Women's Roles</div><p class="text-slate-300">Many tribes were <strong>matrilineal</strong> (children joined their mother's clan). Women served as religious leaders and owned dwellings and tools.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">4. Busting the "Noble Savage" Myth</div><p class="text-slate-300">Tribes had class distinctions and hereditary rulers, though wealth was distributed much more evenly than in Europe.</p></div>
+            </div>`
+          },
+          {
+            id: "sec-spanish",
+            badge: "Section 3 • Conquistadors, Georgia & The Southwest",
+            title: "Spanish Florida, 'Cow-Head,' Santa Fe & Popé's 1680 Pueblo Revolt",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>Ponce de León &amp; Diet Dr Pepper (1513–1521):</strong> <a href="https://www.britannica.com/biography/Juan-Ponce-de-Leon" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Juan Ponce de León</a> came to Florida in 1513 seeking gold and the Fountain of Youth, dying from a Calusa poison arrow in 1521.</li>
+              <li><strong>Álvar Núñez "Cow-Head" Cabeza de Vaca:</strong> Wandered the Southwest in the 1520s–30s finding zero gold, while Spanish microbes decimated Indigenous populations.</li>
+              <li><strong>The 1597 Georgia Uprising:</strong> Spain wanted Florida bases to stop pirates from raiding silver galleons. Forced mission conversions sparked the <strong>1597 <a href="https://en.wikipedia.org/wiki/Guale" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Guale Uprising</a> along the Georgia coast</strong>.</li>
+              <li><strong>Santa Fe (1610) &amp; The <a href="https://www.britannica.com/event/Pueblo-Rebellion" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Pueblo Revolt of 1680</a>:</strong> After the Pueblo population fell from 60,000 to 17,000 and Franciscan friars banned native religion, <a href="https://www.britannica.com/biography/Pope-Tewa-Pueblo-leader" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Popé</a> led 2,000 warriors in 1680 to drive Spain out of Santa Fe, replace churches with <strong>kivas</strong>, and force Spain to end the <strong><a href="https://www.britannica.com/topic/encomienda" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">encomienda</a></strong> forced-labor system.</li>
+            </ul>`
+          },
+          {
+            id: "sec-blacklegend",
+            badge: "Section 4 • Historiography & Myth-Busting",
+            title: "Bartolomé de las Casas, The Black Legend & Reading History Critically",
+            content: `<div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs sm:text-sm text-slate-200 space-y-2">
+              <div class="font-bold text-amber-300">What Is <a href="https://www.britannica.com/topic/Black-Legend" target="_blank" rel="noopener noreferrer" class="underline">The Black Legend</a>?</div>
+              <p>Spanish priest <a href="https://www.britannica.com/biography/Bartolome-de-Las-Casas" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Bartolomé de las Casas</a> exposed Spain's horrific cruelty toward Indigenous people. Later <strong>English settlers</strong> weaponized those true accounts as propaganda ("The Black Legend") to claim England needed to expand its own empire to "save" the Natives from Spain.</p>
+              <div class="font-bold text-teal-300 pt-1">The Historian's 3 Golden Questions:</div>
+              <p>Always ask: <strong>(1) Who is speaking? (2) Why are they speaking? (3) Whose voices go unheard, and why?</strong></p>
+            </div>`
+          }
+        ],
+        quiz: [
+          { id: "q1", question: "Why does John Green say European diseases caused an 'octadecimation' rather than a 'decimation' of Native North American populations?", options: ["The diseases arrived in eight separate waves over 80 years.", "'Decimation' means losing 1 in 10 people, whereas diseases like smallpox and flu killed closer to 8 in 10 (80%).", "Only eight major Indigenous confederacies survived along the Atlantic coast.", "Eight different European empires brought microbes to North America."], correctIndex: 1, explanation: "'Decimation' literally means reducing a group by 1/10th (10%). Smallpox and influenza wiped out closer to 80% (8 in 10) of Indigenous populations." },
+          { id: "q2", question: "Which North American Indigenous civilization built large multi-family canyon cliff dwellings that peaked around 1200 CE before declining due to drought?", options: ["The Aztec Empire", "The Ancestral Puebloans (Zuni and Hopi ancestors) in the Southwest", "The Calusa Kingdom of Southern Florida", "The Guale Chiefdom of coastal Georgia"], correctIndex: 1, explanation: "The Ancestral Puebloans (ancestors of the Zuni and Hopi) built cliff dwellings in the Southwest that peaked around 1200 CE." },
+          { id: "q3", question: "What does it mean that many Indigenous North American societies were 'matrilineal'?", options: ["Only women served as military generals.", "Women privately bought and sold plots of tribal farmland.", "Children became members of their mother's family/clan, and women often held religious authority and owned dwellings and tools.", "European queens appointed village leaders."], correctIndex: 2, explanation: "In matrilineal societies, family lineage passed through the mother's side, and women frequently served as religious leaders and owned the home and tools." },
+          { id: "q4", question: "How did most Indigenous tribes view land ownership, as explained by Sauk leader Black Hawk?", options: ["Land was a common resource given by the Great Spirit for families to use and cultivate for survival, not private property to be owned forever.", "Land belonged permanently to whichever warrior fenced it first.", "Only gold mines could be privately owned.", "Land could be bought and sold using Spanish silver."], correctIndex: 0, explanation: "Village leaders assigned plots for families to use, but land was seen as common to everyone rather than private real estate." },
+          { id: "q5", question: "Why did Spain initially want to establish military bases in Florida?", options: ["To harvest timber for the Spanish Armada", "To thwart pirates who preyed on silver-laden Spanish galleons sailing out of Mexico", "To bottle the Fountain of Youth", "To escape the cold winters of Santa Fe"], correctIndex: 1, explanation: "Spain needed coastal bases in Florida to protect its silver-laden treasure fleets sailing out of Mexico from pirates." },
+          { id: "q6", question: "What sparked the Pueblo Revolt of 1680 in New Mexico, and who led it?", options: ["Ponce de León raised taxes; Black Hawk led it.", "A flood destroyed Santa Fe; Cabeza de Vaca led it.", "Population collapse (60,000 to 17,000), forced encomienda labor, and Franciscan suppression of native religion; religious leader Popé united ~2,000 warriors.", "English pirates invaded New Mexico; Las Casas led it."], correctIndex: 2, explanation: "Popé united around 2,000 warriors across multiple pueblos in 1680, driving the Spanish out of Santa Fe and replacing churches with kivas." },
+          { id: "q7", question: "What were the two major lasting changes after the Pueblo Revolt of 1680?", options: ["Spain permanently abandoned all of North America.", "The Spanish became much more tolerant of Indigenous religion and abandoned the forced-labor encomienda system.", "The Pueblos adopted written Spanish law.", "Santa Fe grew to 500,000 settlers."], correctIndex: 1, explanation: "Even after Spain returned to New Mexico, they stopped trying to violently stamp out Pueblo religion and ended the encomienda system." },
+          { id: "q8", question: "What is 'The Black Legend' that John Green warns us about at the end of Episode 1?", options: ["A pirate ghost story in the Caribbean", "The myth that Ponce de León found the Fountain of Youth", "The true account of Spanish cruelty toward Native Americans that later English settlers used as propaganda to justify their own empire-building", "The secret code Popé used in 1680"], correctIndex: 2, explanation: "English settlers hyped up Spain's very real atrocities ('The Black Legend') to claim they were expanding their empire to 'save' Native Americans from the Spanish." }
+        ],
+        shortAnswers: [
+          { id: "sa1", prompt: "1. Why did John Green get zapped by the Shock Pen during the Mystery Document segment, and why was Bartolomé de las Casas's writing so important?", sample: "John guessed the right author (Bartolomé de las Casas) but the wrong book title—guessing 'A Short Account of the Destruction of the Indies' instead of 'History of the Indies'! Las Casas was a Spanish priest who bravely condemned his own countrymen's cruelty and fought for Indigenous human rights." },
+          { id: "sa2", prompt: "2. What three questions should you ask every time you read an early American primary source, and why?", sample: "Always ask: (1) Who is speaking? (2) Why are they speaking? (3) Whose voices go unheard, and why? Because pre-contact North American tribes didn't use written scripts, nearly all early written records come from European perspectives." }
+        ],
+        flashcards: [
+          { id: "fc1", category: "Indigenous Civilizations", date: "Peaked ~1200 CE", term: "Ancestral Puebloans (Zuni & Hopi)", what: "Southwestern Indigenous civilization famous for multi-family canyon cliff dwellings.", why: "Proves complex North American societies rose and declined (from drought) centuries before Europeans arrived.", url: "https://www.britannica.com/topic/Indigenous-peoples-of-the-American-Southwest/Pueblo-peoples" },
+          { id: "fc2", category: "Indigenous Politics", date: "Pre-Contact Onward", term: "Haudenosaunee (Iroquois) Confederacy", what: "Political alliance ('Great League of Peace') uniting five (later six) Indigenous nations in upstate New York.", why: "Demonstrates sophisticated regional diplomacy and political organization in North America prior to European contact.", url: "https://www.britannica.com/topic/Haudenosaunee-Confederacy" },
+          { id: "fc3", category: "Social Structure", date: "Pre-Contact Onward", term: "Matrilineal Society", what: "Kinship system where children belong to their mother's clan and inheritance flows through the maternal line.", why: "Gave Indigenous women major religious authority and ownership of dwellings and tools—unlike 16th-century Europe.", url: "https://kids.britannica.com/students/article/Indigenous-peoples-of-the-Americas/275046" },
+          { id: "fc4", category: "Indigenous Worldviews", date: "Quoted in Ep. 1", term: "Black Hawk (Sauk Leader)", what: "Sauk leader who explained that the Great Spirit gave land to cultivate for subsistence, not private ownership.", why: "Highlights the fundamental clash between Indigenous shared land use and European private property.", url: "https://www.britannica.com/biography/Black-Hawk-Sauk-and-Fox-leader" },
+          { id: "fc5", category: "Spanish Conquistadors", date: "1513 & 1521", term: "Juan Ponce de León", what: "Spanish explorer who arrived in Florida in 1513 looking for gold and the Fountain of Youth.", why: "Led the first European expedition to Florida; died in 1521 from a Calusa poison arrow.", url: "https://www.britannica.com/biography/Juan-Ponce-de-Leon" },
+          { id: "fc6", category: "Spanish Conquistadors", date: "1520s–1530s", term: "Álvar Núñez Cabeza de Vaca", what: "Spanish explorer ('Cow-Head') who wandered the American Southwest searching for gold.", why: "Found no gold, but early expeditions spread Old World microbes that decimated Native populations.", url: "https://www.britannica.com/biography/Alvar-Nunez-Cabeza-de-Vaca" },
+          { id: "fc7", category: "Indigenous Resistance", date: "1597", term: "Guale Uprising (Georgia Coast)", what: "Indigenous rebellion against Spanish Catholic missions along present-day coastal Georgia.", why: "Destroyed Spanish missions and showed fierce early Native resistance right in Georgia.", url: "https://en.wikipedia.org/wiki/Guale" },
+          { id: "fc8", category: "Colonial Labor System", date: "16th–17th Centuries", term: "Encomienda System", what: "Spanish colonial practice forcing Indigenous people to provide unpaid labor and tribute to Spanish settlers.", why: "Operated as brutal forced servitude until Popé's 1680 Pueblo Revolt forced Spain to abandon it in New Mexico.", url: "https://www.britannica.com/topic/encomienda" },
+          { id: "fc9", category: "Indigenous Resistance", date: "1680", term: "Popé & The Pueblo Revolt", what: "Religious leader Popé organized ~2,000 Pueblo warriors to expel the Spanish from Santa Fe and rebuild kivas.", why: "Most successful Indigenous uprising in North America; forced Spain to end the encomienda and tolerate Pueblo religion.", url: "https://www.britannica.com/event/Pueblo-Rebellion" },
+          { id: "fc10", category: "Historiography", date: "1484–1566", term: "Bartolomé de las Casas", what: "Spanish Dominican friar and author of 'History of the Indies' who exposed Spanish atrocities against Natives.", why: "Showed internal Spanish dissent against brutality, though English writers used his words for the Black Legend.", url: "https://www.britannica.com/biography/Bartolome-de-Las-Casas" },
+          { id: "fc11", category: "Propaganda", date: "16th–17th Centuries", term: "The Black Legend", what: "Narrative emphasizing Spain's unspeakable cruelty toward Indigenous peoples.", why: "Weaponized by English colonizers to justify building England's own empire under the guise of 'saving' Natives.", url: "https://www.britannica.com/topic/Black-Legend" }
+        ],
+        timeline: [
+          { id: "tl1", order: 1, yearLabel: "~1200 CE", title: "Zuni & Hopi (Ancestral Puebloan) Canyon Dwellings Peak", detail: "Multi-family cliff dwellings thrive in the Southwest before declining due to drought." },
+          { id: "tl2", order: 2, yearLabel: "1513", title: "Juan Ponce de León Lands in Florida", detail: "First official Spanish expedition reaches Florida looking for gold and the Fountain of Youth." },
+          { id: "tl3", order: 3, yearLabel: "1521", title: "Calusa Poison Arrow Kills Ponce de León", detail: "Ponce de León is mortally wounded on his return trip to Florida." },
+          { id: "tl4", order: 4, yearLabel: "1527–1536", title: "Álvar Núñez 'Cow-Head' Cabeza de Vaca Wanders the Southwest", detail: "Conquistadors trek across the Southwest finding no gold while spreading Old World microbes." },
+          { id: "tl5", order: 5, yearLabel: "1597", title: "Guale Indians Rise Up Against Spanish Missions in Georgia", detail: "Indigenous Guale fighters rebel against forced conversion along the Georgia coast." },
+          { id: "tl6", order: 6, yearLabel: "1610", title: "Spain Establishes Permanent Settlement at Santa Fe, New Mexico", detail: "Santa Fe becomes the colonial capital of New Mexico." },
+          { id: "tl7", order: 7, yearLabel: "1680", title: "Popé Leads 2,000 Warriors in the Pueblo Revolt", detail: "Pueblo warriors expel the Spanish from Santa Fe, rebuild kivas, and end the encomienda system." }
+        ],
+        mysteryDocs: [
+          {
+            id: "md1",
+            badge: "Episode 1 Official Mystery Document",
+            quote: `"The Indians were totally deprived of their freedom and were put in the harshest, fiercest, most horrible servitude and captivity which no one who has not seen it can understand... I sometimes came upon dead bodies on my way, and upon others who were gasping and moaning in their death agony, repeating 'Hungry! Hungry!' And this was the freedom, the good treatment, and the Christianity the Indians received."`,
+            clues: [
+              "Clue 1: The writer refers to 'our Spaniards,' showing he is a Spanish clergyman horrified by his countrymen's abuses.",
+              "Clue 2: John Green guessed the right author but got zapped because he guessed 'A Short Account of the Destruction of the Indies' instead of this book!"
+            ],
+            options: [
+              "Bartolomé de las Casas — History of the Indies",
+              "Juan Ginés de Sepúlveda — On the Just Causes of War",
+              "Juan Ponce de León — Florida Expedition Logs",
+              "Popé — Declaration of the Santa Fe Kivas"
+            ],
+            correctIndex: 0,
+            takeaway: "Bartolomé de las Casas wrote this in 'History of the Indies.' English propagandists later seized on his honest criticisms to spin the Black Legend."
+          },
+          {
+            id: "md2",
+            badge: "Episode 1 Thought Bubble Primary Quote",
+            quote: `"The Great Spirit gave it to his children to live upon and cultivate as far as necessary for their subsistence, and so long as they occupy and cultivate it they have a right to the soil."`,
+            clues: [
+              "Clue 1: This quote explains why Indigenous North Americans viewed land as a common resource rather than private property.",
+              "Clue 2: The speaker was a famous leader of the Sauk tribe."
+            ],
+            options: [
+              "Popé — Tewa Religious Leader",
+              "Black Hawk — Leader of the Sauk Tribe",
+              "Juanillo — Chief of the Georgia Guale",
+              "Álvar Núñez Cabeza de Vaca"
+            ],
+            correctIndex: 1,
+            takeaway: "Sauk leader Black Hawk captured the core contrast between Indigenous shared land stewardship and European private property."
+          },
+          {
+            id: "md3",
+            badge: "Episode 1 Bonus Counter-Argument Quote",
+            quote: `"Those whose condition is such that their function is the use of their bodies and nothing better can be expected of them, those, I say, are natural slaves. Such are the barbarous and inhumane peoples [of the Americas] who have no civil life and peaceful customs... and who do not even possess written laws."`,
+            clues: [
+              "Clue 1: John Green mentions this Spanish philosopher as someone who argued that the Indians might not even be human.",
+              "Clue 2: He was Bartolomé de las Casas's main opponent in the 1550 Valladolid Debate."
+            ],
+            options: [
+              "Bartolomé de las Casas — History of the Indies",
+              "King Charles V — The New Laws of the Indies",
+              "Juan Ginés de Sepúlveda — Democrates Alter (On the Just Causes of War)",
+              "Álvar Núñez Cabeza de Vaca — La Relación"
+            ],
+            correctIndex: 2,
+            takeaway: "Juan Ginés de Sepúlveda represented the imperialist mindset that Las Casas fought against."
+          }
+        ]
       },
-      {
+
+      2: {
         id: 2,
         number: "02",
+        era: "1607–1691",
         title: "When is Thanksgiving? Colonizing America",
-        active: false,
-        duration: "12:25",
-        youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s",
-        desc: "Jamestown, the starving time, tobacco, Plymouth, the Massachusetts Bay Colony, and the difference between Pilgrims and Puritans."
+        duration: "12:26",
+        youtubeUrl: "https://www.youtube.com/watch?v=o69TvQqyGdg",
+        docUrl: "https://docs.google.com/document/d/1yRPyXvlDalBN7P9sNko48b9MFJ2RmOxlj1ftsp5J_4Q/edit?usp=drivesdk",
+        desc: "Jamestown's goldsmiths and 'Starving Time,' John Rolfe's tobacco boom, the Headright System, Plymouth's Mayflower Compact, Squanto, and John Winthrop's 'City upon a Hill.'",
+        sections: [
+          {
+            id: "ep2-s1",
+            badge: "Section 1 • Jamestown & The Starving Time (1607–1610)",
+            title: "Why Goldsmiths Make Terrible Farmers: Jamestown & Roanoke",
+            content: `<p class="text-sm text-slate-200 leading-relaxed mb-3">Contrary to the myth that all early English settlers came for religious freedom, the first permanent English colony at <strong><a href="https://en.wikipedia.org/wiki/History_of_the_United_States" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Jamestown, Virginia</a> (1607)</strong> was a business venture by the <strong>Virginia Company</strong> to find gold (following two failed attempts, including the "Lost Colony" of <strong>Roanoke Island</strong> that left only <em>CROATOAN</em> carved on a tree).</p>
+            <ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>"Would Rather Starve Than Farm":</strong> Because the Virginia Company sent a disproportionate number of goldsmiths and jewelers, Captain <strong>John Smith</strong> noted they preferred starving to farming.</li>
+              <li><strong>The Starving Time (1609–1610):</strong> Half the colonists died in year one; after the brutal winter of 1609–1610, only <strong>65 of 500</strong> colonists survived (an 80% mortality rate!).</li>
+              <li><strong>The <a href="https://www.americanhistorycentral.com/entries/apush-regions-british-colonies/" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Headright System</a> (1618):</strong> Offered <strong>50 acres of land</strong> for each person a settler paid to bring over, creating huge estates worked by <strong>indentured servants</strong> (who served 7–10 years as "temporary slaves").</li>
+            </ul>`
+          },
+          {
+            id: "ep2-s2",
+            badge: "Section 2 • Tobacco, 1619 & Chesapeake Society",
+            title: "30 Million Pounds of Tobacco, 1619 Slavery & Feudal Maryland",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>1619 Arrival of Enslaved Africans:</strong> Just 12 years after Jamestown's founding, the first shipment of enslaved Africans arrived in Virginia.</li>
+              <li><strong>King James Hated Smoke, Loved Taxes:</strong> Tobacco ("a thank-you for the smallpox, here's some lung cancer gift from the Natives") saved Virginia's economy. King James I called smoking <em>"loathesome to the eye and hateful to the nose,"</em> but loved the tax revenue—exports hit 200,000 lbs/year by 1624 and <strong>30 million lbs/year by the 1680s</strong>.</li>
+              <li><strong>Chesapeake Demographics:</strong> Three-quarters of immigrants were servants, and men outnumbered women <strong>5 to 1</strong>. High male death rates in the disease-ridden swamp created a small class of property-owning widows.</li>
+              <li><strong>Maryland (1632):</strong> Founded as a single-owner proprietorship granted to Catholic <strong>Cecilius Calvert (Lord Baltimore)</strong>, who wanted a feudal kingdom and welcomed Catholics.</li>
+            </ul>`
+          },
+          {
+            id: "ep2-s3",
+            badge: "Section 3 • Thought Bubble: Pilgrims vs. Puritans",
+            title: "The Mayflower Compact (1620), Squanto & The First Thanksgiving",
+            content: `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Puritans vs. Pilgrims</div><p class="text-slate-300"><strong>Puritans (Congregationalists)</strong> wanted to purify the Church of England from its "Catholic-y" bishops and incense. <strong>Pilgrims (Separatists)</strong> wanted to separate completely—fleeing to Holland before sailing on the <em>Mayflower</em> in 1620.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1"><a href="https://www.britannica.com/topic/Mayflower-Compact" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Mayflower Compact</a> (1620)</div><p class="text-slate-300">Blown off course to Massachusetts instead of Virginia, 41 Pilgrim men signed the <strong>first written framework for self-government in the U.S.</strong></p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Squanto &amp; Chief Massasoit</div><p class="text-slate-300">Landing 6 weeks before winter without food, half the Pilgrims died. Patuxet interpreter <strong>Squanto</strong> and Wampanoag chief <strong>Massasoit</strong> saved them by teaching them to plant corn and fish—leading to the 1621 Thanksgiving feast.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Massachusetts Bay (1629)</div><p class="text-slate-300">Unlike Virginia, the Massachusetts Bay Company moved its board of directors <em>to America</em>, giving New England far greater self-government (and absorbing Plymouth in 1691).</p></div>
+            </div>`
+          },
+          {
+            id: "ep2-s4",
+            badge: "Section 4 • 'City Upon a Hill' & Puritan Dissenters",
+            title: "John Winthrop, 'Visible Saints,' Roger Williams & Anne Hutchinson",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong><a href="https://www.britannica.com/biography/John-Winthrop-American-colonial-governor" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">John Winthrop</a>'s "City Upon a Hill" (1630):</strong> Preached that Puritans had to subordinate individual luxuries to the collective good as a model to the world—the root of <strong>American Exceptionalism</strong>.</li>
+              <li><strong>Inequality + Universal Literacy:</strong> Only church members (<strong>"Visible Saints"</strong>) could vote, and slavery existed in Massachusetts by 1640. However, Puritans required every child to learn to read the Bible!</li>
+              <li><strong>Banishing Dissenters:</strong> <strong>Roger Williams</strong> (who preached full religious freedom) was banished and founded <strong>Rhode Island</strong>. <strong>Anne Hutchinson</strong> (who preached that salvation came from inner grace, not outward church attendance, and dared to teach as a woman) was banished to New York, where she was killed during an Indigenous conflict.</li>
+            </ul>`
+          }
+        ],
+        quiz: [
+          { id: "e2q1", question: "Why did Jamestown nearly collapse during its first years, culminating in 'The Starving Time' of 1609–1610?", options: ["Spanish warships blockaded the Chesapeake.", "The Virginia Company sent too many goldsmiths and jewelers who 'would rather starve than farm.'", "A volcano erupted in Virginia.", "King James I outlawed corn."], correctIndex: 1, explanation: "Expecting South American-style gold, the Virginia Company sent goldsmiths and gentlemen who refused to farm, leading to an 80% mortality rate." },
+          { id: "e2q2", question: "How did the Virginia Company's 'Headright System' (1618) work?", options: ["Every settler received 50 acres of land for each person they paid to bring to Virginia, fueling large estates worked by indentured servants.", "Only church members ('Visible Saints') could own land.", "Every Native American tribe received 50 acres.", "Indentured servants became governor after 2 years."], correctIndex: 0, explanation: "Paying passage for indentured servants earned wealthy planters 50 acres per head, creating giant tobacco plantations." },
+          { id: "e2q3", question: "What crop turned Virginia into a booming plantation society (despite King James I calling it 'loathesome to the eye and hateful to the nose')?", options: ["Sugar cane", "Cotton", "Tobacco", "Potatoes"], correctIndex: 2, explanation: "Introduced by John Rolfe, Virginia tobacco exports exploded from 200,000 pounds in 1624 to over 30 million pounds a year by the 1680s." },
+          { id: "e2q4", question: "What was the difference between the Puritans and the Pilgrims?", options: ["Puritans were Catholic; Pilgrims were Quaker.", "Puritans (Congregationalists) wanted to purify the Church of England; Pilgrims were extreme Separatists who wanted to separate completely.", "Pilgrims settled Jamestown in 1607; Puritans settled Maryland.", "There was no difference at all."], correctIndex: 1, explanation: "While both were Calvinist Protestants, the Plymouth Pilgrims were Separatists who broke completely from the Church of England." },
+          { id: "e2q5", question: "Why is the Mayflower Compact (1620) considered such a milestone in U.S. history?", options: ["It abolished slavery in New England.", "It was the first written framework for self-government in what became the United States, binding signers to follow 'just and equal laws.'", "It declared war on King James I.", "It established the first bank in Boston."], correctIndex: 1, explanation: "Signed on board the Mayflower after blowing off course to Massachusetts, it bound the colonists to obey laws written by their chosen representatives." },
+          { id: "e2q6", question: "What did John Winthrop mean by calling Massachusetts Bay 'a city upon a hill' in his 1630 sermon 'A Model of Christian Charity'?", options: ["Boston should build a giant stone fortress on Bunker Hill.", "The Puritans had to unite as a collective community and serve as a godly model watched by the whole world.", "Every individual should pursue personal wealth above all else.", "Only people living on hills could vote."], correctIndex: 1, explanation: "Winthrop emphasized collective unity over individualism—and warned that the eyes of the world were watching their godly experiment." },
+          { id: "e2q7", question: "Who was allowed to vote and hold office in the early Massachusetts Bay Colony?", options: ["Every adult man and woman", "Anyone who owned 50 acres of tobacco", "Only full church members who proved they were 'Visible Saints'", "Anyone who could read the Bible"], correctIndex: 2, explanation: "Although New England towns held democratic elections, voting was restricted strictly to 'Visible Saints' (full church members)." },
+          { id: "e2q8", question: "Why were Roger Williams and Anne Hutchinson banished from the Massachusetts Bay Colony?", options: ["They tried to sell Boston to the French.", "Williams called for full religious freedom, and Hutchinson preached that church membership should be based on inner grace rather than outward church attendance.", "They refused to learn how to read.", "They smuggled tobacco into Plymouth."], correctIndex: 1, explanation: "Puritans did not tolerate religious dissent: Williams was banished (and founded Rhode Island), and Hutchinson was banished to New York." }
+        ],
+        shortAnswers: [
+          { id: "e2sa1", prompt: "1. Contrast the founding goals and social structure of Virginia (Jamestown) with Massachusetts Bay.", sample: "Virginia was founded for profit by the Virginia Company and became a male-dominated plantation colony built on tobacco, indentured servants, and enslaved Africans (starting in 1619). Massachusetts Bay was founded by Puritan families focused on collective religious unity ('a city upon a hill'), town meetings of 'Visible Saints,' and universal literacy so everyone could read the Bible." },
+          { id: "e2sa2", prompt: "2. Why was Anne Hutchinson considered 'doubly threatening' to the Puritan leaders of Massachusetts?", sample: "First, she challenged Puritan theology by arguing that salvation came from inner grace rather than outward church attendance; second, she was a woman preaching unorthodox religious ideas in a deeply patriarchal society." }
+        ],
+        flashcards: [
+          { id: "e2fc1", category: "Chesapeake Colonies", date: "Founded 1607", term: "Jamestown & The Virginia Company", what: "First permanent English colony in America, funded by a joint-stock company hunting for gold.", why: "Nearly collapsed during the 1609–10 'Starving Time' before tobacco made it a plantation society.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e2fc2", category: "Colonial Labor", date: "1618 Onward", term: "Headright System & Indentured Servants", what: "Granted 50 acres of land per person a settler paid to bring over; servants worked 7–10 years for passage.", why: "Created huge tobacco estates owned by wealthy elites atop a massive class of servants.", url: "https://www.americanhistorycentral.com/entries/apush-regions-british-colonies/" },
+          { id: "e2fc3", category: "Slavery & Economy", date: "1619", term: "1619 Arrival of Enslaved Africans", what: "First shipment of enslaved Africans brought to Virginia, twelve years after Jamestown's founding.", why: "Marked the beginning of plantation slavery in English North America.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e2fc4", category: "Chesapeake Colonies", date: "Founded 1632", term: "Maryland & Cecilius Calvert", what: "Second Chesapeake colony, granted as a single-owner proprietorship to Catholic Lord Baltimore.", why: "Operated like a feudal manor and served as a rare colonial haven welcoming Catholics.", url: "https://www.americanhistorycentral.com/entries/apush-regions-british-colonies/" },
+          { id: "e2fc5", category: "Self-Government", date: "1620", term: "The Mayflower Compact", what: "Agreement signed by 41 Pilgrim men aboard the Mayflower binding them to follow 'just and equal laws.'", why: "First written framework for self-government in U.S. history.", url: "https://www.britannica.com/topic/Mayflower-Compact" },
+          { id: "e2fc6", category: "Indigenous Allies", date: "1620–1621", term: "Squanto & Chief Massasoit", what: "Patuxet interpreter and Wampanoag chief who rescued the starving Plymouth Pilgrims.", why: "Taught the Pilgrims to plant corn and catch fish, leading to the 1621 Thanksgiving feast.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e2fc7", category: "Puritan New England", date: "1630", term: "John Winthrop & 'A City Upon a Hill'", what: "Puritan governor and author of the sermon 'A Model of Christian Charity.'", why: "Defined New England's collective religious mission and birthed 'American Exceptionalism.'", url: "https://www.britannica.com/biography/John-Winthrop-American-colonial-governor" },
+          { id: "e2fc8", category: "Religious Dissenters", date: "1635–1637", term: "Roger Williams & Anne Hutchinson", what: "Puritan dissenters banished from Massachusetts for preaching religious freedom and inner grace.", why: "Williams founded Rhode Island; Hutchinson exposed Puritan religious and gender intolerance.", url: "https://en.wikipedia.org/wiki/Timeline_of_the_Thirteen_Colonies" }
+        ],
+        timeline: [
+          { id: "e2t1", order: 1, yearLabel: "1607", title: "Jamestown Founded by the Virginia Company", detail: "First permanent English settlement in America is established in Virginia." },
+          { id: "e2t2", order: 2, yearLabel: "1609–1610", title: "'The Starving Time' Winter at Jamestown", detail: "Jamestown's population plunges from 500 to just 65 survivors." },
+          { id: "e2t3", order: 3, yearLabel: "1618", title: "Virginia Company Introduces the Headright System", detail: "Grants 50 acres of land for every person a settler pays to bring over, booming indentured servitude." },
+          { id: "e2t4", order: 4, yearLabel: "1619", title: "First Shipment of Enslaved Africans Arrives in Virginia", detail: "Marks the ominous beginning of chattel slavery in the English colonies." },
+          { id: "e2t5", order: 5, yearLabel: "1620", title: "Pilgrims Land at Plymouth & Sign the Mayflower Compact", detail: "41 passengers sign the first written framework for self-government in America." },
+          { id: "e2t6", order: 6, yearLabel: "1629–1630", title: "Massachusetts Bay Colony Chartered & Winthrop Preaches 'City Upon a Hill'", detail: "Puritans establish Massachusetts Bay with local self-government for 'Visible Saints.'" },
+          { id: "e2t7", order: 7, yearLabel: "1635–1637", title: "Roger Williams & Anne Hutchinson Banished from Massachusetts", detail: "Williams founds Rhode Island; Hutchinson is exiled to New York." }
+        ],
+        mysteryDocs: [
+          {
+            id: "e2m1",
+            badge: "Episode 2 Official Mystery Document",
+            quote: `"We must be knit together, in this work, as one man. We must entertain each other in brotherly affection. We must be willing to abridge ourselves of our superfluities, for the supply of others' necessities... For we must consider that we shall be as a city upon a hill. The eyes of all people are upon us."`,
+            clues: [
+              "Clue 1: The speaker is a Puritan leader urging his community to put collective charity ahead of personal luxuries.",
+              "Clue 2: That famous phrase—'a city upon a hill'—was later quoted by Ronald Reagan in his 1989 farewell address!"
+            ],
+            options: [
+              "John Winthrop — 'A Model of Christian Charity' (1630)",
+              "Captain John Smith — 'General History of Virginia' (1624)",
+              "William Bradford — 'Of Plymouth Plantation' (1630)",
+              "Roger Williams — 'The Bloudy Tenent of Persecution' (1644)"
+            ],
+            correctIndex: 0,
+            takeaway: "John Winthrop nailed the Puritan ethos in 'A Model of Christian Charity' (1630): collective unity over individualism, and the birth of American Exceptionalism."
+          },
+          {
+            id: "e2m2",
+            badge: "Episode 2 Bonus Royal Rant",
+            quote: `"A custom loathesome to the eye, hateful to the nose, harmful to the brain, dangerous to the lungs, and in the black stinking fume thereof, nearest resembling the horrible Stygian smoke of the pit that is bottomless."`,
+            clues: [
+              "Clue 1: The author is an English king who despised Virginia's booming new cash crop—even though he loved collecting tax revenue from it!",
+              "Clue 2: Jamestown was literally named after him."
+            ],
+            options: [
+              "King James I — 'A Counterblaste to Tobacco' (1604)",
+              "Cecilius Calvert — Charter of Maryland (1632)",
+              "John Rolfe — Letters from Jamestown (1614)",
+              "Anne Hutchinson — Trial Transcript (1637)"
+            ],
+            correctIndex: 0,
+            takeaway: "King James I hated tobacco smoke with a passion, yet nothing funded the crown and Virginia planters quite like tobacco taxes!"
+          }
+        ]
       },
-      {
+
+      3: {
         id: 3,
         number: "03",
+        era: "1607–1678",
         title: "The Natives and the English",
-        active: false,
         duration: "11:27",
-        youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s",
-        desc: "Chief Powhatan, Pocahontas, the Pequot War, King Philip's War (Metacom), and how English settlers viewed Native Americans."
+        youtubeUrl: "https://www.youtube.com/watch?v=TTYOQ05oDOI",
+        docUrl: "https://docs.google.com/document/d/1it94qEyQjfqgwLBSY6Ixi8LnkLzhpmK12ckBSba2Wtc/edit?usp=drivesdk",
+        desc: "Chief Powhatan, the real story of Pocahontas, Opechancanough's 1622 uprising, Puritan fears of 'going native,' the 1637 Pequot War, and King Philip's War (Metacom).",
+        sections: [
+          {
+            id: "ep3-s1",
+            badge: "Section 1 • Virginia & The Powhatan Confederacy",
+            title: "Chief Powhatan, The Real Pocahontas & The 1622 Uprising",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>Chief Wahunsonacock ("<a href="https://www.britannica.com/topic/Powhatan-North-American-Indian-confederacy" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Powhatan</a>"):</strong> Leader of over 30 Virginia tribes who realized the starving English were clueless at farming but had valuable <strong>guns and iron tools</strong>.</li>
+              <li><strong>Pocahontas Never Married John Smith:</strong> Her "rescue" of John Smith was likely an adoption ritual staged by Powhatan to show dominance. Kidnapped for ransom in 1613, she married <strong>John Rolfe</strong> in 1614, went to England, and died of disease.</li>
+              <li><strong>Opechancanough's 1622 Uprising:</strong> Realizing the English wanted Native land permanently, Chief Opechancanough attacked in 1622 and 1644. Though defeated, the 1622 attack bankrupted the <strong>Virginia Company</strong> (only 1,200 of 6,000 colonists survived by 1644), making Virginia a royal colony ("governments are better at governing than corporations").</li>
+            </ul>`
+          },
+          {
+            id: "ep3-s2",
+            badge: "Section 2 • Thought Bubble: Trade, Furs & Roaming Pigs",
+            title: "How Two-Way Trade & Free-Range Livestock Sparked War",
+            content: `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Surplus for Surplus</div><p class="text-slate-300">Early trade wasn't Europeans tricking naive Natives: the English traded <strong>iron tools, cloth, and guns</strong> for Indigenous <strong>food and beaver furs</strong>.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Disrupted Gender Roles &amp; Beaver Wars</div><p class="text-slate-300">Hunting constantly for furs pulled Native men away from farming and sparked bloody inter-tribal wars fought with European guns.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Fences &amp; Free-Range Pigs</div><p class="text-slate-300">The English fenced off Native hunting grounds while letting English <strong>pigs and cattle</strong> roam wild and eat Native cornfields.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">"Going Native" Panic (1642)</div><p class="text-slate-300">Because Indigenous society offered tempting abundance and equality (especially for women), Massachusetts passed a 1642 law sentencing colonists who ran away to join tribes to <strong>3 years of hard labor</strong>!</p></div>
+            </div>`
+          },
+          {
+            id: "ep3-s3",
+            badge: "Section 3 • New England Wars: Pequot War & King Philip's War",
+            title: "The Mystic Massacre (1637) & Metacom's War (1675–1676)",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>The <a href="https://www.britannica.com/topic/Pequot-War" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Pequot War</a> (1637):</strong> Massachusetts, Connecticut, and Narragansett forces burned a Pequot village at <strong>Mystic</strong>, massacring over <strong>500 people</strong> and selling survivors into Caribbean slavery—opening the Connecticut River Valley to English settlement.</li>
+              <li><strong><a href="https://www.britannica.com/event/King-Philips-War" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">King Philip's War / Metacom's War</a> (1675–1676):</strong> Wampanoag chief <strong>Metacom ("King Philip")</strong> led a massive uprising that attacked <strong>half of New England's 90 towns</strong> and destroyed 12 of them—killing 1,000 of 52,000 colonists and 3,000 of 20,000 Natives.</li>
+              <li><strong>Symbolic Warfare &amp; Livestock:</strong> Native warriors disemboweled English cattle because grazing animals drove relentless English land-grabbing.</li>
+            </ul>`
+          },
+          {
+            id: "ep3-s4",
+            badge: "Section 4 • Why We Study Indigenous Resistance",
+            title: "Puritan Self-Doubt & Remembering Active Historical Agency",
+            content: `<div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs sm:text-sm text-slate-200 space-y-2">
+              <div class="font-bold text-amber-300">Puritan "Backsliding" in 1675:</div>
+              <p>In the 1675 Massachusetts Laws of War, Puritans blamed King Philip's War on their own moral failure—believing God sent Native warriors as a "scourge" because Boston had strayed from its godly mission within 50 years!</p>
+              <div class="font-bold text-teal-300 pt-1">Active Makers of History:</div>
+              <p>Studying these wars reminds us that Native Americans were people who <strong>acted in history</strong>, not passive victims who were merely acted upon.</p>
+            </div>`
+          }
+        ],
+        quiz: [
+          { id: "e3q1", question: "Why did Chief Powhatan initially decide to help the English colonists at Jamestown?", options: ["He wanted to move to London.", "He realized the English were clueless at farming (starving) but useful as trade allies because they had guns and iron tools.", "He was afraid of the Dutch in New Amsterdam.", "Captain John Smith paid him a million dollars in gold."], correctIndex: 1, explanation: "Powhatan saw that trading surplus corn and furs for English guns and metal tools strengthened his confederacy." },
+          { id: "e3q2", question: "What is the historical truth about Pocahontas and Captain John Smith?", options: ["They got married in Jamestown and moved to Boston.", "She never married John Smith; her 'rescue' was likely an adoption/dominance ritual staged by her father Powhatan, and she later married John Rolfe.", "She led the 1622 uprising against Jamestown.", "She wrote the Mayflower Compact."], correctIndex: 1, explanation: "Pocahontas never married Smith; she was kidnapped in 1613, converted to Christianity, and married tobacco planter John Rolfe in 1614." },
+          { id: "e3q3", question: "How did the fur trade and English livestock (pigs and cattle) create conflict with Native Americans?", options: ["The English refused to eat beef or pork.", "Overhunting for furs disrupted gender roles and sparked inter-tribal wars, while free-roaming English pigs and cows trampled Native crops.", "Native tribes stole all the pigs to sail to the Caribbean.", "King James I taxed beaver hats at 500%."], correctIndex: 1, explanation: "English fences locked Natives out of land while free-roaming English pigs and cattle ate unfenced Indigenous cornfields." },
+          { id: "e3q4", question: "What was a major result of Chief Opechancanough's 1622 uprising in Virginia?", options: ["The English permanently abandoned Virginia.", "It was the final nail in the coffin of the profitless Virginia Company, turning Virginia into a royal colony in 1624.", "Opechancanough became Governor of Massachusetts.", "Spain conquered Jamestown."], correctIndex: 1, explanation: "The Virginia Company never turned a profit and lost 80% of its settlers, prompting the Crown to take over Virginia as a royal colony." },
+          { id: "e3q5", question: "Why did the Massachusetts General Court pass a law in 1642 punishing colonists with 3 years of hard labor if they went to live with Native Americans?", options: ["Puritan leaders feared colonists would 'go native' because Indigenous society offered tempting abundance and greater equality (especially for women).", "Native tribes were recruiting sailors for pirate ships.", "The King wanted all colonists drafted into the army.", "There was a gold rush in Connecticut."], correctIndex: 0, explanation: "Despite calling Natives 'heathens' on the Massachusetts seal ('Come over and help us'), Puritans worried colonists preferred the freedom of Native life." },
+          { id: "e3q6", question: "What happened during the 1637 Pequot War at Mystic River?", options: ["A peaceful treaty was signed giving Connecticut back to the Pequots.", "Massachusetts, Connecticut, and Narragansett forces burned the Pequot village at Mystic, massacring over 500 people and enslaving survivors.", "French troops rescued the Pequot tribe.", "Roger Williams led the English army."], correctIndex: 1, explanation: "The brutal Mystic massacre shocked even William Bradford and opened the Connecticut River Valley to English expansion." },
+          { id: "e3q7", question: "Who led the massive 1675–1676 New England uprising that attacked half of the region's 90 English towns?", options: ["Chief Powhatan", "Popé", "Wampanoag chief Metacom (whom the English called 'King Philip')", "Squanto"], correctIndex: 2, explanation: "Metacom ('King Philip') led the largest Indigenous alliance in New England history, destroying 12 of 90 English towns." },
+          { id: "e3q8", question: "Why did the Massachusetts General Court blame *themselves* in 1675 for the devastation of King Philip's War?", options: ["They forgot to lock the gates of Boston.", "They believed God had sent Native Americans as a 'severe scourge' to punish the Puritans for 'backsliding' from their godly mission.", "They had run out of gunpowder.", "They blamed Roger Williams for casting a spell."], correctIndex: 1, explanation: "Within 50 years of Winthrop's 'City upon a Hill' sermon, Puritans feared their religious mission was failing and viewed the war as God's punishment." }
+        ],
+        shortAnswers: [
+          { id: "e3sa1", prompt: "1. Why did Native American warriors during King Philip's War reserve special brutality for English cows and livestock?", sample: "Free-roaming English cattle and pigs trampled Indigenous cornfields, and their grazing needs constantly drove English colonists to seize more Native territory. Targeting cows struck directly at the ecological engine of English colonization." },
+          { id: "e3sa2", prompt: "2. Why does John Green emphasize that we must study bloody conflicts like the Pequot War and King Philip's War rather than glossing over them?", sample: "Because American mythology often erases Indigenous people or treats them as passive victims. Studying their fierce resistance reminds us that Native Americans were active agents who shaped history, not just people acted upon by it." }
+        ],
+        flashcards: [
+          { id: "e3fc1", category: "Virginia Confederacy", date: "Early 1600s", term: "Chief Powhatan (Wahunsonacock)", what: "Paramount leader of over 30 Algonquian tribes in the Chesapeake region.", why: "Kept early Jamestown alive through food trade in exchange for English guns and metal tools.", url: "https://www.britannica.com/topic/Powhatan-North-American-Indian-confederacy" },
+          { id: "e3fc2", category: "Chesapeake History", date: "1607–1617", term: "Pocahontas & John Rolfe", what: "Powhatan's daughter who was kidnapped in 1613 and married tobacco planter John Rolfe in 1614.", why: "Brought temporary peace to Virginia; debunks the myth that she married John Smith.", url: "https://en.wikipedia.org/wiki/List_of_17th-century_wars_involving_the_Thirteen_Colonies" },
+          { id: "e3fc3", category: "Indigenous Resistance", date: "1622 & 1644", term: "Chief Opechancanough", what: "Powhatan's successor who launched major coordinated attacks against Virginia's land-hungry settlers.", why: "His 1622 uprising bankrupted the Virginia Company, turning Virginia into a royal colony.", url: "https://en.wikipedia.org/wiki/American_Indian_Wars" },
+          { id: "e3fc4", category: "Puritan Literature", date: "1682", term: "Captivity Narratives (Mary Rowlandson)", what: "Popular Puritan accounts of being captured by Native Americans and returning to Christian society.", why: "Used as propaganda to discourage colonists from 'going native,' even while admitting captives were treated well.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e3fc5", category: "New England Conflict", date: "1637", term: "The Pequot War (Mystic Massacre)", what: "War in which English colonists and Narragansett allies burned a Pequot village at Mystic, killing 500+.", why: "Nearly eradicated the Pequot nation and opened the Connecticut River Valley to English settlement.", url: "https://www.britannica.com/topic/Pequot-War" },
+          { id: "e3fc6", category: "New England Conflict", date: "1675–1676", term: "King Philip's War (Metacom's War)", what: "Massive uprising led by Wampanoag chief Metacom ('King Philip') that attacked half of New England's 90 towns.", why: "Deadliest colonial war in New England; nearly pushed the English back to the coast before Metacom was killed.", url: "https://www.britannica.com/event/King-Philips-War" }
+        ],
+        timeline: [
+          { id: "e3t1", order: 1, yearLabel: "1607", title: "John Smith Orders Jamestown Colonists to Stop Stealing Native Food", detail: "Early trade between Chief Powhatan and Jamestown begins peacefully." },
+          { id: "e3t2", order: 2, yearLabel: "1613–1614", title: "Pocahontas Kidnapped for Ransom & Marries John Rolfe", detail: "Creates a temporary eight-year peace between Jamestown and the Powhatan Confederacy." },
+          { id: "e3t3", order: 3, yearLabel: "1622", title: "Chief Opechancanough Leads Massive Uprising in Virginia", detail: "Attempt to expel land-hungry English settlers bankrupts the Virginia Company." },
+          { id: "e3t4", order: 4, yearLabel: "1637", title: "Pequot War & The Massacre at Mystic River", detail: "English forces burn the Pequot village at Mystic, killing over 500 people." },
+          { id: "e3t5", order: 5, yearLabel: "1642", title: "Massachusetts Passes '3 Years Hard Labor' Law Against 'Going Native'", detail: "Puritan leaders punish colonists who leave Christian society to live with Indigenous tribes." },
+          { id: "e3t6", order: 6, yearLabel: "1675–1676", title: "Metacom Leads King Philip's War Across New England", detail: "Indigenous coalition attacks 45 of 90 English towns and destroys 12 before Metacom is killed." }
+        ],
+        mysteryDocs: [
+          {
+            id: "e3m1",
+            badge: "Episode 3 Official Mystery Document",
+            quote: `"The righteous God hath heightened our calamity, and given commission to the barbarous Heathen to rise up against us, and to become a smart rod and a severe scourge to us, in burning and depopulating several hopeful plantations... hereby speaking aloud to us to search and try out our ways, and turn again unto the Lord our God, from whom we have departed with a great backsliding."`,
+            clues: [
+              "Clue 1: Written in 1675 using a plural narrator ('us', 'our ways') during Metacom's devastating attacks on New England towns.",
+              "Clue 2: John Green got zapped by the Shock Pen because this was written by a colonial legislature rather than a single person!"
+            ],
+            options: [
+              "Laws of War Passed by the General Court of Massachusetts (1675)",
+              "Mary Rowlandson — 'The Sovereignty and Goodness of God' (1682)",
+              "William Bradford — 'Of Plymouth Plantation' (1637)",
+              "Captain John Smith — 'Generall Historie of Virginia' (1624)"
+            ],
+            correctIndex: 0,
+            takeaway: "Passed by the General Court of Massachusetts in 1675, this law shows Puritans interpreted King Philip's War as God punishing them for 'backsliding' from their City upon a Hill!"
+          },
+          {
+            id: "e3m2",
+            badge: "Episode 3 Eyewitness Quote",
+            quote: `"It was a fearful sight to see them thus frying in the fire, and the streams of blood quenching the same, and horrible was the stink and scent thereof..."`,
+            clues: [
+              "Clue 1: This horrified eyewitness quote describes the 1637 burning of the Pequot village at Mystic River.",
+              "Clue 2: The writer was the longtime Governor of Plymouth Colony."
+            ],
+            options: [
+              "William Bradford — Account of the Mystic Massacre (1637)",
+              "Roger Williams — Letter to Providence (1636)",
+              "Chief Opechancanough — Message to Jamestown (1622)",
+              "John Rolfe — Virginia Tobacco Ledger (1615)"
+            ],
+            correctIndex: 0,
+            takeaway: "Even Plymouth Governor William Bradford was shaken by the sheer brutality of the 1637 Mystic massacre during the Pequot War."
+          }
+        ]
       },
-      {
+
+      4: {
         id: 4,
         number: "04",
+        era: "1624–1769",
         title: "The Quakers, the Dutch, and the Ladies",
-        active: false,
         duration: "11:38",
-        youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s",
-        desc: "New Amsterdam turning into New York, William Penn's Pennsylvania, Bacon's Rebellion, the Salem Witch Trials, and colonial women's lives."
+        youtubeUrl: "https://www.youtube.com/watch?v=p47tZLJbdag",
+        docUrl: "https://docs.google.com/document/d/1lNQ7cYRbA2xxSIHH-KWKkJHHeZAGrEL9vDqcgKVXrDk/edit?usp=drivesdk",
+        desc: "Dutch New Amsterdam turning into New York, William Penn's Quaker Pennsylvania, the 1737 Walking Purchase fraud, Bacon's Rebellion (1676), the Salem Witch Trials, and colonial women.",
+        sections: [
+          {
+            id: "ep4-s1",
+            badge: "Section 1 • The Dutch, The Quakers & Carolina",
+            title: "New Amsterdam (1624), William Penn's Pennsylvania (1681) & The Walking Purchase",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong><a href="https://www.americanhistorycentral.com/entries/apush-european-colonization-americas/" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">New Amsterdam</a> Becomes New York (1664):</strong> Founded by Dutch businessmen in 1624, New Amsterdam welcomed Jews and Quakers, allowed women to inherit property and run businesses, and gave free Black people wider job access. When 4 English warships seized it in <strong>1664</strong>, women and free Black residents lost many of those rights!</li>
+              <li><strong><a href="https://www.britannica.com/biography/William-Penn-Quaker-leader" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">William Penn</a>'s "Best Poor Man's Country" (1681):</strong> Pacifist, anti-slavery Quakers founded Pennsylvania with religious freedom, broad male voting rights, and initial respect for Native Americans.</li>
+              <li><strong>The Walking Purchase Fraud (1737):</strong> After Penn died, Governor James Logan tricked the Lenape into ceding a "36-hour walk" of land—and hired fast runners to grab a huge territory!</li>
+              <li><strong>South Carolina (1663):</strong> Settled by planters from the sugar island of <strong>Barbados</strong>, who imported Caribbean-style plantation slavery to act as a buffer north of Spanish Florida.</li>
+            </ul>`
+          },
+          {
+            id: "ep4-s2",
+            badge: "Section 2 • Late-17th-Century Crises",
+            title: "Bacon's Rebellion (1676), The Dominion of New England & The Salem Witch Trials (1692)",
+            content: `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1"><a href="https://www.britannica.com/event/Bacons-Rebellion" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Bacon's Rebellion</a> (1676)</div><p class="text-slate-300"><strong>Nathaniel Bacon</strong> led armed Virginia frontier settlers against Gov. <strong>William Berkeley</strong> because Berkeley wouldn't let them kill more Indians and take western land. Bacon burned Jamestown before dying of dysentery.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Shift From Servants to Slavery</div><p class="text-slate-300">Bacon's Rebellion terrified Virginia elites—causing them to replace white indentured servants (who became free, armed, land-hungry rebels) with <strong>enslaved Africans</strong>.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Dominion of New England &amp; Toleration Act</div><p class="text-slate-300">James II merged New England, NY, and NJ under dictator <strong>Edmund Andros</strong> (1686) until the 1688 Glorious Revolution. The <strong>1690 Toleration Act</strong> ended Puritan theocracy—basing voting on property, not church membership.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1"><a href="https://www.britannica.com/event/Salem-witch-trials" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Salem Witch Trials</a> (1691–1692)</div><p class="text-slate-300">With their Puritan mission collapsing and even Quakers tolerated, panicked Massachusetts colonists accused ~150 people of witchcraft and executed 19 (including 14 women).</p></div>
+            </div>`
+          },
+          {
+            id: "ep4-s3",
+            badge: "Section 3 • Thought Bubble: Small Farms & Artisans",
+            title: "Why Land Equaled Freedom (And Why Paul Revere Made Silver)",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>Small Family Farms:</strong> Unlike Caribbean sugar islands, most northern and middle colonists worked small family farms—tying the American idea of "freedom" closely to owning land.</li>
+              <li><strong>Running Out of New England Farmland:</strong> Low disease rates caused New England's population to boom so fast that families ran out of land, sending younger sons into coastal cities.</li>
+              <li><strong>Rise of Colonial Artisans:</strong> Despite British rules discouraging colonial manufacturing, booming towns needed blacksmiths, weavers, and silversmiths (like future patriot <strong>Paul Revere</strong>).</li>
+            </ul>`
+          },
+          {
+            id: "ep4-s4",
+            badge: "Section 4 • Colonial Class & Women's Lives",
+            title: "Elite Dynasties, Coverture & Mary Cooper's 1769 Diary",
+            content: `<div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs sm:text-sm text-slate-200 space-y-2">
+              <div class="font-bold text-amber-300">Colonial Elites vs. The Poor:</div>
+              <p>Colonial America was far from classless (George Washington's father and grandfather were both elite justices of the peace), though abundant food and potential land kept poor Europeans indenturing themselves to come over.</p>
+              <div class="font-bold text-teal-300 pt-1">Colonial Women &amp; Mary Cooper's Diary (1769):</div>
+              <p>Married women couldn't own property (husbands willed land to sons and household items to daughters). As farmwife <strong>Mary Cooper</strong> wrote in 1769: <em>"I am dirty and distressed, almost wearied to death... here have I seen little else but hard labor and sorrow."</em></p>
+            </div>`
+          }
+        ],
+        quiz: [
+          { id: "e4q1", question: "How did the 1664 English takeover of Dutch New Amsterdam (renamed New York) affect women and free Black residents?", options: ["Both groups gained the right to vote.", "Women lost the Dutch right to inherit property and conduct business independently, and free Black people lost many jobs they had held under the Dutch.", "Slavery was immediately abolished in New York.", "Every Dutch family was given 500 acres in New Jersey."], correctIndex: 1, explanation: "Commercially minded Dutch law had given women and free Black people greater economic rights than English law allowed." },
+          { id: "e4q2", question: "What made William Penn's colony of Pennsylvania ('the best poor man's country,' founded 1681) stand out in the 17th century?", options: ["It was a Quaker haven featuring religious toleration, pacifism, opposition to slavery, voting rights for over half of men, and initial respect for Native Americans.", "It required everyone to join the Church of England.", "It was founded by sugar planters from Barbados.", "It banned all German-speaking immigrants."], correctIndex: 0, explanation: "Quaker Pennsylvania offered remarkable religious freedom, opposed slavery, and treated Native Americans fairly while Penn was alive." },
+          { id: "e4q3", question: "What was the 'Walking Purchase' of 1737 in Pennsylvania?", options: ["A charity walk organized by William Penn", "A notorious land fraud where Pennsylvania Governor James Logan hired fast runners to mark out as much Lenape land as 'a man could walk in 36 hours'", "A treaty giving Manhattan back to the Lenape", "A law requiring colonists to walk to church"], correctIndex: 1, explanation: "Because Quakers were pacifists who wouldn't wage war, Penn's successors used legal trickery and trained runners to cheat the Lenape out of land." },
+          { id: "e4q4", question: "Why did Nathaniel Bacon launch Bacon's Rebellion against Virginia Governor William Berkeley in 1676?", options: ["Bacon wanted to protect Native Americans from English settlers.", "Bacon was furious that Berkeley gave the best land to his wealthy cronies and wouldn't let frontier colonists kill more Indians to take their land.", "Berkeley outlawed tobacco farming in Jamestown.", "Bacon wanted Virginia to join the Dutch Empire."], correctIndex: 1, explanation: "Bacon's frontier rebels burned Jamestown because Berkeley wouldn't sanction a war to seize more Indigenous land." },
+          { id: "e4q5", question: "What were the two biggest long-term consequences of Bacon's Rebellion (1676)?", options: ["Virginia abolished slavery and became a Quaker colony.", "A rapid shift away from white indentured servants toward enslaved Africans, and a stronger desire by the English Crown to control the colonies.", "Nathaniel Bacon became King of Virginia.", "Jamestown became the capital of New England."], correctIndex: 1, explanation: "Southern planters realized armed former indentured servants were dangerous rebels and switched to permanent racial slavery." },
+          { id: "e4q6", question: "What was the 'Dominion of New England' (1686), and what ended it?", options: ["A sports league in Boston", "King James II's mega-colony merging New England, NY, and NJ under dictator Edmund Andros; it ended when England's 1688 Glorious Revolution inspired colonists to jail Andros.", "A trade alliance with the Iroquois Confederacy", "A Puritan missionary society"], correctIndex: 1, explanation: "When the Glorious Revolution toppled James II in England, Bostonians overthrew and jailed Edmund Andros in 1689." },
+          { id: "e4q7", question: "How did the English Toleration Act of 1690 help set the stage for the 1691–1692 Salem Witch Trials?", options: ["It forced Massachusetts to tolerate all Protestants (even Quakers!) and based voting on property ownership instead of church membership—shattering the Puritan religious experiment.", "It legalized witchcraft in Boston.", "It banned women from attending church.", "It forced everyone in Salem to move to Rhode Island."], correctIndex: 0, explanation: "With their 'City upon a Hill' theocracy over, anxious Puritans looked for scapegoats and sought to reassert male religious authority." },
+          { id: "e4q8", question: "What does Mary Cooper's 1769 diary entry ('I am dirty and distressed, almost wearied to death... here have I seen little else but hard labor and sorrow') remind us about colonial history?", options: ["Colonial women could easily divorce their husbands and buy plantations.", "Married women couldn't own property, and real history is about ordinary people struggling to care for their families—not just kings and generals.", "All colonial women worked in silver factories.", "Life in England was much easier for poor farmers than in America."], correctIndex: 1, explanation: "Under English law, married women couldn't own land, and everyday colonial survival involved exhausting domestic labor." }
+        ],
+        shortAnswers: [
+          { id: "e4sa1", prompt: "1. Explain how Bacon's Rebellion (1676) accelerated the transition from indentured servitude to racial slavery in the Southern colonies.", sample: "Indentured servants eventually finished their 7-to-10-year contracts and became free, landless, armed men who rebelled when they couldn't get land (burning Jamestown in 1676). Terrified Virginia elites shifted to enslaved Africans because enslaved people never became free competitors demanding land." },
+          { id: "e4sa2", prompt: "2. Why did the English crown set up South Carolina in 1663, and why did slavery take root there so quickly?", sample: "King Charles II chartered Carolina as a buffer colony just north of Spanish Florida. Its original English settlers came directly from the Caribbean sugar island of Barbados, bringing an already brutal plantation slavery system with them." }
+        ],
+        flashcards: [
+          { id: "e4fc1", category: "Middle Colonies", date: "1624–1664", term: "New Amsterdam (New Netherland)", what: "Dutch commercial colony on Manhattan Island seized by four English warships in 1664 and renamed New York.", why: "Dutch rule gave women and free Black residents far more economic rights than English rule did.", url: "https://www.americanhistorycentral.com/entries/apush-european-colonization-americas/" },
+          { id: "e4fc2", category: "Middle Colonies", date: "Founded 1681", term: "William Penn & The Quakers", what: "Pacifist, anti-slavery Protestant founder of Pennsylvania ('the best poor man's country').", why: "Established religious freedom, broad male voting rights, and initial fairness toward Native Americans.", url: "https://www.britannica.com/biography/William-Penn-Quaker-leader" },
+          { id: "e4fc3", category: "Colonial Land Fraud", date: "1737", term: "The Walking Purchase", what: "Trick in which Pennsylvania Governor James Logan hired fast runners to mark out a '36-hour walk' of Lenape land.", why: "Showed that after William Penn died, land greed overtook Quaker fairness toward Indigenous people.", url: "https://en.wikipedia.org/wiki/Timeline_of_the_Thirteen_Colonies" },
+          { id: "e4fc4", category: "Chesapeake Crisis", date: "1676", term: "Bacon's Rebellion (Nathaniel Bacon)", what: "Armed uprising of Virginia frontier settlers against Gov. William Berkeley; burned Jamestown before Bacon died of dysentery.", why: "Accelerated the shift from white indentured servants to enslaved Africans and increased royal control.", url: "https://www.britannica.com/event/Bacons-Rebellion" },
+          { id: "e4fc5", category: "Royal Centralization", date: "1686–1689", term: "Dominion of New England & Edmund Andros", what: "King James II's mega-colony combining New England, NY, and NJ under one autocratic governor.", why: "Overthrown in 1689 when England's Glorious Revolution inspired Bostonians to jail Andros.", url: "https://en.wikipedia.org/wiki/Timeline_of_the_Thirteen_Colonies" },
+          { id: "e4fc6", category: "Religious & Voting Law", date: "1690", term: "English Toleration Act of 1690", what: "Law requiring colonies to let all Protestants worship freely and basing voting rights on property, not church membership.", why: "Ended the Puritan theocracy in Massachusetts right before the Salem Witch Trials.", url: "https://en.wikipedia.org/wiki/Timeline_of_the_Thirteen_Colonies" },
+          { id: "e4fc7", category: "New England Crisis", date: "1691–1692", term: "The Salem Witch Trials", what: "Mass hysteria in Salem, Massachusetts in which ~150 people were accused of witchcraft and 19 were hanged.", why: "Driven by Puritan panic over losing religious dominance, frontier wars, and gender hierarchy.", url: "https://www.britannica.com/event/Salem-witch-trials" }
+        ],
+        timeline: [
+          { id: "e4t1", order: 1, yearLabel: "1624", title: "Dutch Traders Establish New Amsterdam on Manhattan", detail: "Commercial colony welcomes diverse settlers and allows women to run businesses." },
+          { id: "e4t2", order: 2, yearLabel: "1663–1664", title: "Carolina Chartered & English Warships Seize New Amsterdam", detail: "Barbados planters settle Carolina; New Amsterdam becomes English New York." },
+          { id: "e4t3", order: 3, yearLabel: "1676", title: "Nathaniel Bacon Leads Bacon's Rebellion & Burns Jamestown", detail: "Frontier uprising against Gov. Berkeley accelerates Virginia's shift to African slavery." },
+          { id: "e4t4", order: 4, yearLabel: "1681", title: "William Penn Receives Charter for Quaker Pennsylvania", detail: "Establishes 'the best poor man's country' with religious freedom and anti-slavery principles." },
+          { id: "e4t5", order: 5, yearLabel: "1686–1690", title: "Dominion of New England Toppled & Toleration Act Passed", detail: "Glorious Revolution ends Andros's rule; voting in Massachusetts shifts from church membership to property." },
+          { id: "e4t6", order: 6, yearLabel: "1691–1692", title: "The Salem Witch Trials Erupt in Massachusetts", detail: "Nearly 150 people are accused and 19 executed amid Puritan religious crisis." },
+          { id: "e4t7", order: 7, yearLabel: "1737", title: "Pennsylvania Conducts the Fraudulent 'Walking Purchase'", detail: "Fast runners cheat the Lenape out of a massive tract of land." }
+        ],
+        mysteryDocs: [
+          {
+            id: "e4m1",
+            badge: "Episode 4 Official Mystery Document",
+            quote: `"We accuse Sir William Berkeley as guilty of each and every one of the same, and as one who has traitorously attempted, violated, and injured his Majesty's interest here... by him betrayed and in a barbarous and shameful manner exposed to the incursions and murder of the heathen. And we do further declare these ensuing persons in this list, to have been his wicked and pernicious counselors..."`,
+            clues: [
+              "Clue 1: The writer is furious at Virginia Governor Sir William Berkeley and his 'wicked and pernicious counselors' in 1676.",
+              "Clue 2: He burned Jamestown to the ground before dying of dysentery!"
+            ],
+            options: [
+              "Nathaniel Bacon — 'Declaration of the People of Virginia' (1676)",
+              "Edmund Andros — Decree of the Dominion of New England (1686)",
+              "William Penn — 'Frame of Government of Pennsylvania' (1682)",
+              "Cotton Mather — 'Wonders of the Invisible World' (1693)"
+            ],
+            correctIndex: 0,
+            takeaway: "John Green dodged the Shock Pen! Nathaniel Bacon wrote this in 1676 demanding the right to attack Native Americans and seize frontier land."
+          },
+          {
+            id: "e4m2",
+            badge: "Episode 4 Everyday History Diary",
+            quote: `"I am dirty and distressed, almost wearied to death. This day is 40 years since I left my father's house and come here, and here have I seen little else but hard labor and sorrow."`,
+            clues: [
+              "Clue 1: Written in 1769, this diary entry shows the exhausting daily reality of ordinary colonial farmwomen.",
+              "Clue 2: John Green quotes her at the very end of Episode 4."
+            ],
+            options: [
+              "Mary Cooper — Colonial Farmwife's Diary (1769)",
+              "Anne Hutchinson — Boston Trial Notes (1637)",
+              "Pocahontas — Letters from London (1616)",
+              "Queen Mary II — Toleration Act Address (1690)"
+            ],
+            correctIndex: 0,
+            takeaway: "Mary Cooper's 1769 diary reminds us that history isn't just about kings and generals—it's about ordinary women and men working to keep their families alive."
+          }
+        ]
       },
-      {
+
+      5: {
         id: 5,
         number: "05",
+        era: "1730s–1763",
         title: "The Seven Years War and the Great Awakening",
-        active: false,
         duration: "10:40",
-        youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s",
-        desc: "Mercantilism, the triangular trade, colonial slavery, Jonathan Edwards, George Whitefield, and the global war that set up the American Revolution."
+        youtubeUrl: "https://www.youtube.com/watch?v=5vKGU3aEGss",
+        docUrl: "https://docs.google.com/document/d/1nxXo-N3rP_NAmgjmoooNHxixasLmyoo-vtlH9lVdHFs/edit?usp=drivesdk",
+        desc: "Mercantilism, the Triangular Trade, 21-year-old George Washington at Fort Necessity, the 9-year Seven Years' War, Pontiac's Rebellion, the Proclamation Line of 1763, and the Great Awakening.",
+        sections: [
+          {
+            id: "ep5-s1",
+            badge: "Section 1 • Mercantilism, Slavery & The Ohio Company",
+            title: "Why the 'Seven Years' War' Lasted 9 Years (1754–1763)",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong><a href="https://www.britannica.com/event/French-and-Indian-War" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Seven Years' War / French &amp; Indian War</a>:</strong> Called the true "First World War" by Winston Churchill, it lasted 9 years (1754–1763) and was rooted in <strong>economics</strong>.</li>
+              <li><strong>Mercantilism &amp; The Triangular Trade:</strong> Britain regulated colonial economies to amass national wealth—relying on colonies to produce raw materials (especially slave-grown <strong>tobacco and sugar</strong>) and buy British finished goods. To keep growing, mercantilism always needed <strong>more western land</strong>.</li>
+              <li><strong>The 1749 Ohio Company Spark:</strong> Virginia's governor granted a huge tract of Ohio River Valley land to the <strong>Ohio Company</strong>. The French and their Indigenous fur-trade allies refused to give it up!</li>
+            </ul>`
+          },
+          {
+            id: "ep5-s2",
+            badge: "Section 2 • Thought Bubble: Young George Washington & The War",
+            title: "Fort Necessity (1754), Acadian Expulsion & The 1763 Treaty of Paris",
+            content: `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">21-Year-Old George Washington</div><p class="text-slate-300">Sent to eject the French from western Pennsylvania in <strong>1754</strong>, young militia Colonel <a href="https://en.wikipedia.org/wiki/George_Washington_in_the_French_and_Indian_War" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">George Washington</a> built—and surrendered—the ironically named <strong>Fort Necessity</strong> after losing 1/3 of his men.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Braddock's Defeat &amp; Acadian Cajuns</div><p class="text-slate-300">French &amp; Native forces crushed Gen. Braddock at Fort Duquesne (Pittsburgh). Britain expelled <strong>11,000 French Acadians</strong> from Nova Scotia (survivors in Louisiana became <strong>Cajuns</strong>) before winning Quebec at the <strong>Plains of Abraham (1759)</strong>.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Treaty of Paris (1763): Sugar &gt; Snow</div><p class="text-slate-300">Britain got <strong>Canada</strong> from France and <strong>Florida</strong> from Spain, while France kept its Caribbean sugar islands (Guadeloupe &amp; Martinique) and Spain got Cuba and the Philippines.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Why Native Americans Lost Big</div><p class="text-slate-300">With the French gone from the Ohio and Mississippi valleys, Indigenous tribes lost their European ally and faced aggressive British land-grabbers alone.</p></div>
+            </div>`
+          },
+          {
+            id: "ep5-s3",
+            badge: "Section 3 • Pontiac's Rebellion & The Proclamation of 1763",
+            title: "Besieging Detroit & The First Parliamentary Law Colonists Ignored",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong><a href="https://www.britannica.com/event/Pontiacs-War" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Pontiac's Rebellion</a> (1763):</strong> Ottawa and Delaware warriors launched an armed revolt in 1763, besieging Fort Detroit and killing hundreds of British settlers.</li>
+              <li><strong>The <a href="https://www.britannica.com/event/Proclamation-of-1763" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Proclamation Line of 1763</a>:</strong> To stop expensive frontier wars, the British Parliament banned colonists from settling <strong>west of the Appalachian Mountains</strong>.</li>
+              <li><strong>Setting Up the Revolution:</strong> Because colonists had just fought a 9-year war specifically to win the right to move into that western land, they furiously ignored Parliament's line and settled there anyway!</li>
+            </ul>`
+          },
+          {
+            id: "ep5-s4",
+            badge: "Section 4 • Republicanism, Liberalism & The Great Awakening",
+            title: "John Locke, George Whitefield & Questioning All Authority",
+            content: `<div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs sm:text-sm text-slate-200 space-y-2">
+              <div class="font-bold text-amber-300">Republicanism &amp; Classical Liberalism:</div>
+              <p><strong>Republicanism</strong> championed a kingless society where property-owning citizens practiced civic <em>virtue</em> (subordinating personal interest to the public good). <strong>Classical Liberalism</strong> (from <strong>John Locke</strong>) argued government is a social contract meant to protect natural rights to <strong>Life, Liberty, and Property</strong>.</p>
+              <div class="font-bold text-teal-300 pt-1">The <a href="https://www.britannica.com/event/Great-Awakening" target="_blank" rel="noopener noreferrer" class="underline">First Great Awakening</a> (1730s–1740s):</div>
+              <p>"New Light" ministers like <a href="https://en.wikipedia.org/wiki/Jonathan_Edwards_(theologian)" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Jonathan Edwards</a> and English revivalist <a href="https://www.britannica.com/biography/George-Whitefield" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">George Whitefield</a> (1739–41 tour) preached emotional, personal salvation over predestination. Once colonists started criticizing established church elites, they were ready to criticize Parliament too!</p>
+            </div>`
+          }
+        ],
+        quiz: [
+          { id: "e5q1", question: "How long did the Seven Years' War (French and Indian War) actually last in North America?", options: ["3 years (1760–1763)", "5 years (1755–1760)", "9 years (1754–1763)", "100 years"], correctIndex: 2, explanation: "Despite being called the Seven Years' War in Europe (1756–1763), fighting in North America lasted 9 years from 1754 to 1763!" },
+          { id: "e5q2", question: "What was the British economic theory of 'mercantilism,' and why did it require constant colonial expansion?", options: ["Free trade with zero government rules", "Government regulation of the economy to boost national power via a favorable balance of trade—requiring colonies to supply slave-grown raw materials and buy British finished goods", "Replacing gold and silver with beaver pelts", "Giving all factories to France"], correctIndex: 1, explanation: "To produce more raw materials (like tobacco and sugar) and create more consumers for British goods, mercantilism constantly craved more land." },
+          { id: "e5q3", question: "Which 21-year-old Virginia militia colonel helped spark the French and Indian War in 1754 by building and surrendering the 'ironically named' Fort Necessity?", options: ["Paul Revere", "Thomas Jefferson", "George Washington", "Nathaniel Bacon"], correctIndex: 2, explanation: "A 21-year-old George Washington lost one-third of his men and had to abandon Fort Necessity in western Pennsylvania in 1754." },
+          { id: "e5q4", question: "Under the 1763 Treaty of Paris, why was France happy to let Britain have snowy Canada in exchange for keeping Guadeloupe and Martinique?", options: ["Guadeloupe and Martinique had gold mines.", "Caribbean sugar islands were worth far more money than all of Canada.", "France hated hockey.", "Canada had no beaver furs left."], correctIndex: 1, explanation: "In the 18th-century mercantile economy, Caribbean sugar islands generated vastly more wealth than Canada!" },
+          { id: "e5q5", question: "What was Pontiac's Rebellion (1763), and what British policy did it directly cause?", options: ["A Boston tax protest that caused the Stamp Act", "An armed uprising by Ottawa and Delaware tribes that besieged Detroit and convinced Parliament to issue the Proclamation Line of 1763 banning settlement west of the Appalachians", "A French Acadian uprising in Louisiana", "A mutiny aboard British warships"], correctIndex: 1, explanation: "Pontiac's Rebellion convinced London to reserve land west of the Appalachians for Native Americans via the Proclamation Line of 1763." },
+          { id: "e5q6", question: "How did American colonists react to the Proclamation Line of 1763?", options: ["They happily obeyed Parliament and stayed on the coast.", "They angrily ignored it and settled west anyway, since they had just fought a 9-year war for the right to take that land.", "They invited the French army back to Pittsburgh.", "They moved to Florida for Disney World."], correctIndex: 1, explanation: "Colonists had fought the French and Indian War specifically to grab Ohio Valley land, so they openly defied Parliament's boundary." },
+          { id: "e5q7", question: "How did John Locke's 'Classical Liberalism' define the main task of government?", options: ["To enforce one national religion", "To protect citizens' natural rights—defined as Life, Liberty, and Property—through a social contract", "To maximize the King's gold reserves", "To ban private property"], correctIndex: 1, explanation: "Locke argued that people form governments via a social contract whereby they give up a bit of liberty in exchange for protection of Life, Liberty, and Property." },
+          { id: "e5q8", question: "How did the First Great Awakening (and preachers like George Whitefield) help set the stage for the American Revolution?", options: ["Whitefield was a general in the Continental Army.", "By preaching that salvation was within each individual ('New Lights') and criticizing established church hierarchies, it broke down respect for traditional authority—including Parliament.", "It united all colonists under the Pope.", "It outlawed taxes on tea."], correctIndex: 1, explanation: "Once ordinary colonists felt empowered to challenge established religious elites and choose their own churches, challenging a distant Parliament came naturally." }
+        ],
+        shortAnswers: [
+          { id: "e5sa1", prompt: "1. Why were Native Americans the biggest losers of the Seven Years' War, even more than France or Spain?", sample: "With France expelled from the Mississippi and Ohio river valleys in 1763, Native American tribes lost their primary European trade and military ally and could no longer play rival empires off against each other—leaving them alone against land-hungry British settlers." },
+          { id: "e5sa2", prompt: "2. What was the difference between 18th-century 'Republicanism' and John Locke's 'Liberalism'?", sample: "Republicanism (inspired by ancient Rome) argued for a kingless government where property-owning citizens practiced civic 'virtue' by subordinating selfish desires to the public good. Liberalism (from John Locke) focused on individual rights, arguing government is a social contract created to protect Life, Liberty, and Property." }
+        ],
+        flashcards: [
+          { id: "e5fc1", category: "Imperial Economics", date: "17th–18th Centuries", term: "Mercantilism & Triangular Trade", what: "British economic policy regulating colonial trade (powered by slave-grown tobacco and sugar) to boost national wealth.", why: "Demanded constant westward expansion for raw materials and colonial consumers, sparking war with France.", url: "https://en.wikipedia.org/wiki/Seven_Years%27_War" },
+          { id: "e5fc2", category: "Road to War", date: "1749 & 1754", term: "The Ohio Company & Fort Necessity", what: "Virginia land-speculation syndicate whose claims in the Ohio Valley led to 21-year-old George Washington's 1754 defeat.", why: "Triggered the French and Indian War (the North American phase of the Seven Years' War).", url: "https://en.wikipedia.org/wiki/George_Washington_in_the_French_and_Indian_War" },
+          { id: "e5fc3", category: "Global Conflict", date: "1755", term: "Expulsion of the Acadians (Cajuns)", what: "Forced British deportation of over 11,000 French Acadians from Nova Scotia during the war.", why: "Survivors who resettled in Louisiana became the Cajun community.", url: "https://www.britannica.com/event/French-and-Indian-War" },
+          { id: "e5fc4", category: "Diplomacy", date: "1763", term: "Treaty of Paris (1763)", what: "Ended the Seven Years' War; Britain gained Canada and Florida while France kept Caribbean sugar islands.", why: "Eliminated French power in North America, left Britain with huge war debts, and isolated Native Americans.", url: "https://www.britannica.com/event/French-and-Indian-War" },
+          { id: "e5fc5", category: "Indigenous Resistance", date: "1763", term: "Pontiac's Rebellion", what: "Armed uprising by Ottawa and Delaware tribes in the Great Lakes/Ohio region that besieged Fort Detroit.", why: "Convinced the British Parliament to issue the Proclamation Line of 1763 to halt western colonial settlement.", url: "https://www.britannica.com/event/Pontiacs-War" },
+          { id: "e5fc6", category: "Imperial Policy", date: "1763", term: "Proclamation Line of 1763", what: "British royal decree banning colonists from settling west of the Appalachian Mountains.", why: "Infuriated colonists (who had just fought a war for that land) and became the first major British law they openly ignored.", url: "https://www.britannica.com/event/Proclamation-of-1763" },
+          { id: "e5fc7", category: "Political Philosophy", date: "18th Century", term: "Republicanism & Classical Liberalism (John Locke)", what: "Ideas championing civic virtue without a king (Republicanism) and a social contract protecting Life, Liberty, and Property (Locke).", why: "Undermined traditional royal authority and inspired the American Revolution.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e5fc8", category: "Religious Revival", date: "1730s–1740s", term: "First Great Awakening & George Whitefield", what: "Emotional Protestant revival ('New Lights') preaching individual repentance and 'born-again' salvation.", why: "Encouraged colonists to question religious elites—paving the way to question British political authority.", url: "https://www.britannica.com/event/Great-Awakening" }
+        ],
+        timeline: [
+          { id: "e5t1", order: 1, yearLabel: "1739–1741", title: "George Whitefield's Preaching Tour Electrifies the Great Awakening", detail: "'New Light' revivals emphasize personal salvation and challenge established church hierarchies." },
+          { id: "e5t2", order: 2, yearLabel: "1749", title: "Virginia Grants Western Land to the Ohio Company", detail: "French and Indigenous allies reject Virginia speculators' claims to the Ohio River Valley." },
+          { id: "e5t3", order: 3, yearLabel: "1754", title: "21-Year-Old George Washington Surrenders Fort Necessity", detail: "Failed attempt to eject the French from western Pennsylvania kicks off the French and Indian War." },
+          { id: "e5t4", order: 4, yearLabel: "1755", title: "Braddock's Defeat at Fort Duquesne & Expulsion of the Acadians", detail: "French and Native forces rout Gen. Braddock; Britain deports 11,000 French Acadians from Nova Scotia." },
+          { id: "e5t5", order: 5, yearLabel: "1759", title: "British Capture Quebec at the Battle of the Plains of Abraham", detail: "Decisive British victories at Duquesne, Ticonderoga, and Quebec turn the war." },
+          { id: "e5t6", order: 6, yearLabel: "1763 (Feb)", title: "Treaty of Paris Ends the Seven Years' War", detail: "Britain takes Canada and Florida while France keeps its lucrative sugar islands." },
+          { id: "e5t7", order: 7, yearLabel: "1763 (May–Oct)", title: "Pontiac's Rebellion & The Proclamation Line of 1763", detail: "Indigenous uprising besieges Detroit; Parliament bans settlement west of the Appalachians (and colonists ignore it)." }
+        ],
+        mysteryDocs: [
+          {
+            id: "e5m1",
+            badge: "Episode 5 Official Mystery Document",
+            quote: `"We humbly conceive that it is contrary to the maxims of good policy, and extremely dangerous to our frontiers, to suffer any Indians, of what tribe soever, to live within the inhabited parts of this province, while we are engaged in an Indian war; as experience has taught us that they are all perfidious..."`,
+            clues: [
+              "Clue 1: Written in 1764 by angry Pennsylvania frontier settlers during Pontiac's Rebellion.",
+              "Clue 2: John Green got zapped by the Shock Pen again because Stan picked a collective frontier petition instead of a single famous author!"
+            ],
+            options: [
+              "A Remonstrance of Distressed and Bleeding Frontier Inhabitants of Pennsylvania (Paxton Boys, 1764)",
+              "King George III — The Royal Proclamation of 1763",
+              "George Washington — Journal of Fort Necessity (1754)",
+              "George Whitefield — 'Marks of a True Conversion' (1740)"
+            ],
+            correctIndex: 0,
+            takeaway: "This 1764 frontier petition from Pennsylvania shows how the Seven Years' War and Pontiac's Rebellion fueled violent anti-Indigenous hostility along the colonial frontier."
+          },
+          {
+            id: "e5m2",
+            badge: "Episode 5 Enlightenment Philosophy Quote",
+            quote: `"The great and chief end, therefore, of men's uniting into commonwealths, and putting themselves under government, is the preservation of their property [life, liberty, and estate]."` ,
+            clues: [
+              "Clue 1: This philosopher defined the 'Classical Liberalism' and 'social contract' theory discussed by John Green in Episode 5.",
+              "Clue 2: Thomas Jefferson later adapted his trio of 'Life, Liberty, and Property' for the Declaration of Independence!"
+            ],
+            options: [
+              "John Locke — 'Two Treatises of Government' (1689)",
+              "Adam Smith — 'The Wealth of Nations' (1776)",
+              "Jonathan Edwards — 'Sinners in the Hands of an Angry God' (1741)",
+              "General Edward Braddock — Orders at Fort Duquesne (1755)"
+            ],
+            correctIndex: 0,
+            takeaway: "John Locke's social contract theory taught colonists that if a government fails to protect citizens' natural rights (Life, Liberty, and Property), it loses its legitimacy!"
+          }
+        ]
       }
-    ];
+    };
 
-    const GUIDE_SECTIONS = [
-      {
-        id: "sec-tldr",
-        badge: "Section 1 • 60-Second Overview",
-        title: "The 'Wait For It...' TL;DR & Pre-Columbian North America",
-        content: `
-          <p class="text-sm text-slate-200 leading-relaxed mb-3">
-            Before the United States was either <em>united</em> or <em>states</em> (and before John Green could declare Alaskan statehood illegitimate), millions of Indigenous people lived across North America. While North America didn't have giant classical empires with monumental stone architecture, metalwork, gunpowder, wheels, written scripts, or large domesticated animals like the Aztecs or Incas, Indigenous societies had <strong>sustainable farming, complex political alliances, and continent-wide trade networks</strong>.
-          </p>
-          <ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
-            <li><strong>The "Octadecimation":</strong> About <strong>2 to 10 million</strong> people lived within present-day U.S. borders (and up to 75 million across the Americas). European diseases like smallpox and influenza didn't just "decimate" (1 in 10) populations—they killed roughly <strong>8 in 10 (80%)</strong>.</li>
-            <li><strong>Civilizations Rose &amp; Fell Before Columbus:</strong> Around <strong>1200 CE</strong>, the <a href="https://www.britannica.com/topic/Indigenous-peoples-of-the-American-Southwest/Pueblo-peoples" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline hover:text-teal-200">Ancestral Puebloans</a> (ancestors of the <a href="https://en.wikipedia.org/wiki/Zuni_people" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Zuni</a> and <a href="https://en.wikipedia.org/wiki/Hopi" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Hopi</a>) built large multi-family cliff dwellings in Southwestern canyons before abandoning them due to severe drought.</li>
-            <li><strong>Why "Primitive" Is a Bad Word:</strong> Calling societies without wheels or beepers "primitive" assumes humanity moves on a straight escalator from "less evolved" to "more evolved." That's both Eurocentric and contemporary-centric!</li>
-          </ul>
-        `
-      },
-      {
-        id: "sec-thoughtbubble",
-        badge: "Section 2 • Thought Bubble Spotlight",
-        title: "Indigenous Worldviews: Confederacies, Matrilineal Clans & Shared Land",
-        content: `
-          <p class="text-sm text-slate-200 leading-relaxed mb-3">
-            Even though generalizing across hundreds of tribes over thousands of years is tricky, the Thought Bubble highlights four major cultural contrasts between Indigenous North Americans and 16th-century Europeans:
-          </p>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
-            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
-              <div class="font-bold text-amber-300 mb-1">1. Regional Adaptation &amp; Leagues</div>
-              <p class="text-slate-300">West Coast tribes fished and hunted sea mammals; Great Plains tribes hunted buffalo. Tribes also formed alliances like the <a href="https://www.britannica.com/topic/Haudenosaunee-Confederacy" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Haudenosaunee (Iroquois) Confederacy</a> ("Great League of Peace") in upstate New York.</p>
-            </div>
-            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
-              <div class="font-bold text-amber-300 mb-1">2. Using Land vs. Owning Land</div>
-              <p class="text-slate-300">Village leaders assigned families land to farm or hunt, but land was a shared resource—nobody "owned" the soil forever as private real estate.</p>
-            </div>
-            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
-              <div class="font-bold text-amber-300 mb-1">3. Matrilineal Families &amp; Women's Roles</div>
-              <p class="text-slate-300">Many tribes were <strong>matrilineal</strong> (children joined their mother's clan). Women served as religious leaders, owned dwellings and tools, and faced far less policing over female chastity than in Europe.</p>
-            </div>
-            <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
-              <div class="font-bold text-amber-300 mb-1">4. Busting the "Noble Savage" Myth</div>
-              <p class="text-slate-300">Tribes weren't classless utopias (rulers often came from hereditary families), though wealth was distributed much more evenly than in Europe.</p>
-            </div>
-          </div>
-        `
-      },
-      {
-        id: "sec-spanish",
-        badge: "Section 3 • Conquistadors, Georgia & The Southwest",
-        title: "Spanish Florida, 'Cow-Head,' Santa Fe & Popé's 1680 Pueblo Revolt",
-        content: `
-          <ul class="space-y-2.5 text-xs sm:text-sm text-slate-300 list-disc pl-5">
-            <li><strong>Ponce de León &amp; Diet Dr Pepper (1513–1521):</strong> <a href="https://www.britannica.com/biography/Juan-Ponce-de-Leon" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Juan Ponce de León</a> arrived in Florida in 1513 hunting for gold and the Fountain of Youth. In 1521, a Calusa warrior's poison arrow killed him before he could discover Diet Dr Pepper.</li>
-            <li><strong>Álvar Núñez "Cow-Head" Cabeza de Vaca:</strong> Wandered the American Southwest in the 1520s–30s looking for gold. Spanish explorers found zero gold, but spread the microbes that devastated Native populations.</li>
-            <li><strong>Mosquitoes, Pirates &amp; The 1597 Georgia Uprising:</strong> Spain wanted Florida bases to stop pirates from raiding silver galleons leaving Mexico. Franciscan missionaries tried converting local tribes, sparking the <strong>1597 <a href="https://en.wikipedia.org/wiki/Guale" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Guale Uprising</a> along the Georgia coast</strong> that burned down Spanish missions.</li>
-            <li><strong>Santa Fe (1610) &amp; The <a href="https://www.britannica.com/event/Pueblo-Rebellion" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Pueblo Revolt of 1680</a>:</strong> In New Mexico, the Pueblo population fell from 60,000 to 17,000 between 1600 and 1680 while Franciscan friars tried to stamp out Indigenous religion. In <strong>1680</strong>, religious leader <a href="https://www.britannica.com/biography/Pope-Tewa-Pueblo-leader" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Popé</a> united 2,000 warriors, expelled the Spanish from Santa Fe, tore down churches, and rebuilt ceremonial <strong>kivas</strong>. When Spain returned later, they dropped the forced-labor <strong><a href="https://www.britannica.com/topic/encomienda" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">encomienda</a></strong> system and tolerated Indigenous religion!</li>
-          </ul>
-        `
-      },
-      {
-        id: "sec-blacklegend",
-        badge: "Section 4 • Historiography & Myth-Busting",
-        title: "Bartolomé de las Casas, The Black Legend & Reading History Critically",
-        content: `
-          <p class="text-sm text-slate-200 leading-relaxed mb-3">
-            Spanish priest <a href="https://www.britannica.com/biography/Bartolome-de-Las-Casas" target="_blank" rel="noopener noreferrer" class="text-teal-300 underline">Bartolomé de las Casas</a> bravely exposed how brutally his fellow Spaniards treated Indigenous people in <em>History of the Indies</em>. But that leads to one of history's biggest traps:
-          </p>
-          <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs sm:text-sm text-slate-200 space-y-2">
-            <div class="font-bold text-amber-300">What Is <a href="https://www.britannica.com/topic/Black-Legend" target="_blank" rel="noopener noreferrer" class="underline">The Black Legend</a>?</div>
-            <p>The Black Legend is the true story that Spain unleashed horrific cruelty on Native Americans—<strong>weaponized as propaganda by later English settlers</strong>. The English used Spain's atrocities to claim England needed to colonize America to "save" Indigenous people from the awful Spanish (even though English settlers ended up treating Native Americans terrible, too).</p>
-            <div class="font-bold text-teal-300 pt-1">The 3 Questions Every Historian Must Ask:</div>
-            <p>Because pre-contact North American tribes didn't leave written texts, whenever you read an early primary source, always ask: <strong>(1) Who is speaking? (2) Why are they speaking? (3) Whose voices go unheard, and why?</strong></p>
-          </div>
-        `
-      }
-    ];
-
-    const QUIZ_QUESTIONS = [
-      {
-        id: "q1",
-        question: "Why does John Green say European diseases caused an 'octadecimation' rather than a 'decimation' of Native North American populations?",
-        options: [
-          "The diseases arrived in eight separate waves over 80 years.",
-          "'Decimation' means losing 1 in 10 people, whereas diseases like smallpox and flu killed closer to 8 in 10 (80%).",
-          "Only eight major Indigenous confederacies survived along the Atlantic coast.",
-          "Eight different European empires brought microbes to North America."
-        ],
-        correctIndex: 1,
-        explanation: "Spot on! 'Decimation' literally means reducing a group by 1/10th (10%). Smallpox and influenza wiped out closer to 80% (8 in 10) of Indigenous populations—an 'octadecimation.'"
-      },
-      {
-        id: "q2",
-        question: "Which North American Indigenous civilization built large multi-family canyon cliff dwellings that peaked around 1200 CE before declining (likely due to drought)?",
-        options: [
-          "The Aztec Empire of Tenochtitlan",
-          "The Ancestral Puebloans (ancestors of the Zuni and Hopi) in the Southwest",
-          "The Calusa Kingdom of Southern Florida",
-          "The Guale Chiefdom of coastal Georgia"
-        ],
-        correctIndex: 1,
-        explanation: "Correct! The Ancestral Puebloans (ancestors of the Zuni and Hopi) built remarkable cliff dwellings in the Southwest that peaked around 1200 CE, long before Europeans arrived."
-      },
-      {
-        id: "q3",
-        question: "What does it mean that many Indigenous North American societies were 'matrilineal'?",
-        options: [
-          "Only women were allowed to serve as military generals during war.",
-          "Women privately bought and sold plots of tribal farmland.",
-          "Children became members of their mother's family/clan, and women often held religious authority and owned dwellings and tools.",
-          "European queens appointed the leaders of each village."
-        ],
-        correctIndex: 2,
-        explanation: "Exactly right! In matrilineal societies, family lineage passed through the mother's side, and women frequently served as important religious leaders and owned the family home and tools."
-      },
-      {
-        id: "q4",
-        question: "How did most Indigenous tribes view land ownership, as explained by Sauk leader Black Hawk?",
-        options: [
-          "Land was a common resource given by the Great Spirit for families to use and cultivate for survival, not private property to be owned forever.",
-          "Land belonged permanently to whichever warrior built a fence around it first.",
-          "Only gold mines could be privately owned; farmland was rented from the king.",
-          "Land could be bought and sold using Spanish silver coins."
-        ],
-        correctIndex: 0,
-        explanation: "Nailed it! Village leaders assigned plots for families to use, but the land itself was seen as common to everyone—the European idea of permanent private land ownership didn't exist."
-      },
-      {
-        id: "q5",
-        question: "Why did Spain initially want to establish military bases in Florida (despite the heat, mosquitoes, and 1597 Guale uprising along the Georgia/Florida coast)?",
-        options: [
-          "To harvest timber for the Spanish Armada in Europe",
-          "To thwart pirates who preyed on silver-laden Spanish galleons sailing out of Mexico",
-          "To bottle the Fountain of Youth and trade it with France",
-          "To escape the cold winters of Santa Fe, New Mexico"
-        ],
-        correctIndex: 1,
-        explanation: "Correct! Spain needed coastal military bases in Florida to protect its treasure fleets (galleons loaded with Mexican silver) from pirates."
-      },
-      {
-        id: "q6",
-        question: "What sparked the Pueblo Revolt of 1680 in New Mexico, and who led it?",
-        options: [
-          "Juan Ponce de León raised taxes on corn; Chief Black Hawk led the revolt.",
-          "A severe flood destroyed Santa Fe; Cabeza de Vaca led the revolt.",
-          "Population collapse (60,000 to 17,000), forced encomienda labor, and militant Franciscan suppression of native religion; religious leader Popé united ~2,000 warriors.",
-          "English pirates invaded New Mexico; Bartolomé de las Casas led the revolt."
-        ],
-        correctIndex: 2,
-        explanation: "Boom! Popé united around 2,000 warriors across multiple Pueblo communities in 1680, driving the Spanish out of Santa Fe and replacing Christian churches with traditional kivas."
-      },
-      {
-        id: "q7",
-        question: "What were the two major lasting changes after the Pueblo Revolt of 1680?",
-        options: [
-          "Spain permanently abandoned all of North America and sold Mexico to France.",
-          "The Spanish became much more tolerant of Indigenous religion and abandoned the forced-labor encomienda system.",
-          "The Pueblos adopted written Spanish law and built ships to sail to Europe.",
-          "Santa Fe grew into a metropolis of over 500,000 Spanish settlers."
-        ],
-        correctIndex: 1,
-        explanation: "Yes! Even though Spain re-established control over New Mexico after 12 years, they stopped trying to ruthlessly stamp out Pueblo religion and ended the encomienda forced labor system."
-      },
-      {
-        id: "q8",
-        question: "What is 'The Black Legend' that John Green warns us about at the end of Episode 1?",
-        options: [
-          "A pirate ghost story told by Spanish sailors in the Caribbean",
-          "The myth that Juan Ponce de León was poisoned by a magical arrow",
-          "The true account of Spanish cruelty toward Native Americans that later English settlers used as propaganda to justify their own empire-building",
-          "The secret code Popé used to coordinate the 1680 uprising"
-        ],
-        correctIndex: 2,
-        explanation: "100% right! While Spanish cruelty was very real (as documented by Bartolomé de las Casas), English settlers hyped up the 'Black Legend' to pretend they were expanding their empire to 'save' Native Americans from the Spanish."
-      }
-    ];
-
-    const SHORT_ANSWERS = [
-      {
-        id: "sa1",
-        prompt: "1. Why did John Green get zapped by the Shock Pen during the Mystery Document segment, and why was Bartolomé de las Casas's writing so unusual for a 16th-century Spaniard?",
-        sample: "John guessed the right author (Bartolomé de las Casas) but the wrong book title—he guessed 'A Short Account of the Destruction of the Indies' instead of 'History of the Indies'! Las Casas was unusual because, unlike most European colonists (and thinkers like Sepúlveda who argued Natives weren't fully human), Las Casas publicly condemned his own countrymen's cruelty and fought for Indigenous human rights."
-      },
-      {
-        id: "sa2",
-        prompt: "2. What three questions should you ask every time you read a historical primary source from early American history, and why?",
-        sample: "Always ask: (1) Who is speaking? (2) Why are they speaking? (3) Whose voices go unheard, and why? This matters because pre-Columbian North American tribes didn't use written languages, meaning nearly all early written records come from Europeans with their own biases and agendas."
-      }
-    ];
-
-    const FLASHCARDS = [
-      {
-        id: "fc1",
-        category: "Indigenous Civilizations",
-        date: "Peaked ~1200 CE",
-        term: "Ancestral Puebloans (Zuni & Hopi)",
-        what: "Southwestern Indigenous civilization famous for building large, multi-family cliff dwellings in canyons.",
-        why: "Proves complex North American societies rose and declined (likely due to drought/environmental degradation) centuries before Europeans arrived.",
-        url: "https://www.britannica.com/topic/Indigenous-peoples-of-the-American-Southwest/Pueblo-peoples"
-      },
-      {
-        id: "fc2",
-        category: "Indigenous Politics",
-        date: "Pre-Contact Onward",
-        term: "Haudenosaunee (Iroquois) Confederacy",
-        what: "Also known as the 'Great League of Peace'—a political confederacy uniting five (later six) Indigenous nations in upstate New York.",
-        why: "Demonstrates sophisticated regional diplomacy and political organization in North America prior to European colonization.",
-        url: "https://www.britannica.com/topic/Haudenosaunee-Confederacy"
-      },
-      {
-        id: "fc3",
-        category: "Social Structure",
-        date: "Pre-Contact Onward",
-        term: "Matrilineal Society",
-        what: "A kinship system in which children become members of their mother's family/clan rather than their father's.",
-        why: "In many Indigenous tribes, women held major religious authority and owned family dwellings and tools—a sharp contrast to 16th-century Europe.",
-        url: "https://kids.britannica.com/students/article/Indigenous-peoples-of-the-Americas/275046"
-      },
-      {
-        id: "fc4",
-        category: "Indigenous Worldviews",
-        date: "1767–1838 (Quoted in Ep. 1)",
-        term: "Black Hawk (Sauk Leader)",
-        what: "Leader of the Sauk tribe quoted in the Thought Bubble on how Indigenous peoples viewed the land.",
-        why: "Explained that the Great Spirit gave land for communities to cultivate for subsistence—not as permanent private property to buy and sell.",
-        url: "https://www.britannica.com/biography/Black-Hawk-Sauk-and-Fox-leader"
-      },
-      {
-        id: "fc5",
-        category: "Spanish Conquistadors",
-        date: "1513 & 1521",
-        term: "Juan Ponce de León",
-        what: "Spanish explorer who arrived in Florida in 1513 searching for gold and the mythical Fountain of Youth.",
-        why: "Led the first confirmed European expedition to Florida; died in 1521 from a Calusa warrior's poison-tipped arrow.",
-        url: "https://www.britannica.com/biography/Juan-Ponce-de-Leon"
-      },
-      {
-        id: "fc6",
-        category: "Spanish Conquistadors",
-        date: "1520s–1530s",
-        term: "Álvar Núñez Cabeza de Vaca",
-        what: "Spanish explorer (whose surname literally means 'Cow-Head') who wandered the American Southwest looking for gold.",
-        why: "While explorers like him found zero gold, they spread Old World microbes (smallpox, flu) that decimated Native populations.",
-        url: "https://www.britannica.com/biography/Alvar-Nunez-Cabeza-de-Vaca"
-      },
-      {
-        id: "fc7",
-        category: "Indigenous Resistance",
-        date: "1597",
-        term: "Guale Uprising (Georgia Coast)",
-        what: "An Indigenous rebellion led by Guale chiefdom warriors against Spanish Catholic missions along present-day coastal Georgia.",
-        why: "Destroyed multiple Spanish missions and showed fierce early Native resistance to forced religious conversion in the Southeast.",
-        url: "https://en.wikipedia.org/wiki/Guale"
-      },
-      {
-        id: "fc8",
-        category: "Spanish Colonization",
-        date: "Founded 1610",
-        term: "Santa Fe, New Mexico",
-        what: "Spain's first permanent settlement in the American Southwest (population stayed under ~3,000).",
-        why: "Oldest state capital in the U.S. and the central flashpoint where Franciscan missionary intolerance sparked the Pueblo Revolt of 1680.",
-        url: "https://www.britannica.com/place/Santa-Fe-New-Mexico"
-      },
-      {
-        id: "fc9",
-        category: "Colonial Labor System",
-        date: "16th–17th Centuries",
-        term: "Encomienda System",
-        what: "Spanish legal practice forcing Indigenous communities to provide unpaid labor and tribute to Spanish colonists.",
-        why: "Operated as brutal forced servitude until Popé's 1680 Pueblo Revolt forced the Spanish to abandon it in New Mexico.",
-        url: "https://www.britannica.com/topic/encomienda"
-      },
-      {
-        id: "fc10",
-        category: "Indigenous Resistance",
-        date: "1680",
-        term: "Popé & The Pueblo Revolt",
-        what: "Religious leader Popé organized ~2,000 Pueblo warriors to kill 400 Spanish colonists, expel Spain from Santa Fe, and replace churches with kivas.",
-        why: "The most successful Indigenous uprising against Europeans in North America; forced Spain to drop the encomienda and tolerate Pueblo religion.",
-        url: "https://www.britannica.com/event/Pueblo-Rebellion"
-      },
-      {
-        id: "fc11",
-        category: "Historiography & Propaganda",
-        date: "16th–17th Centuries",
-        term: "Bartolomé de las Casas & The Black Legend",
-        what: "Las Casas was a Spanish priest who exposed Spanish atrocities against Natives; the 'Black Legend' was the tale of Spain's unspeakable cruelty.",
-        why: "English settlers used Las Casas's true accounts as propaganda ('The Black Legend') to justify expanding England's own empire to 'save' the Indians.",
-        url: "https://www.britannica.com/topic/Black-Legend"
-      }
-    ];
-
-    const TIMELINE_EVENTS = [
-      {
-        id: "tl1",
-        order: 1,
-        yearLabel: "~1200 CE",
-        title: "Zuni & Hopi (Ancestral Puebloan) Canyon Dwellings Peak",
-        detail: "Large multi-family cliff dwellings thrive in the American Southwest before declining due to drought—centuries before Columbus."
-      },
-      {
-        id: "tl2",
-        order: 2,
-        yearLabel: "1513",
-        title: "Juan Ponce de León Lands in Florida",
-        detail: "Spain's first official expedition reaches Florida looking for gold and the fabled Fountain of Youth."
-      },
-      {
-        id: "tl3",
-        order: 3,
-        yearLabel: "1521",
-        title: "Calusa Poison Arrow Kills Ponce de León",
-        detail: "On his return expedition to colonize Florida, Ponce de León is mortally wounded by a Calusa warrior's arrow."
-      },
-      {
-        id: "tl4",
-        order: 4,
-        yearLabel: "1527–1536",
-        title: "Álvar Núñez 'Cow-Head' Cabeza de Vaca Wanders the Southwest",
-        detail: "Surviving conquistadors trek across the Southwest finding no gold, while Old World diseases spread rapidly."
-      },
-      {
-        id: "tl5",
-        order: 5,
-        yearLabel: "1597",
-        title: "Guale Indians Rise Up Against Spanish Missions in Georgia",
-        detail: "Indigenous Guale fighters rebel against forced conversion and destroy Spanish missions along the Georgia coast."
-      },
-      {
-        id: "tl6",
-        order: 6,
-        yearLabel: "1610",
-        title: "Spain Establishes Permanent Settlement at Santa Fe, New Mexico",
-        detail: "Santa Fe becomes the colonial capital of New Mexico as Franciscan friars press Pueblo communities to abandon native religion."
-      },
-      {
-        id: "tl7",
-        order: 7,
-        yearLabel: "1680",
-        title: "Popé Leads 2,000 Warriors in the Pueblo Revolt",
-        detail: "Pueblo warriors drive the Spanish out of Santa Fe, tear down churches, rebuild kivas, and end the encomienda system."
-      }
-    ];
-
-    const MYSTERY_DOCS = [
-      {
-        id: "md1",
-        badge: "Mystery Document #1 (From the Episode)",
-        quote: `"The Indians were totally deprived of their freedom and were put in the harshest, fiercest, most horrible servitude and captivity which no one who has not seen it can understand. Even beasts enjoy more freedom when they are allowed to graze in the fields, but our Spaniards gave no such opportunity to Indians and truly considered them perpetual slaves... I sometimes came upon dead bodies on my way, and upon others who were gasping and moaning in their death agony, repeating 'Hungry! Hungry!' And this was the freedom, the good treatment, and the Christianity the Indians received."`,
-        clues: [
-          "Clue 1: Notice the phrase 'our Spaniards'—the writer is a Spaniard who is horrified by how his own countrymen are treating Indigenous people.",
-          "Clue 2: He was a Dominican friar who debated Juan Ginés de Sepúlveda. (Careful: John Green got zapped by the Shock Pen because he guessed this author's *other* book!)"
-        ],
-        options: [
-          "Bartolomé de las Casas — History of the Indies (Historia de las Indias)",
-          "Juan Ginés de Sepúlveda — On the Just Causes of War Against the Indians",
-          "Juan Ponce de León — Logs of the Florida Fountain of Youth",
-          "Álvar Núñez Cabeza de Vaca — Adventures in the Unknown Interior"
-        ],
-        correctIndex: 0,
-        takeaway: "Boom—no Shock Pen for you! Bartolomé de las Casas wrote this in 'History of the Indies.' While his eyewitness critique was heroic, English propagandists later used his writings to fuel the Black Legend."
-      },
-      {
-        id: "md2",
-        badge: "Mystery Document #2 (Thought Bubble Quote)",
-        quote: `"The Great Spirit gave it to his children to live upon and cultivate as far as necessary for their subsistence, and so long as they occupy and cultivate it they have a right to the soil."`,
-        clues: [
-          "Clue 1: This quote explains why Indigenous North Americans viewed land as a common resource for survival rather than private property to buy and sell.",
-          "Clue 2: The speaker was a famous leader of the Sauk tribe in the Midwest."
-        ],
-        options: [
-          "Popé — Tewa Religious Leader of the 1680 Pueblo Revolt",
-          "Black Hawk — Leader of the Sauk Tribe",
-          "Juanillo — Chief of the Guale in Coastal Georgia",
-          "Bartolomé de las Casas — Spanish Dominican Friar"
-        ],
-        correctIndex: 1,
-        takeaway: "Spot on! Sauk leader Black Hawk summarized the core clash between Indigenous and European views of property: land was a shared gift for community subsistence, not private real estate."
-      },
-      {
-        id: "md3",
-        badge: "Mystery Document #3 (The Opposite European Viewpoint)",
-        quote: `"Those whose condition is such that their function is the use of their bodies and nothing better can be expected of them, those, I say, are natural slaves. Such are the barbarous and inhumane peoples [of the Americas] who have no civil life and peaceful customs... and who do not even possess written laws."`,
-        clues: [
-          "Clue 1: John Green mentions this Spanish philosopher during the Mystery Document segment as someone who 'argued that the Indians might not even be human.'",
-          "Clue 2: He was Bartolomé de las Casas's arch-rival in the famous 1550–1551 Valladolid Debate in Spain."
-        ],
-        options: [
-          "Bartolomé de las Casas — History of the Indies",
-          "King Charles V — The New Laws of the Indies",
-          "Juan Ginés de Sepúlveda — Democrates Alter (On the Just Causes of War)",
-          "Álvar Núñez Cabeza de Vaca — La Relación"
-        ],
-        correctIndex: 2,
-        takeaway: "Correct! Juan Ginés de Sepúlveda represented the brutal imperialist mindset that Las Casas fought against—using the lack of European-style written laws to claim Indigenous people were 'natural slaves.'"
-      }
+    const UPCOMING_UNIT2 = [
+      { number: "06", title: "Taxes & Smuggling — Prelude to Revolution", duration: "12:19", youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s", desc: "The Stamp Act, Townshend Acts, Boston Massacre, Boston Tea Party, and why colonists were so mad about taxes." },
+      { number: "07", title: "Who Won the American Revolution?", duration: "12:41", youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s", desc: "Saratoga, Yorktown, Revolutionary War strategy, and how the Revolution affected women, enslaved people, and Native Americans." },
+      { number: "08", title: "The Constitution, the Articles, and Federalism", duration: "13:04", youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s", desc: "The Articles of Confederation, Shays' Rebellion, the 1787 Constitutional Convention, the Great Compromise, and the Federalist Papers." }
     ];
 
     // ==================== STATE MANAGEMENT ====================
-    const STORAGE_KEY = "gia_ccush_ep1_state_v1";
+    const STORAGE_KEY = "gia_ccush_unit1_state_v2";
     let state = {
+      activeEp: 1,
       activeTab: "guide",
       soundEnabled: true,
       awesomePoints: 0,
       sectionsRead: {},
-      studentNotes: "",
+      studentNotesByEp: {},
       quizAnswers: {},
       quizZaps: 0,
-      retryMissedMode: false,
       shortAnswerText: {},
       shortAnswerRevealed: {},
       fcIndex: 0,
       fcFlipped: false,
       fcFilter: "all",
-      fcOrder: FLASHCARDS.map((_, i) => i),
+      fcOrderByEp: {},
       fcMastered: {},
       timelineStudyMode: false,
-      timelinePlacedIds: [],
-      timelinePoolIds: [],
-      timelineSolved: false,
+      timelinePlacedByEp: {},
+      timelinePoolByEp: {},
+      timelineSolvedByEp: {},
       mysteryActiveIdx: 0,
       mysteryCluesShown: {},
       mysteryAnswers: {}
     };
+
+    function getEp() {
+      return EPISODES_DATA[state.activeEp] || EPISODES_DATA[1];
+    }
+
+    function ensureEpStructures(epId) {
+      const ep = EPISODES_DATA[epId];
+      if (!state.fcOrderByEp[epId] || state.fcOrderByEp[epId].length !== ep.flashcards.length) {
+        state.fcOrderByEp[epId] = ep.flashcards.map((_, i) => i);
+      }
+      if (!state.timelinePoolByEp[epId] && !state.timelinePlacedByEp[epId]) {
+        initTimelinePoolForEp(epId);
+      }
+    }
+
+    function initTimelinePoolForEp(epId) {
+      const ep = EPISODES_DATA[epId];
+      const ids = ep.timeline.map(e => e.id);
+      const rev = ids.slice().reverse();
+      const swapped = [];
+      for (let i = 0; i < rev.length; i += 2) {
+        if (i + 1 < rev.length) swapped.push(rev[i + 1]);
+        swapped.push(rev[i]);
+      }
+      state.timelinePlacedByEp[epId] = [];
+      state.timelinePoolByEp[epId] = swapped;
+    }
 
     function loadState() {
       try {
@@ -988,20 +1222,14 @@
           const parsed = JSON.parse(raw);
           state = Object.assign({}, state, parsed);
         }
-      } catch (e) {
-        // Fallback if localStorage is restricted
-      }
-      if (!state.timelinePoolIds || (state.timelinePoolIds.length === 0 && state.timelinePlacedIds.length === 0)) {
-        initTimelinePool();
-      }
+      } catch (e) {}
+      [1, 2, 3, 4, 5].forEach(ensureEpStructures);
     }
 
     function saveState() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch (e) {
-        // Ignore storage errors in sandboxed frames
-      }
+      } catch (e) {}
       updateGlobalStats();
     }
 
@@ -1050,9 +1278,7 @@
           osc.start(now);
           osc.stop(now + 0.5);
         }
-      } catch (e) {
-        // Ignore audio errors
-      }
+      } catch (e) {}
     }
 
     function showToast(message, tone = "amber") {
@@ -1072,63 +1298,119 @@
       }, 2600);
     }
 
-    // ==================== GLOBAL STATS & SIDEBAR ====================
+    // ==================== HERO & STATS ====================
+    function renderHeroAndSidebarLinks() {
+      const ep = getEp();
+      document.getElementById("heroEpBadge").textContent = `EPISODE #${ep.number}`;
+      document.getElementById("heroEraBadge").textContent = ep.era;
+      document.getElementById("heroEpTitle").textContent = ep.title;
+      document.getElementById("heroEpDesc").textContent = ep.desc;
+
+      document.getElementById("sidebarResourceHeading").textContent = `Episode ${ep.id} Resources`;
+      document.getElementById("sidebarDocLink").href = ep.docUrl;
+      document.getElementById("sidebarDocLabel").textContent = `Open Ep. ${ep.id} Google Doc`;
+      document.getElementById("sidebarVideoLink").href = ep.youtubeUrl;
+      document.getElementById("sidebarVideoLabel").textContent = `Watch Episode ${ep.id} Video`;
+      document.getElementById("sidebarVideoSub").textContent = `YouTube • ${ep.duration}`;
+
+      document.getElementById("guideHeaderTitle").textContent = `Episode ${ep.id} Interactive Study Guide`;
+      document.getElementById("guideOpenDocBtn").href = ep.docUrl;
+      document.getElementById("notesHeaderTitle").textContent = `📝 Gia's Episode ${ep.id} Quick Notes`;
+      document.getElementById("quizHeaderTitle").textContent = `Episode ${ep.id}: "Avoid the Shock Pen" Quiz`;
+      document.getElementById("tabFlashcardsLabel").textContent = `Flashcards (${ep.flashcards.length})`;
+
+      const notesInput = document.getElementById("studentNotesInput");
+      notesInput.value = state.studentNotesByEp[ep.id] || "";
+    }
+
+    function getEpMasteryStats(epId) {
+      const ep = EPISODES_DATA[epId];
+      const readCount = ep.sections.filter(s => state.sectionsRead[s.id]).length;
+      const correctQuizCount = ep.quiz.filter(q => state.quizAnswers[q.id] === q.correctIndex).length;
+      const masteredFcCount = ep.flashcards.filter(f => state.fcMastered[f.id]).length;
+      const tlSolved = !!state.timelineSolvedByEp[epId];
+      const mysterySolvedCount = ep.mysteryDocs.filter(m => state.mysteryAnswers[m.id] === m.correctIndex).length;
+
+      const total = ep.sections.length + ep.quiz.length + ep.flashcards.length + 1 + ep.mysteryDocs.length;
+      const done = readCount + correctQuizCount + masteredFcCount + (tlSolved ? 1 : 0) + mysterySolvedCount;
+      const pct = Math.min(100, Math.round((done / total) * 100));
+
+      return { readCount, correctQuizCount, masteredFcCount, tlSolved, mysterySolvedCount, pct };
+    }
+
     function updateGlobalStats() {
-      const readCount = Object.values(state.sectionsRead).filter(Boolean).length;
-      const correctQuizCount = QUIZ_QUESTIONS.filter(q => state.quizAnswers[q.id] === q.correctIndex).length;
-      const masteredFcCount = Object.values(state.fcMastered).filter(Boolean).length;
-      const mysterySolvedCount = MYSTERY_DOCS.filter((m, idx) => state.mysteryAnswers[idx] === m.correctIndex).length;
+      let totalPts = 0;
+      [1, 2, 3, 4, 5].forEach(id => {
+        const st = getEpMasteryStats(id);
+        totalPts += (st.readCount * 15) + (st.correctQuizCount * 25) + (st.masteredFcCount * 10) + (st.tlSolved ? 50 : 0) + (st.mysterySolvedCount * 30);
+      });
+      state.awesomePoints = totalPts;
+      document.getElementById("awesomePointsDisplay").textContent = totalPts;
 
-      // Recalculate Awesome Points deterministically
-      const pts = (readCount * 15) + (correctQuizCount * 25) + (masteredFcCount * 10) + (state.timelineSolved ? 50 : 0) + (mysterySolvedCount * 30);
-      state.awesomePoints = pts;
+      const ep = getEp();
+      const curr = getEpMasteryStats(ep.id);
+      document.getElementById("headerMasteryLabel").textContent = `Ep. ${ep.id} Mastery:`;
+      document.getElementById("headerMasteryBar").style.width = `${curr.pct}%`;
+      document.getElementById("headerMasteryText").textContent = `${curr.pct}%`;
 
-      // Mastery percentage (out of 20 total milestones: 4 sections + 8 quiz + 5 flashcards threshold + 1 timeline + 2 mystery)
-      const totalItems = 4 + 8 + 11 + 1 + 3;
-      const completedItems = readCount + correctQuizCount + masteredFcCount + (state.timelineSolved ? 1 : 0) + mysterySolvedCount;
-      const pct = Math.min(100, Math.round((completedItems / totalItems) * 100));
-
-      document.getElementById("awesomePointsDisplay").textContent = pts;
-      document.getElementById("headerMasteryBar").style.width = `${pct}%`;
-      document.getElementById("headerMasteryText").textContent = `${pct}%`;
-
-      document.getElementById("statSectionsRead").textContent = `${readCount} / 4`;
-      document.getElementById("statQuizScore").textContent = `${correctQuizCount} / 8`;
-      document.getElementById("statFlashcards").textContent = `${masteredFcCount} / 11`;
-      document.getElementById("statTimeline").textContent = state.timelineSolved ? "Solved ✅" : `${state.timelinePlacedIds.length} / 7`;
-      document.getElementById("statMystery").textContent = `${mysterySolvedCount} / 3`;
+      document.getElementById("sidebarChecklistTitle").textContent = `Gia's Ep. ${ep.id} Checklist`;
+      document.getElementById("statSectionsRead").textContent = `${curr.readCount} / ${ep.sections.length}`;
+      document.getElementById("statQuizScore").textContent = `${curr.correctQuizCount} / ${ep.quiz.length}`;
+      document.getElementById("statFlashcards").textContent = `${curr.masteredFcCount} / ${ep.flashcards.length}`;
+      const placedLen = (state.timelinePlacedByEp[ep.id] || []).length;
+      document.getElementById("statTimeline").textContent = curr.tlSolved ? "Solved ✅" : `${placedLen} / ${ep.timeline.length}`;
+      document.getElementById("statMystery").textContent = `${curr.mysterySolvedCount} / ${ep.mysteryDocs.length}`;
     }
 
     function renderSidebarEpisodes() {
       const container = document.getElementById("episodeListContainer");
       container.innerHTML = "";
-      EPISODES.forEach(ep => {
+      [1, 2, 3, 4, 5].forEach(id => {
+        const ep = EPISODES_DATA[id];
+        const st = getEpMasteryStats(id);
+        const isCurrent = state.activeEp === id;
         const btn = document.createElement("button");
         btn.type = "button";
-        if (ep.active) {
-          btn.className = "w-full text-left p-3 rounded-xl bg-gradient-to-r from-amber-400/20 to-orange-500/10 border border-amber-400/50 transition flex items-start gap-2.5";
-          btn.innerHTML = `
-            <span class="px-2 py-0.5 rounded-md bg-amber-400 text-slate-950 font-extrabold text-xs mt-0.5">#${ep.number}</span>
-            <div class="flex-1 min-w-0">
-              <div class="text-xs font-bold text-white leading-snug">${ep.title}</div>
-              <div class="text-[11px] text-amber-300 mt-0.5">● Active Now • ${ep.duration}</div>
+        btn.className = isCurrent
+          ? "w-full text-left p-3 rounded-xl bg-gradient-to-r from-amber-400/20 to-orange-500/10 border border-amber-400/60 transition flex items-start gap-2.5 shadow"
+          : "w-full text-left p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 transition flex items-start gap-2.5";
+
+        btn.innerHTML = `
+          <span class="px-2 py-0.5 rounded-md ${isCurrent ? "bg-amber-400 text-slate-950 font-extrabold" : "bg-slate-700 text-slate-200 font-bold"} text-xs mt-0.5">#${ep.number}</span>
+          <div class="flex-1 min-w-0">
+            <div class="text-xs font-bold ${isCurrent ? "text-white" : "text-slate-200"} leading-snug truncate">${ep.title}</div>
+            <div class="flex items-center justify-between text-[10px] mt-1">
+              <span class="${isCurrent ? "text-amber-300 font-semibold" : "text-slate-400"}">${isCurrent ? "● Viewing" : "Unlocked"} • ${ep.duration}</span>
+              <span class="font-bold ${st.pct === 100 ? "text-emerald-300" : "text-teal-300"}">${st.pct}%</span>
             </div>
-          `;
-          btn.addEventListener("click", () => {
-            showToast("Viewing Episode 1: The Black Legend, Native Americans, and Spaniards!");
-          });
-        } else {
-          btn.className = "w-full text-left p-2.5 rounded-xl bg-slate-800/50 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 transition flex items-start gap-2.5 opacity-80 hover:opacity-100";
-          btn.innerHTML = `
-            <span class="px-2 py-0.5 rounded-md bg-slate-700 text-slate-300 font-bold text-xs mt-0.5">#${ep.number}</span>
-            <div class="flex-1 min-w-0">
-              <div class="text-xs font-semibold text-slate-300 leading-snug truncate">${ep.title}</div>
-              <div class="text-[10px] text-slate-400 mt-0.5">🔒 Up Next • Click to preview</div>
-            </div>
-          `;
-          btn.addEventListener("click", () => openEpisodeModal(ep));
-        }
+          </div>
+        `;
+        btn.addEventListener("click", () => {
+          state.activeEp = id;
+          state.fcIndex = 0;
+          state.fcFlipped = false;
+          state.fcFilter = "all";
+          state.mysteryActiveIdx = 0;
+          saveState();
+          renderAll();
+          showToast(`Switched to Episode ${ep.id}: ${ep.title}`);
+        });
         container.appendChild(btn);
+      });
+
+      const upContainer = document.getElementById("upcomingEpisodeListContainer");
+      upContainer.innerHTML = "";
+      UPCOMING_UNIT2.forEach(u => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "w-full text-left p-2 rounded-xl bg-slate-900 hover:bg-slate-800/80 border border-slate-800/90 transition flex items-center gap-2 opacity-75 hover:opacity-100";
+        btn.innerHTML = `
+          <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-bold text-[10px]">#${u.number}</span>
+          <span class="text-[11px] text-slate-300 truncate flex-1">${u.title}</span>
+          <span class="text-[10px] text-slate-500">🔒</span>
+        `;
+        btn.addEventListener("click", () => openEpisodeModal(u));
+        upContainer.appendChild(btn);
       });
     }
 
@@ -1150,9 +1432,10 @@
 
     // ==================== TAB 1: STUDY GUIDE ====================
     function renderGuideSections() {
+      const ep = getEp();
       const container = document.getElementById("guideSectionsContainer");
       container.innerHTML = "";
-      GUIDE_SECTIONS.forEach(sec => {
+      ep.sections.forEach(sec => {
         const isRead = !!state.sectionsRead[sec.id];
         const card = document.createElement("div");
         card.className = `rounded-2xl border p-5 transition ${
@@ -1187,20 +1470,21 @@
           }
           saveState();
           renderGuideSections();
+          renderSidebarEpisodes();
         });
       });
     }
 
     // ==================== TAB 2: SHOCK PEN QUIZ ====================
     function renderQuiz() {
+      const ep = getEp();
       const container = document.getElementById("quizQuestionsContainer");
       container.innerHTML = "";
 
-      const correctCount = QUIZ_QUESTIONS.filter(q => state.quizAnswers[q.id] === q.correctIndex).length;
-      const answeredCount = Object.keys(state.quizAnswers).length;
-      const missedCount = QUIZ_QUESTIONS.filter(q => state.quizAnswers[q.id] !== undefined && state.quizAnswers[q.id] !== q.correctIndex).length;
+      const correctCount = ep.quiz.filter(q => state.quizAnswers[q.id] === q.correctIndex).length;
+      const missedCount = ep.quiz.filter(q => state.quizAnswers[q.id] !== undefined && state.quizAnswers[q.id] !== q.correctIndex).length;
 
-      document.getElementById("quizScoreBanner").textContent = `${correctCount} / 8`;
+      document.getElementById("quizScoreBanner").textContent = `${correctCount} / ${ep.quiz.length}`;
       document.getElementById("quizZapsBanner").textContent = `${state.quizZaps} ⚡`;
 
       const retryBtn = document.getElementById("retryMissedQuizBtn");
@@ -1211,7 +1495,7 @@
         retryBtn.classList.add("hidden");
       }
 
-      QUIZ_QUESTIONS.forEach((q, idx) => {
+      ep.quiz.forEach((q, idx) => {
         const userAns = state.quizAnswers[q.id];
         const isAnswered = userAns !== undefined;
         const isCorrect = userAns === q.correctIndex;
@@ -1254,7 +1538,7 @@
 
         card.innerHTML = `
           <div class="flex items-center justify-between gap-2 mb-2.5">
-            <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Question ${idx + 1} of 8</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Question ${idx + 1} of ${ep.quiz.length}</span>
             ${
               isAnswered
                 ? isCorrect
@@ -1284,7 +1568,7 @@
         btn.addEventListener("click", () => {
           const qid = btn.getAttribute("data-qid");
           const optIdx = parseInt(btn.getAttribute("data-opt"), 10);
-          const qObj = QUIZ_QUESTIONS.find(item => item.id === qid);
+          const qObj = ep.quiz.find(item => item.id === qid);
           if (!qObj || state.quizAnswers[qid] !== undefined) return;
 
           state.quizAnswers[qid] = optIdx;
@@ -1298,6 +1582,7 @@
           }
           saveState();
           renderQuiz();
+          renderSidebarEpisodes();
 
           if (optIdx !== qObj.correctIndex) {
             const cardEl = document.getElementById(`quiz-card-${qid}`);
@@ -1306,10 +1591,9 @@
         });
       });
 
-      // Render Short Answers
       const saContainer = document.getElementById("shortAnswerContainer");
       saContainer.innerHTML = "";
-      SHORT_ANSWERS.forEach(sa => {
+      ep.shortAnswers.forEach(sa => {
         const userText = state.shortAnswerText[sa.id] || "";
         const revealed = !!state.shortAnswerRevealed[sa.id];
         const block = document.createElement("div");
@@ -1353,8 +1637,11 @@
 
     // ==================== TAB 3: FLASHCARDS ====================
     function getFilteredFlashcards() {
-      return state.fcOrder
-        .map(idx => FLASHCARDS[idx])
+      const ep = getEp();
+      ensureEpStructures(ep.id);
+      const order = state.fcOrderByEp[ep.id];
+      return order
+        .map(idx => ep.flashcards[idx])
         .filter(card => {
           if (state.fcFilter === "mastered") return !!state.fcMastered[card.id];
           if (state.fcFilter === "learning") return !state.fcMastered[card.id];
@@ -1363,9 +1650,10 @@
     }
 
     function renderFlashcards() {
-      // Update filter pills
+      const ep = getEp();
       document.querySelectorAll(".fc-filter-btn").forEach(btn => {
         const f = btn.getAttribute("data-fc-filter");
+        if (f === "all") btn.textContent = `All (${ep.flashcards.length})`;
         if (f === state.fcFilter) {
           btn.className = "fc-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950";
         } else {
@@ -1374,12 +1662,11 @@
       });
 
       const deck = getFilteredFlashcards();
-      const stage = document.getElementById("flashcardStage");
       if (deck.length === 0) {
         state.fcFilter = "all";
         state.fcIndex = 0;
         renderFlashcards();
-        showToast("No cards in that filter—showing all 11 cards!");
+        showToast(`No cards in that filter—showing all ${ep.flashcards.length} cards!`);
         return;
       }
 
@@ -1408,10 +1695,9 @@
       document.getElementById("fcBackWhat").textContent = currentCard.what;
       document.getElementById("fcBackWhy").textContent = currentCard.why;
 
-      // Mini Grid
       const grid = document.getElementById("fcMiniGrid");
       grid.innerHTML = "";
-      FLASHCARDS.forEach((fc, idx) => {
+      ep.flashcards.forEach((fc, idx) => {
         const mastered = !!state.fcMastered[fc.id];
         const isCurrent = fc.id === currentCard.id;
         const btn = document.createElement("button");
@@ -1429,7 +1715,7 @@
         `;
         btn.addEventListener("click", () => {
           state.fcFilter = "all";
-          const pos = state.fcOrder.indexOf(idx);
+          const pos = state.fcOrderByEp[ep.id].indexOf(idx);
           state.fcIndex = pos >= 0 ? pos : 0;
           state.fcFlipped = false;
           renderFlashcards();
@@ -1439,15 +1725,12 @@
     }
 
     // ==================== TAB 4: TIMELINE SORTER ====================
-    function initTimelinePool() {
-      const ids = TIMELINE_EVENTS.map(e => e.id);
-      // Deterministic shuffle so it's never already sorted
-      const shuffled = [ids[4], ids[1], ids[6], ids[0], ids[5], ids[2], ids[3]];
-      state.timelinePlacedIds = [];
-      state.timelinePoolIds = shuffled;
-    }
-
     function renderTimeline() {
+      const ep = getEp();
+      ensureEpStructures(ep.id);
+      const placedIds = state.timelinePlacedByEp[ep.id] || [];
+      const poolIds = state.timelinePoolByEp[ep.id] || [];
+
       const placedContainer = document.getElementById("timelinePlacedContainer");
       const poolWrapper = document.getElementById("timelinePoolWrapper");
       const poolContainer = document.getElementById("timelinePoolContainer");
@@ -1461,10 +1744,10 @@
       if (state.timelineStudyMode) {
         modeBtn.textContent = "🎮 Switch to Game Mode";
         poolWrapper.classList.add("hidden");
-        promptText.innerHTML = "<strong>Study Mode Active:</strong> Reviewing all 7 Episode 1 events in exact chronological order.";
+        promptText.innerHTML = `<strong>Study Mode Active:</strong> Reviewing all ${ep.timeline.length} Episode ${ep.id} events in exact chronological order.`;
         scoreBadge.textContent = "Complete Reference Timeline";
 
-        TIMELINE_EVENTS.forEach((ev, i) => {
+        ep.timeline.forEach((ev, i) => {
           const row = document.createElement("div");
           row.className = "p-4 rounded-xl bg-slate-950 border border-teal-500/30 flex items-start gap-3.5";
           row.innerHTML = `
@@ -1480,20 +1763,19 @@
       }
 
       modeBtn.textContent = "👁️ Switch to Study Mode";
-      const nextStep = state.timelinePlacedIds.length + 1;
-      scoreBadge.textContent = `Placed: ${state.timelinePlacedIds.length} / 7`;
+      const nextStep = placedIds.length + 1;
+      scoreBadge.textContent = `Placed: ${placedIds.length} / ${ep.timeline.length}`;
 
-      if (state.timelinePlacedIds.length === TIMELINE_EVENTS.length) {
+      if (placedIds.length === ep.timeline.length) {
         poolWrapper.classList.add("hidden");
-        promptText.innerHTML = "🎉 <strong>Timeline Mastered!</strong> You placed all 7 historical milestones in exact chronological order (+50 Awesome Pts)!";
+        promptText.innerHTML = `🎉 <strong>Timeline Mastered!</strong> You placed all ${ep.timeline.length} Episode ${ep.id} milestones in chronological order (+50 Awesome Pts)!`;
       } else {
         poolWrapper.classList.remove("hidden");
-        promptText.innerHTML = `Step <strong>${nextStep} of 7</strong>: Click the next earliest historical event from the pool below!`;
+        promptText.innerHTML = `Step <strong>${nextStep} of ${ep.timeline.length}</strong>: Click the next earliest historical event from the pool below!`;
       }
 
-      // Render Placed Events
-      state.timelinePlacedIds.forEach((id, idx) => {
-        const ev = TIMELINE_EVENTS.find(e => e.id === id);
+      placedIds.forEach((id, idx) => {
+        const ev = ep.timeline.find(e => e.id === id);
         if (!ev) return;
         const row = document.createElement("div");
         row.className = "p-3.5 rounded-xl bg-emerald-950/30 border border-emerald-500/40 flex items-start gap-3";
@@ -1507,9 +1789,8 @@
         placedContainer.appendChild(row);
       });
 
-      // Render Pool Events (without revealing dates!)
-      state.timelinePoolIds.forEach(id => {
-        const ev = TIMELINE_EVENTS.find(e => e.id === id);
+      poolIds.forEach(id => {
+        const ev = ep.timeline.find(e => e.id === id);
         if (!ev) return;
         const btn = document.createElement("button");
         btn.type = "button";
@@ -1519,12 +1800,12 @@
           <p class="text-xs text-slate-400 mt-1">${ev.detail}</p>
         `;
         btn.addEventListener("click", () => {
-          const expectedOrder = state.timelinePlacedIds.length + 1;
+          const expectedOrder = state.timelinePlacedByEp[ep.id].length + 1;
           if (ev.order === expectedOrder) {
-            state.timelinePlacedIds.push(ev.id);
-            state.timelinePoolIds = state.timelinePoolIds.filter(item => item !== ev.id);
-            if (state.timelinePlacedIds.length === TIMELINE_EVENTS.length) {
-              state.timelineSolved = true;
+            state.timelinePlacedByEp[ep.id].push(ev.id);
+            state.timelinePoolByEp[ep.id] = state.timelinePoolByEp[ep.id].filter(item => item !== ev.id);
+            if (state.timelinePlacedByEp[ep.id].length === ep.timeline.length) {
+              state.timelineSolvedByEp[ep.id] = true;
               playSound("fanfare");
               showToast("Timeline Complete! +50 Awesome Points!", "emerald");
             } else {
@@ -1533,6 +1814,7 @@
             }
             saveState();
             renderTimeline();
+            renderSidebarEpisodes();
           } else {
             playSound("zap");
             btn.classList.add("zap-animate");
@@ -1546,10 +1828,13 @@
 
     // ==================== TAB 5: MYSTERY DOCUMENT ====================
     function renderMysteryDocs() {
+      const ep = getEp();
+      if (state.mysteryActiveIdx >= ep.mysteryDocs.length) state.mysteryActiveIdx = 0;
+
       const selector = document.getElementById("mysterySelectorBtns");
       selector.innerHTML = "";
-      MYSTERY_DOCS.forEach((doc, idx) => {
-        const solved = state.mysteryAnswers[idx] === doc.correctIndex;
+      ep.mysteryDocs.forEach((doc, idx) => {
+        const solved = state.mysteryAnswers[doc.id] === doc.correctIndex;
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = `px-3 py-1.5 rounded-xl text-xs font-bold transition ${
@@ -1565,10 +1850,9 @@
         selector.appendChild(btn);
       });
 
-      const idx = state.mysteryActiveIdx;
-      const doc = MYSTERY_DOCS[idx];
-      const cluesShown = state.mysteryCluesShown[idx] || 0;
-      const userAns = state.mysteryAnswers[idx];
+      const doc = ep.mysteryDocs[state.mysteryActiveIdx];
+      const cluesShown = state.mysteryCluesShown[doc.id] || 0;
+      const userAns = state.mysteryAnswers[doc.id];
       const isAnswered = userAns !== undefined;
       const isCorrect = userAns === doc.correctIndex;
 
@@ -1636,7 +1920,7 @@
       const clueBtn = document.getElementById("revealClueBtn");
       if (clueBtn) {
         clueBtn.addEventListener("click", () => {
-          state.mysteryCluesShown[idx] = (state.mysteryCluesShown[idx] || 0) + 1;
+          state.mysteryCluesShown[doc.id] = (state.mysteryCluesShown[doc.id] || 0) + 1;
           saveState();
           renderMysteryDocs();
         });
@@ -1645,7 +1929,7 @@
       container.querySelectorAll(".md-opt-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           const chosen = parseInt(btn.getAttribute("data-md-opt"), 10);
-          state.mysteryAnswers[idx] = chosen;
+          state.mysteryAnswers[doc.id] = chosen;
           if (chosen === doc.correctIndex) {
             playSound("fanfare");
             showToast("Mystery Document Solved! +30 Awesome Points", "emerald");
@@ -1655,11 +1939,22 @@
           }
           saveState();
           renderMysteryDocs();
+          renderSidebarEpisodes();
         });
       });
     }
 
-    // ==================== NAVIGATION & EVENT LISTENERS ====================
+    function renderAll() {
+      renderHeroAndSidebarLinks();
+      renderSidebarEpisodes();
+      renderGuideSections();
+      renderQuiz();
+      renderFlashcards();
+      renderTimeline();
+      renderMysteryDocs();
+      updateGlobalStats();
+    }
+
     function switchTab(tabName) {
       state.activeTab = tabName;
       document.querySelectorAll(".tab-panel").forEach(panel => {
@@ -1680,23 +1975,15 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       loadState();
-      renderSidebarEpisodes();
-      renderGuideSections();
-      renderQuiz();
-      renderFlashcards();
-      renderTimeline();
-      renderMysteryDocs();
-      updateGlobalStats();
+      renderAll();
 
-      // Restore notes
       const notesInput = document.getElementById("studentNotesInput");
-      notesInput.value = state.studentNotes || "";
       notesInput.addEventListener("input", () => {
-        state.studentNotes = notesInput.value;
+        const ep = getEp();
+        state.studentNotesByEp[ep.id] = notesInput.value;
         saveState();
       });
 
-      // Copy Notes
       document.getElementById("copyNotesBtn").addEventListener("click", () => {
         const text = notesInput.value.trim();
         if (!text) {
@@ -1718,31 +2005,30 @@
         }
       });
 
-      // Clear Notes
       document.getElementById("clearNotesBtn").addEventListener("click", () => {
+        const ep = getEp();
         notesInput.value = "";
-        state.studentNotes = "";
+        state.studentNotesByEp[ep.id] = "";
         saveState();
         showToast("Scratchpad cleared.");
       });
 
-      // Mark All Read
       document.getElementById("markAllReadBtn").addEventListener("click", () => {
-        GUIDE_SECTIONS.forEach(s => { state.sectionsRead[s.id] = true; });
+        const ep = getEp();
+        ep.sections.forEach(s => { state.sectionsRead[s.id] = true; });
         playSound("fanfare");
         saveState();
         renderGuideSections();
-        showToast("All 4 study guide sections marked read! (+60 Pts)", "emerald");
+        renderSidebarEpisodes();
+        showToast(`All Episode ${ep.id} sections marked read! (+60 Pts)`, "emerald");
       });
 
-      // Tab buttons
       document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
           switchTab(btn.getAttribute("data-tab"));
         });
       });
 
-      // Sound Toggle
       const soundBtn = document.getElementById("soundToggleBtn");
       function syncSoundUI() {
         document.getElementById("soundIcon").textContent = state.soundEnabled ? "🔊" : "🔇";
@@ -1756,27 +2042,28 @@
         showToast(state.soundEnabled ? "Sound effects enabled!" : "Sound effects muted.");
       });
 
-      // Quiz Reset & Retry Missed
       document.getElementById("resetQuizBtn").addEventListener("click", () => {
-        state.quizAnswers = {};
-        state.quizZaps = 0;
+        const ep = getEp();
+        ep.quiz.forEach(q => { delete state.quizAnswers[q.id]; });
         saveState();
         renderQuiz();
-        showToast("Quiz reset—good luck dodging the Shock Pen!");
+        renderSidebarEpisodes();
+        showToast(`Episode ${ep.id} quiz reset—good luck dodging the Shock Pen!`);
       });
 
       document.getElementById("retryMissedQuizBtn").addEventListener("click", () => {
-        QUIZ_QUESTIONS.forEach(q => {
+        const ep = getEp();
+        ep.quiz.forEach(q => {
           if (state.quizAnswers[q.id] !== undefined && state.quizAnswers[q.id] !== q.correctIndex) {
             delete state.quizAnswers[q.id];
           }
         });
         saveState();
         renderQuiz();
+        renderSidebarEpisodes();
         showToast("Missed questions unlocked for retry!");
       });
 
-      // Flashcard Flip & Navigation
       document.getElementById("flashcardFlipWrapper").addEventListener("click", () => {
         state.fcFlipped = !state.fcFlipped;
         renderFlashcards();
@@ -1805,6 +2092,7 @@
         state.fcFlipped = false;
         saveState();
         renderFlashcards();
+        renderSidebarEpisodes();
       });
 
       document.getElementById("fcMarkLearningBtn").addEventListener("click", () => {
@@ -1817,6 +2105,7 @@
         state.fcFlipped = false;
         saveState();
         renderFlashcards();
+        renderSidebarEpisodes();
       });
 
       document.querySelectorAll(".fc-filter-btn").forEach(btn => {
@@ -1829,11 +2118,13 @@
       });
 
       document.getElementById("shuffleFlashcardsBtn").addEventListener("click", () => {
-        for (let i = state.fcOrder.length - 1; i > 0; i--) {
+        const ep = getEp();
+        const ord = state.fcOrderByEp[ep.id];
+        for (let i = ord.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
-          const temp = state.fcOrder[i];
-          state.fcOrder[i] = state.fcOrder[j];
-          state.fcOrder[j] = temp;
+          const temp = ord[i];
+          ord[i] = ord[j];
+          ord[j] = temp;
         }
         state.fcIndex = 0;
         state.fcFlipped = false;
@@ -1841,44 +2132,40 @@
         showToast("Flashcard deck shuffled!");
       });
 
-      // Timeline Controls
       document.getElementById("toggleTimelineModeBtn").addEventListener("click", () => {
         state.timelineStudyMode = !state.timelineStudyMode;
         renderTimeline();
       });
 
       document.getElementById("resetTimelineBtn").addEventListener("click", () => {
+        const ep = getEp();
         state.timelineStudyMode = false;
-        initTimelinePool();
+        initTimelinePoolForEp(ep.id);
         saveState();
         renderTimeline();
+        renderSidebarEpisodes();
         showToast("Timeline game reshuffled!");
       });
 
-      // Modal Close
       document.getElementById("closeModalBtn").addEventListener("click", closeEpisodeModal);
       document.getElementById("modalGotItBtn").addEventListener("click", closeEpisodeModal);
 
-      // Reset All Progress
       document.getElementById("resetAllProgressBtn").addEventListener("click", () => {
-        state.sectionsRead = {};
-        state.quizAnswers = {};
-        state.quizZaps = 0;
-        state.fcMastered = {};
-        state.timelineSolved = false;
-        state.mysteryAnswers = {};
-        state.mysteryCluesShown = {};
-        initTimelinePool();
+        const ep = getEp();
+        ep.sections.forEach(s => { delete state.sectionsRead[s.id]; });
+        ep.quiz.forEach(q => { delete state.quizAnswers[q.id]; });
+        ep.flashcards.forEach(f => { delete state.fcMastered[f.id]; });
+        delete state.timelineSolvedByEp[ep.id];
+        ep.mysteryDocs.forEach(m => {
+          delete state.mysteryAnswers[m.id];
+          delete state.mysteryCluesShown[m.id];
+        });
+        initTimelinePoolForEp(ep.id);
         saveState();
-        renderGuideSections();
-        renderQuiz();
-        renderFlashcards();
-        renderTimeline();
-        renderMysteryDocs();
-        showToast("All Episode 1 progress reset!");
+        renderAll();
+        showToast(`Episode ${ep.id} progress reset!`);
       });
 
-      // Activate saved tab
       if (state.activeTab && state.activeTab !== "guide") {
         switchTab(state.activeTab);
       }
