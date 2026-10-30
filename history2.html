@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>U.S. History Graphic Novel Hub</title>
+<style>
+  :root {
+    --border-color: #1a1a1a;
+    --bg-color: #f4f1ea;
+    --panel-bg: #ffffff;
+    --accent: #d32f2f;
+    --highlight: #ffca28;
+  }
+  body {
+    font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+    background-color: var(--bg-color);
+    color: #333;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 2.5rem;
+    border-bottom: 5px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .panel {
+    background-color: var(--panel-bg);
+    border: 4px solid var(--border-color);
+    border-radius: 4px;
+    box-shadow: 8px 8px 0px var(--border-color);
+    padding: 15px;
+    transition: transform 0.2s ease-in-out;
+  }
+  .panel:hover {
+    transform: translateY(-4px) translateX(-4px);
+    box-shadow: 12px 12px 0px var(--border-color);
+  }
+  .panel h2 {
+    font-size: 1.2rem;
+    background-color: var(--accent);
+    color: white;
+    padding: 6px 12px;
+    display: inline-block;
+    border: 3px solid var(--border-color);
+    margin-top: -30px;
+    text-transform: uppercase;
+    transform: rotate(-2deg);
+  }
+  .video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    border: 3px solid var(--border-color);
+    margin-bottom: 15px;
+    background-color: #000;
+  }
+  .video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .notes {
+    font-size: 1rem;
+    line-height: 1.5;
+    border-left: 5px solid var(--highlight);
+    padding-left: 12px;
+    margin-top: 10px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<h1>U.S. History Timeline Hub</h1>
+
+<div class="grid-container">
+  <!-- Episodes 1-5 -->
+  <div class="panel">
+    <h2>Ep 1: The Black Legend</h2>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/6E9WU9TGrec" allowfullscreen></iframe>
+    </div>
+    <div class="notes">Native Americans and Spaniards before 1492.</div>
+  </div>
+
+  <div class="panel">
+    <h2>Ep 2: Colonizing America</h2>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/o69TvQqyGdg" allowfullscreen></iframe>
+    </div>
+    <div class="notes">Jamestown, Roanoke, and the early English colonies.</div>
+  </div>
+
+  <div class="panel">
+    <h2>Ep 3: Natives & The English</h2>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/TTYOQFTjlEQ" allowfullscreen></iframe>
+    </div>
+    <div class="notes">Interactions, conflicts, and the Powhatan Confederacy.</div>
+  </div>
+
+  <div class="panel">
+    <h2>Ep 4: Quakers & The Dutch</h2>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/p47tZLJbdag" allowfullscreen></iframe>
+    </div>
+    <div class="notes">New Amsterdam, Pennsylvania, and colonial society.</div>
+  </div>
+
+  <div class="panel">
+    <h2>Ep 5: Seven Years War</h2>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/5vKGU3aEGss" allowfullscreen></iframe>
+    </div>
+    <div class="notes">The French and Indian War and the Great Awakening.</div>
+  </div>
+
+  <!-- Episodes 6-10 -->
+  <div class="panel">
+    <h2>Ep 6: Taxes & Smuggling</h2>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/Eytc9ZaNWyc" allowfullscreen></iframe>
+    </div>
+    <div class="notes">Prelude to Revolution, the Stamp Act, and colonial anger.</div>
+  </div>
+
+  <div class="panel">
+    <h2>Ep 7: The Revolution</h2>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/3EiSymRrKI4" allowfullscreen></iframe>
+    </div>
+    <div class="notes">The Revolutionary War and its immediate socio-political aftermath.</div>
+  </div>
+
+  <div class="panel">
+    <h2>Ep 8: The Constitution</h2>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/bO7FQsCcbD8" allowfullscreen></iframe>
+    </div>
+    <div class="notes">The Articles of Confederation and the establishment of federalism.</div>
+  </div>
+
+  <div class="panel">
+    <h2>Ep 9: Rise of Politics</h2>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/r161cLYzuDI" allowfullscreen></iframe>
+    </div>
+    <div class="notes">Hamilton vs. Jefferson and the formation of the first political parties.</div>
+  </div>
+
+  <div class="panel">
+    <h2>Ep 10: Thomas Jefferson</h2>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/_3Ox6vGteek" allowfullscreen></iframe>
+    </div>
+    <div class="notes">Jefferson's presidency and the structural complexities of his democracy.</div>
+  </div>
+</div>
+
+</body>
+</html>
