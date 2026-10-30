@@ -1,11 +1,9 @@
-index.html
-100%
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crash Course US History — Gia's Interactive Study Hub (Unit 1: Episodes 1–5)</title>
+  <title>Crash Course US History — Gia's Interactive Study Hub (Episodes 1–10)</title>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,7 +74,7 @@ index.html
       </div>
       <p id="modalEpDesc" class="text-sm text-slate-300 leading-relaxed mb-4"></p>
       <div class="bg-slate-800/70 border border-slate-700/80 rounded-xl p-3.5 mb-5 text-xs text-slate-300 space-y-1.5">
-        <div class="font-semibold text-amber-300">Coming in Unit 2 (Episodes 6–10):</div>
+        <div class="font-semibold text-amber-300">Coming in Unit 3 (Episodes 11–15):</div>
         <div>• Dedicated Google Doc Study Guide in Gia's Drive Folder</div>
         <div>• 8-Question "Shock Pen" Interactive Quiz + Short-Answer Check</div>
         <div>• Flip Flashcards, Timeline Sorter &amp; Mystery Document Challenge</div>
@@ -102,7 +100,7 @@ index.html
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-base sm:text-lg font-bold text-white tracking-tight">Crash Course US History Hub</h1>
-            <span class="hidden sm:inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30">Gia's Edition • Unit 1 Complete</span>
+            <span class="hidden sm:inline-block text-[11px] font-semibold px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30">Gia's Edition • Episodes 1–10</span>
           </div>
           <p class="text-xs text-slate-400">Interactive Docs, Shock Pen Quizzes, Flashcards &amp; Primary Sources</p>
         </div>
@@ -148,8 +146,8 @@ index.html
       <!-- Unit 1 Episode List -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg">
         <div class="flex items-center justify-between mb-3">
-          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300">Unit 1: Colonial Era</h2>
-          <span class="text-[11px] font-semibold text-emerald-300 bg-emerald-400/15 border border-emerald-500/30 px-2 py-0.5 rounded-md">5 / 5 Unlocked</span>
+          <h2 class="text-sm font-bold uppercase tracking-wider text-slate-300">Units 1–2: Eps 1–10</h2>
+          <span class="text-[11px] font-semibold text-emerald-300 bg-emerald-400/15 border border-emerald-500/30 px-2 py-0.5 rounded-md">10 / 10 Unlocked</span>
         </div>
 
         <div id="episodeListContainer" class="space-y-2">
@@ -158,8 +156,8 @@ index.html
 
         <div class="mt-4 pt-3 border-t border-slate-800">
           <div class="flex items-center justify-between mb-2">
-            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Up Next: Unit 2 Preview</span>
-            <span class="text-[10px] text-slate-400">Eps 6–8</span>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Up Next: Unit 3 Preview</span>
+            <span class="text-[10px] text-slate-400">Eps 11–13</span>
           </div>
           <div id="upcomingEpisodeListContainer" class="space-y-1.5">
             <!-- Populated by JS -->
@@ -197,7 +195,7 @@ index.html
             <span class="text-lg">🗂️</span>
             <div>
               <div class="text-xs font-bold text-white">All Study Guides Folder</div>
-              <div class="text-[11px] text-slate-400">Google Drive Master Folder (Eps 1–5)</div>
+              <div class="text-[11px] text-slate-400">Google Drive Master Folder (Eps 1–10)</div>
             </div>
           </div>
           <span class="text-xs">↗</span>
@@ -1152,13 +1150,630 @@ index.html
             takeaway: "John Locke's social contract theory taught colonists that if a government fails to protect citizens' natural rights (Life, Liberty, and Property), it loses its legitimacy!"
           }
         ]
+      }      ,
+      6: {
+        id: 6,
+        number: "06",
+        era: "1763–1776",
+        title: "Taxes & Smuggling - Prelude to Revolution",
+        duration: "12:19",
+        youtubeUrl: "http://www.youtube.com/watch?v=Eytc9ZaNWyc",
+        docUrl: "https://docs.google.com/document/d/16ObOrNwkH4JPVJziKI_rPzkdHx1erPMmPnLOwfnS-XI/edit?usp=drivesdk",
+        desc: "Why the Revolution was really about Parliamentary representation and 'our God-given right to smuggle': the Stamp Act, Boston Massacre, Boston Tea Party, Intolerable Acts, First Continental Congress, and Thomas Paine's Common Sense.",
+        sections: [
+          {
+            id: "ep6-s1",
+            badge: "Section 1 • War Debt, Smuggling & The Stamp Act (1763–1766)",
+            title: "£150 Million in Debt, 'Mole Asses' & No Taxation Without Representation",
+            content: `<p class="text-sm text-slate-200 leading-relaxed mb-3">Two big rules up front: (1) The <strong>American Revolution</strong> and the <strong>American War for Independence</strong> are not the same thing, and (2) the Revolution wasn't really about taxes or tea—it was about <strong>lack of Parliamentary representation</strong> and our "God-given right to smuggle."</p>
+            <ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>£150 Million Debt:</strong> Winning the Seven Years' War left Britain with massive debt (interest ate up half the national budget!). Since colonists had set their own taxes via colonial legislatures for 100 years, they hated Parliament taxing them without a vote.</li>
+              <li><strong>Sugar Act (1764):</strong> Actually <em>cut</em> the molasses tax from 6¢ to 3¢ per gallon, but cracked down on smuggling and moved trials from lenient colonial courts to British courts.</li>
+              <li><strong>Stamp Act (1765):</strong> Required a paid revenue stamp on all printed paper—angering <strong>newspaper printers and lawyers</strong>! The <strong>Stamp Act Congress</strong> organized the first colony-wide boycott alongside the <strong>Sons of Liberty</strong>, forcing Britain to repeal it (while passing the <strong>Declaratory Act</strong>: "we can tax you if we want!").</li>
+            </ul>`
+          },
+          {
+            id: "ep6-s2",
+            badge: "Section 2 • Townshend Acts, Snowballs & The Tea Party (1767–1774)",
+            title: "Daughters of Liberty, The Boston Massacre & The Intolerable Acts",
+            content: `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Townshend Acts (1767) &amp; Homespun</div><p class="text-slate-300">New taxes and anti-smuggling boards sparked boycotts led by the <strong>Daughters of Liberty</strong>, who wove "homespun" clothes to replace British imports.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Boston Massacre (March 5, 1770)</div><p class="text-slate-300">"The worst outcome of a snowball fight in American history." Five colonists died (including <strong>Crispus Attucks</strong>); <strong>John Adams</strong> defended the soldiers, winning 7 acquittals.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Boston Tea Party (Dec 16, 1773)</div><p class="text-slate-300">Even though the 1773 Tea Act made tea <em>cheaper</em>, it undercut smugglers and set a tax precedent—so colonists dumped ~$4 million of tea into Boston Harbor.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">The Intolerable Acts (1774)</div><p class="text-slate-300">Britain struck back with the <strong>Massachusetts Government Act</strong> (ending local self-rule), the <strong>Quartering Act</strong> (housing soldiers), and the <strong>Quebec Act</strong> (tolerating Catholics).</p></div>
+            </div>`
+          },
+          {
+            id: "ep6-s3",
+            badge: "Section 3 • First Continental Congress & Shot Heard 'Round the World",
+            title: "America's First Government (1774) & Lexington/Concord (1775)",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>First Continental Congress (Sept 1774):</strong> Delegates from <strong>12 of 13 colonies</strong> (all except Georgia!) met in Philadelphia and created the <strong>Continental Association</strong> to enforce boycotts—making it the <strong>first real national government in America</strong>.</li>
+              <li><strong>English Rights to Natural Rights:</strong> Colonists shifted from claiming traditional "rights as Englishmen" to universal human rights based on the <strong>"immutable laws of nature."</strong></li>
+              <li><strong>Lexington, Concord &amp; Bunker Hill (1775):</strong> War broke out on <strong>April 19, 1775</strong> at Lexington and Concord (15 months before the Declaration!). At <strong>Bunker Hill</strong> (fought on Breed's Hill), heavy British casualties forced Britain to evacuate Boston.</li>
+            </ul>`
+          },
+          {
+            id: "ep6-s4",
+            badge: "Section 4 • Olive Branches, Loyalists & Thomas Paine's Common Sense",
+            title: "How 'The Harry Potter of 1776' Turned a Continent Against an Island",
+            content: `<div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs sm:text-sm text-slate-200 space-y-2">
+              <div class="font-bold text-amber-300">Not Everyone Wanted Independence in 1775:</div>
+              <p>Wealthy elites in New York and Pennsylvania feared democracy, Loyalists like <strong>Charles Inglis</strong> argued Americans were Britons, and Congress sent King George III the <strong>Olive Branch Petition (July 1775)</strong> seeking reconciliation.</p>
+              <div class="font-bold text-teal-300 pt-1">Thomas Paine's <em>Common Sense</em> (January 1776):</div>
+              <p>Selling <strong>150,000 copies</strong> in plain English, Paine's pamphlet argued that <em>"there is something absurd in supposing a continent to be perpetually governed by an island"</em> and that <em>"the cause of America is in great measure the cause of all mankind."</em> Within 6 months, Congress declared independence!</p>
+            </div>`
+          }
+        ],
+        quiz: [
+          { id: "e6q1", question: "Why did the British Parliament start passing new taxes on the American colonies after 1763?", options: ["To build a new palace in London", "To pay off the massive £150 million debt from the Seven Years' War (whose interest payments ate up half the British budget)", "To punish colonists for inventing baseball", "To buy Alaska from Russia"], correctIndex: 1, explanation: "Britain borrowed £150 million to win the Seven Years' War and felt American colonists—the primary beneficiaries—should help pay the bill." },
+          { id: "e6q2", question: "Why were colonists angry about the Sugar Act (1764) and Tea Act (1773) even though both laws actually lowered prices?", options: ["Colonists hated sugar and tea.", "They cracked down on smuggling, moved trials to British courts, and set the precedent that Parliament could tax colonists who had no representation.", "They banned the Daughters of Liberty.", "They forced everyone to move to Quebec."], correctIndex: 1, explanation: "The issue wasn't the price—it was strict anti-smuggling enforcement and taxation without representation in Parliament." },
+          { id: "e6q3", question: "Why was the Stamp Act of 1765 strategically terrible for Britain to pass?", options: ["It only taxed British soldiers.", "By taxing all printed paper, it directly angered newspaper printers and lawyers—the exact people best at organizing protests!", "No one in America knew how to read.", "Stamps hadn't been invented yet."], correctIndex: 1, explanation: "Taxing paper alienated printers and lawyers, sparking the Stamp Act Congress, the Sons of Liberty, and a successful boycott." },
+          { id: "e6q4", question: "What happened after the March 5, 1770 Boston Massacre (in which 5 colonists, including Crispus Attucks, were killed)?", options: ["All nine British soldiers were executed the next day.", "Future president John Adams defended the British soldiers in court; 7 were acquitted and only 2 were convicted of manslaughter.", "King George III repealed all taxes forever.", "George Washington captured Boston Harbor."], correctIndex: 1, explanation: "Thanks to John Adams's defense, 7 of the 9 British soldiers were acquitted and 2 were convicted only of manslaughter." },
+          { id: "e6q5", question: "Which three punitive laws made up the 1774 'Intolerable Acts' passed after the Boston Tea Party?", options: ["The Sugar Act, Stamp Act, and Tea Act", "The Massachusetts Government Act (curtailing self-rule), the Quartering Act (housing soldiers), and the Quebec Act (extending Quebec and tolerating Catholics)", "The Olive Branch Petition, Common Sense, and Declaratory Act", "The Navigation Acts of 1651"], correctIndex: 1, explanation: "Instead of backing down after the Tea Party, Parliament passed the Intolerable Acts, which united the colonies in resistance." },
+          { id: "e6q6", question: "Why does John Green call the First Continental Congress (September 1774) the 'first government of America'?", options: ["It wrote the U.S. Constitution in 1774.", "Delegates from 12 colonies (all except Georgia) coordinated collective action and set up the Continental Association to police boycotts and encourage domestic manufacturing.", "It crowned Thomas Paine king.", "It abolished all colonial legislatures."], correctIndex: 1, explanation: "Coordinating unified policy and policing a boycott across 12 colonies is what a government does!" },
+          { id: "e6q7", question: "How do we know that the War for Independence and the Declaration of Independence weren't the exact same thing?", options: ["Fighting started at Lexington and Concord in April 1775 (15 months before July 1776), and in July 1775 Congress still sent the Olive Branch Petition seeking reconciliation.", "The war didn't start until 1783.", "Only Georgia fought in 1775.", "Britain surrendered before the Declaration was signed."], correctIndex: 0, explanation: "Armed war began in April 1775 at Lexington and Concord, yet Congress still hoped for reconciliation with King George III in July 1775." },
+          { id: "e6q8", question: "Which January 1776 pamphlet sold 150,000 copies and argued that 'there is something absurd in supposing a continent to be perpetually governed by an island'?", options: ["Charles Inglis's 'True Interest of America'", "John Dickinson's 'Letters from a Farmer'", "Thomas Paine's 'Common Sense'", "The Declaratory Act"], correctIndex: 2, explanation: "Thomas Paine's 'Common Sense' was the 'Harry Potter of its time,' convincing ordinary colonists to back independence within six months." }
+        ],
+        shortAnswers: [
+          { id: "e6sa1", prompt: "1. How did the colonists' arguments for their rights evolve between the Stamp Act (1765) and the First Continental Congress (1774)?", sample: "Initially, colonists protested as loyal English subjects demanding their traditional rights within the British Empire (like taxation only by their own legislatures). By 1774, the First Continental Congress began appealing beyond British law to universal human rights derived from the 'immutable laws of nature.'" },
+          { id: "e6sa2", prompt: "2. Who was Charles Inglis (from the Mystery Document), and what does his 1776 pamphlet remind us about the American Revolution?", sample: "Charles Inglis was an Anglican clergyman and Loyalist who argued against Thomas Paine, writing that Americans were Britons who couldn't bear the extremes of republicanism. He reminds us that many colonists—especially wealthy elites in New York and Pennsylvania—opposed independence." }
+        ],
+        flashcards: [
+          { id: "e6fc1", category: "Colonial Taxation", date: "1764 & 1765", term: "Sugar Act & Stamp Act", what: "British laws cracking down on smuggling and requiring paid stamps on all printed paper.", why: "Sparked the Stamp Act Congress (1765) and the first coordinated colonial boycott of British goods.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e6fc2", category: "Colonial Resistance", date: "1765–1770s", term: "Sons & Daughters of Liberty", what: "Patriot groups that organized street protests, enforced boycotts, and spun 'homespun' clothes.", why: "Brought ordinary artisans and women directly into the political struggle against Britain.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e6fc3", category: "Colonial Flashpoint", date: "March 5, 1770", term: "Boston Massacre & Crispus Attucks", what: "Deadly confrontation where British soldiers killed 5 colonists (including mixed-race sailor Crispus Attucks).", why: "Galvanized anti-British sentiment; John Adams defended the soldiers to uphold rule of law.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e6fc4", category: "Colonial Protest", date: "Dec 16, 1773", term: "Tea Act & Boston Tea Party", what: "Colonists disguised as Native Americans dumped ~$4M of East India Company tea into Boston Harbor.", why: "Protested taxation without representation and triggered Britain's punitive Intolerable Acts.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e6fc5", category: "British Retaliation", date: "1774", term: "The Intolerable Acts", what: "Included the Massachusetts Government Act, Quartering Act, and Quebec Act.", why: "Backfired by uniting 12 colonies to convene the First Continental Congress in Philadelphia.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e6fc6", category: "First Government", date: "Sept 1774", term: "First Continental Congress", what: "Delegates from 12 colonies (all except Georgia) who formed the Continental Association to enforce boycotts.", why: "Functioned as the first unified national government in British America.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e6fc7", category: "Outbreak of War", date: "April–July 1775", term: "Lexington & Concord / Olive Branch Petition", what: "'Shot heard 'round the world' (April 1775) followed by Congress's final plea for peace with King George III (July 1775).", why: "Shows fighting began 15 months before Independence while many still hoped for reconciliation.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e6fc8", category: "Revolutionary Ideas", date: "January 1776", term: "Thomas Paine & 'Common Sense'", what: "Plain-English pamphlet selling 150,000 copies that attacked monarchy and called for immediate independence.", why: "Turned the elite colonial dispute into a mass popular movement for independence within 6 months.", url: "https://en.wikipedia.org/wiki/American_Revolution" }
+        ],
+        timeline: [
+          { id: "e6t1", order: 1, yearLabel: "1764–1765", title: "Sugar Act & Stamp Act Passed; Stamp Act Congress Meets", detail: "Britain cracks down on smuggling and taxes paper; colonies launch their first united boycott." },
+          { id: "e6t2", order: 2, yearLabel: "1767", title: "Townshend Acts Spark 'Homespun' Boycotts", detail: "Daughters of Liberty promote domestic cloth to replace British imports." },
+          { id: "e6t3", order: 3, yearLabel: "March 5, 1770", title: "The Boston Massacre Leaves Five Colonists Dead", detail: "Crispus Attucks and four others are killed; John Adams defends the British soldiers in court." },
+          { id: "e6t4", order: 4, yearLabel: "Dec 16, 1773", title: "Sons of Liberty Stage the Boston Tea Party", detail: "Colonists dump $4 million worth of British East India Company tea into Boston Harbor." },
+          { id: "e6t5", order: 5, yearLabel: "1774", title: "Intolerable Acts Passed & First Continental Congress Convenes", detail: "Delegates from 12 colonies meet in Philadelphia and establish the Continental Association." },
+          { id: "e6t6", order: 6, yearLabel: "April–July 1775", title: "Battles of Lexington, Concord & Bunker Hill; Olive Branch Petition", detail: "Armed war erupts in Massachusetts while Congress makes one last plea for peace." },
+          { id: "e6t7", order: 7, yearLabel: "Jan–July 1776", title: "Thomas Paine Publishes 'Common Sense' & Independence Is Declared", detail: "Paine's 150,000-copy bestseller propels the Second Continental Congress to declare independence." }
+        ],
+        mysteryDocs: [
+          {
+            id: "e6m1",
+            badge: "Episode 6 Official Mystery Document",
+            quote: `"The Americans are properly Britons. They have the manners, habits, and ideas of Britons, and have been accustomed to a similar form of government. But Britons could never bear the extremes, either of monarchy or republicanism... this would most probably be the case in America, were a republican form of government adopted in our present ferment."`,
+            clues: [
+              "Clue 1: The writer is an educated American Loyalist arguing in 1776 that adopting a republic is a terrible idea.",
+              "Clue 2: John Green guessed William Franklin, got zapped, and yelled: 'Who the hell is Charles freaking Inglis?!'"
+            ],
+            options: [
+              "Charles Inglis — 'The True Interest of America Impartially Stated' (1776)",
+              "Thomas Paine — 'Common Sense' (1776)",
+              "John Adams — Defense of the British Soldiers (1770)",
+              "King George III — Proclamation of Rebellion (1775)"
+            ],
+            correctIndex: 0,
+            takeaway: "Anglican clergyman Charles Inglis wrote this 1776 Loyalist response to Thomas Paine—reminding us that many colonists remained deeply attached to Britain."
+          },
+          {
+            id: "e6m2",
+            badge: "Episode 6 Bestseller Quote",
+            quote: `"Of more worth is one honest man to society and in the sight of God, than all the crowned ruffians that ever lived... There is something absurd, in supposing a Continent to be perpetually governed by an island."`,
+            clues: [
+              "Clue 1: Published in January 1776, this pamphlet was 'like the Harry Potter of its time, only with liberty instead of wizard school.'",
+              "Clue 2: It sold 150,000 copies and convinced Americans to declare independence within six months!"
+            ],
+            options: [
+              "Thomas Paine — 'Common Sense' (1776)",
+              "John Dickinson — 'Olive Branch Petition' (1775)",
+              "Samuel Adams — Circular Letter (1768)",
+              "Charles Townshend — Revenue Act Speech (1767)"
+            ],
+            correctIndex: 0,
+            takeaway: "Thomas Paine's 'Common Sense' demolished the mystique of kings ('crowned ruffians') in plain, unforgettable English."
+          }
+        ]
+      },
+
+      7: {
+        id: 7,
+        number: "07",
+        era: "1775–1804",
+        title: "Who Won the American Revolution?",
+        duration: "12:41",
+        youtubeUrl: "http://www.youtube.com/watch?v=3EiSymRrKI4",
+        docUrl: "https://docs.google.com/document/d/1Rsj3lY-tvWrJjmnCpWdYpdLxATpdippMHUMQo_UwP-0/edit?usp=drivesdk",
+        desc: "Trenton, Saratoga, and Yorktown; how the Revolution affected soldiers, enslaved African Americans (Lord Dunmore's Proclamation), Native Americans, and women (Republican Motherhood); Noah Webster; and Gordon Wood's radical idea of equality.",
+        sections: [
+          {
+            id: "ep7-s1",
+            badge: "Section 1 • Winning the War: Trenton, Saratoga & Yorktown",
+            title: "Holding the Countryside, French Bailouts & Cornwallis's Peninsula Blunder",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>Cities vs. Countryside:</strong> Britain captured Boston, New York, and Charleston, but the Continentals held the countryside, had home-field advantage, and just had to <em>not quit</em>.</li>
+              <li><strong>Trenton (1776) &amp; Valley Forge:</strong> Washington crossed the Delaware on Christmas morning 1776 to win at Trenton before enduring a freezing winter at Valley Forge (where soldiers starved while "generals always get to eat").</li>
+              <li><strong>Saratoga (1777) Brings In France:</strong> The key northern victory at <strong>Saratoga</strong> convinced <strong>France</strong> to enter the war on America's side (without France, "this would be the history of Southern Canada").</li>
+              <li><strong>Yorktown (1781):</strong> In the South, guerrilla tactics wore down the British until <strong>Lord Cornwallis</strong> parked his army on a <strong>Yorktown peninsula</strong> surrounded on three sides by French warships—forcing Britain's surrender!</li>
+            </ul>`
+          },
+          {
+            id: "ep7-s2",
+            badge: "Section 2 • Thought Bubble: Soldiers, Pacifists & Enslaved Runaways",
+            title: "Joseph Plumb Martin, Lord Dunmore's Proclamation (1775) & Boston King",
+            content: `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Starving Continental Soldiers</div><p class="text-slate-300">Unpaid and underfed, Connecticut soldier <strong>Joseph Plumb Martin</strong> wrote that troops felt they were <em>"starving in detail for an ungrateful people."</em> Pacifist Quakers had their property confiscated for refusing to fight.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Lord Dunmore's Proclamation (1775)</div><p class="text-slate-300">British Governor Lord Dunmore offered <strong>freedom to any enslaved person</strong> who escaped a rebel master and fought for Britain (~5,000 fought for the King!).</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Boston King &amp; 100,000 Escapes</div><p class="text-slate-300">Roughly <strong>100,000 enslaved people</strong> fled to British lines (including memoirist <strong>Boston King</strong>), and 15,000+ evacuated with the British—who abolished slavery across their empire by 1843 without a civil war.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Native Americans &amp; Women</div><p class="text-slate-300">The Iroquois and Cherokee split while Patriot troops burned Native villages. Women like <strong>Deborah Sampson</strong> fought in disguise, but women only got <strong>"Republican Motherhood"</strong> (educating sons, no vote).</p></div>
+            </div>`
+          },
+          {
+            id: "ep7-s3",
+            badge: "Section 3 • Religious Freedom, The Cotton Gin & Northern Abolition",
+            title: "Deism, Eli Whitney's 1793 Cotton Gin & Gradual Emancipation",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>Separation of Church &amp; State:</strong> Deist <strong>Thomas Jefferson</strong> proudest achievement was his <strong>Virginia Statute for Establishing Religious Freedom</strong>.</li>
+              <li><strong>Eli Whitney's Cotton Gin (1793):</strong> Slavery was declining in the South until Whitney's cotton gin made short-staple American cotton profitable—reinvigorating Southern slavery!</li>
+              <li><strong>James Otis &amp; Northern Emancipation (1777–1804):</strong> While Jefferson kept enslaved people (calculating they yielded higher returns than real estate), James Otis and Black activists demanded abolition. Every state north of Maryland passed gradual emancipation laws (though New Jersey still had 18 slaves in 1860!), growing the free Black population from <strong>&lt;10,000 (1776) to ~200,000 (1810)</strong>.</li>
+            </ul>`
+          },
+          {
+            id: "ep7-s4",
+            badge: "Section 4 • What Made the Revolution Truly Revolutionary?",
+            title: "Noah Webster's 'Equality of Property' & Gordon Wood's Radical Equality",
+            content: `<div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs sm:text-sm text-slate-200 space-y-2">
+              <div class="font-bold text-amber-300">Noah Webster on Property &amp; Power (1787):</div>
+              <p>Dictionary creator <strong>Noah Webster</strong> argued that <em>"an equality of property... is the very soul of a republic"</em>—warning that concentrated family wealth destroys liberty.</p>
+              <div class="font-bold text-teal-300 pt-1">Gordon Wood's <em>The Radicalism of the American Revolution</em>:</div>
+              <p>The Revolution's greatest breakthrough was the idea that <strong>no one American is inherently better than any other by birth</strong>—shattering centuries of European noble hierarchy.</p>
+            </div>`
+          }
+        ],
+        quiz: [
+          { id: "e7q1", question: "Why was the Battle of Saratoga (1777) the most important northern victory of the Revolutionary War?", options: ["It captured King George III.", "It convinced France to enter the war on America's side (providing crucial money, troops, and naval support).", "It ended slavery in Massachusetts.", "It took place on Christmas morning."], correctIndex: 1, explanation: "Saratoga convinced France to ally with the United States—and French naval support later trapped Cornwallis at Yorktown." },
+          { id: "e7q2", question: "Why did British General Lord Cornwallis have to surrender at Yorktown in 1781?", options: ["He ran out of tea.", "He stationed his army on a peninsula surrounded on three sides by water filled with French warships.", "George Washington used a submarine.", "His soldiers defected to Spain."], correctIndex: 1, explanation: "Pinned on the Yorktown peninsula by Continental troops on land and the French Navy by sea, Cornwallis had to surrender." },
+          { id: "e7q3", question: "What did British Governor Lord Dunmore's Proclamation (1775) offer, and how did enslaved people respond?", options: ["It offered 50 acres to white planters.", "It granted freedom to any enslaved person who deserted a rebel master and fought for the British; ~5,000 fought and ~100,000 fled to British lines.", "It abolished slavery in England in 1775.", "It forced enslaved people to move to Valley Forge."], correctIndex: 1, explanation: "For enslaved Americans like memoirist Boston King, joining the British army offered real liberation from American slaveholders." },
+          { id: "e7q4", question: "What was 'Republican Motherhood' (championed by Founders like Benjamin Rush)?", options: ["Giving mothers two votes in presidential elections", "The belief that women needed to be educated so they could instruct their sons in the principles of liberty and government (without giving women the vote or property rights)", "An all-female militia led by Deborah Sampson", "A pension for soldiers' widows"], correctIndex: 1, explanation: "Republican Motherhood expanded schooling for women so they could raise virtuous male citizens, while keeping women legally subordinate." },
+          { id: "e7q5", question: "Which 1793 invention tragically reinvigorated slavery in the American South just when it had been on the decline?", options: ["The steam locomotive", "Eli Whitney's cotton gin", "The spinning jenny", "The telegraph"], correctIndex: 1, explanation: "Eli Whitney's 1793 cotton gin made cleaning short-staple American cotton profitable, cementing plantation slavery across the South." },
+          { id: "e7q6", question: "Who wrote the 1787 Mystery Document arguing that 'an equality of property... is the very soul of a republic' (giving John Green his greatest Shock Pen victory)?", options: ["Karl Marx", "Noah Webster", "Alexander Hamilton", "Lord Cornwallis"], correctIndex: 1, explanation: "Lexicographer Noah Webster argued that widespread property ownership prevented powerful families from dominating the republic." },
+          { id: "e7q7", question: "What happened to slavery in the Northern states (north of Maryland) between 1777 and 1804?", options: ["Every enslaved person was freed overnight in 1776.", "All northern states passed gradual emancipation laws (helping grow the U.S. free Black population from <10,000 in 1776 to ~200,000 by 1810, though New Jersey still had 18 slaves in 1860).", "Northern states legalized the slave trade.", "Nothing changed until 1865."], correctIndex: 1, explanation: "Northern states enacted gradual emancipation that slowly phased out slavery while surging the free Black population to nearly 200,000 by 1810." },
+          { id: "e7q8", question: "According to historian Gordon Wood ('The Radicalism of the American Revolution'), what was the most revolutionary idea to emerge from the Revolution?", options: ["Replacing British taxes with tariffs", "The idea of true human equality—that no person is inherently superior to another by birth, and birth is not destiny", "Keeping property requirements for voting", "Creating the Electoral College"], correctIndex: 1, explanation: "Unlike European society where noble birth determined social superiority, the Revolution introduced the radical ideal that all people are equal in dignity." }
+        ],
+        shortAnswers: [
+          { id: "e7sa1", prompt: "1. Why were Native Americans clear 'losers' of the American Revolution, regardless of which side they chose?", sample: "Although Congress asked the Iroquois to stay neutral ('keep the hatchet buried deep'), tribes split between the British and Patriots. Continental troops burned Native villages and enslaved prisoners, and the new United States ignored Indigenous rights to life, liberty, and land." },
+          { id: "e7sa2", prompt: "2. How did Massachusetts patriot James Otis's view of slavery contrast with Thomas Jefferson's actions?", sample: "While many white colonists hypocritically claimed British taxes made them 'slaves,' James Otis wrote that 'unless [enslaved people] were free, there could be no liberty.' Jefferson, by contrast, wrote 'all men are created equal' while holding enslaved people whose labor funded his lifestyle at Monticello." }
+        ],
+        flashcards: [
+          { id: "e7fc1", category: "Turning Point Battle", date: "1777", term: "Battle of Saratoga", what: "Major northern Continental victory over the British Army in New York.", why: "Convinced France to enter the war as America's ally, providing decisive financial and naval aid.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e7fc2", category: "Final Victory", date: "1781", term: "Siege of Yorktown (Lord Cornwallis)", what: "Decisive Virginia battle where Continental troops and the French Navy trapped Cornwallis on a peninsula.", why: "Forced the British surrender that ended the War for Independence.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e7fc3", category: "Black Liberation", date: "1775–1783", term: "Lord Dunmore's Proclamation & Boston King", what: "1775 British offer freeing enslaved people who fled rebel masters; ~100,000 escaped to British lines.", why: "Showed that for enslaved African Americans, Britain—not the Patriots—offered immediate liberty.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e7fc4", category: "Women's History", date: "1780s", term: "Deborah Sampson & Republican Motherhood", what: "Sampson fought disguised as a man; 'Republican Motherhood' educated women to raise liberty-loving sons.", why: "Expanded female schooling while still denying women voting and property rights.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e7fc5", category: "Religious Liberty", date: "1786", term: "Virginia Statute for Religious Freedom", what: "Law drafted by Deist Thomas Jefferson disestablishing the state church in Virginia.", why: "Established the foundational American principle of separation of church and state.", url: "https://en.wikipedia.org/wiki/American_Revolution" },
+          { id: "e7fc6", category: "Slavery & Technology", date: "1793", term: "Eli Whitney's Cotton Gin", what: "Machine that rapidly removed seeds from short-staple cotton.", why: "Made Southern cotton wildly profitable and reinvigorated slavery just as it had been declining.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e7fc7", category: "Republican Thought", date: "1787", term: "Noah Webster", what: "American dictionary creator who wrote that 'equality of property... is the very soul of a republic.'", why: "Revealed early American belief that political liberty required broad property ownership.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e7fc8", category: "Historiography", date: "1992", term: "Gordon Wood ('Radicalism of the American Revolution')", what: "Historian who argued the Revolution's true radicalism was dismantling hereditary social hierarchy.", why: "Explains how the Revolution birthed the ideal that no person is born superior to another.", url: "https://en.wikipedia.org/wiki/American_Revolution" }
+        ],
+        timeline: [
+          { id: "e7t1", order: 1, yearLabel: "Nov 1775", title: "Lord Dunmore Issues Proclamation Offering Freedom to Enslaved Runaways", detail: "5,000 enslaved people fight for Britain and ~100,000 flee to British lines during the war." },
+          { id: "e7t2", order: 2, yearLabel: "Dec 1776", title: "George Washington Crosses the Delaware & Wins at Trenton", detail: "Surprise Christmas morning victory boosts flagging Continental morale." },
+          { id: "e7t3", order: 3, yearLabel: "Oct 1777", title: "American Victory at Saratoga Brings France Into the War", detail: "Major British defeat convinces France to sign a military alliance with the United States." },
+          { id: "e7t4", order: 4, yearLabel: "Oct 1781", title: "Lord Cornwallis Surrenders at Yorktown, Virginia", detail: "French warships and Continental troops trap Cornwallis on a peninsula, ending major fighting." },
+          { id: "e7t5", order: 5, yearLabel: "1786", title: "Virginia Passes Jefferson's Statute for Establishing Religious Freedom", detail: "Establishes a 'wall of separation between church and state.'" },
+          { id: "e7t6", order: 6, yearLabel: "1793", title: "Eli Whitney Invents the Cotton Gin", detail: "Makes short-staple cotton profitable and reignites the expansion of Southern slavery." },
+          { id: "e7t7", order: 7, yearLabel: "1804", title: "All States North of Maryland Enact Gradual Emancipation Laws", detail: "Free Black population in the U.S. rises from under 10,000 (1776) to nearly 200,000 (1810)." }
+        ],
+        mysteryDocs: [
+          {
+            id: "e7m1",
+            badge: "Episode 7 Official Mystery Document",
+            quote: `"An equality of property, with a necessity of alienation, constantly operating to destroy combinations of powerful families, is the very soul of a republic—while this continues, the people will inevitably possess both power and freedom; when this is lost, power departs, liberty expires..."`,
+            clues: [
+              "Clue 1: Written in 1787, arguing that widespread property ownership prevents oligarchy and protects free press and trial by jury.",
+              "Clue 2: John Green joked 'Stan, why did you put communism in my Mystery Document?' before guessing this famous dictionary author!"
+            ],
+            options: [
+              "Noah Webster — 'An Examination into the Leading Principles of the Federal Constitution' (1787)",
+              "Thomas Jefferson — 'Notes on the State of Virginia' (1785)",
+              "Benjamin Rush — 'Thoughts Upon Female Education' (1787)",
+              "Joseph Plumb Martin — 'Private Yankee Doodle' (1830)"
+            ],
+            correctIndex: 0,
+            takeaway: "John Green's greatest Shock Pen triumph! Lexicographer Noah Webster saw broad property distribution as essential to keeping a republic free."
+          },
+          {
+            id: "e7m2",
+            badge: "Episode 7 Black Loyalist Memoir Quote",
+            quote: `"I determined to go to Charles-Town, and throw myself into the hands of the English. They received me readily, and I began to feel the happiness of liberty, of which I knew nothing before."`,
+            clues: [
+              "Clue 1: The author escaped a cruel American master during the Revolutionary War to join the British forces in South Carolina.",
+              "Clue 2: He was one of more than 15,000 formerly enslaved people who evacuated with the British at the end of the war."
+            ],
+            options: [
+              "Boston King — 'Memoirs of the Life of Boston King' (1798)",
+              "James Otis — 'The Rights of the British Colonies' (1764)",
+              "Crispus Attucks — Boston Harbor Letter (1770)",
+              "Lord Dunmore — Virginia Proclamation (1775)"
+            ],
+            correctIndex: 0,
+            takeaway: "Boston King's memoir highlights the central paradox of 1776: for enslaved African Americans, escaping to the British Army was often the truest path to freedom."
+          }
+        ]
+      },
+
+      8: {
+        id: 8,
+        number: "08",
+        era: "1777–1788",
+        title: "The Constitution, the Articles, and Federalism",
+        duration: "13:04",
+        youtubeUrl: "http://www.youtube.com/watch?v=bO7FQsCcbD8",
+        docUrl: "https://docs.google.com/document/d/1ERy6QdwMMnqjU8eMCEU379V_GuChssX7fNCgiUQ27EU/edit?usp=drivesdk",
+        desc: "Why the Articles of Confederation failed ('like non-alcoholic beer'), the Northwest Ordinance of 1787, Shays' Rebellion, the Great Compromise, the Three-Fifths Compromise, Federalism, the Federalist Papers, and Anti-Federalists.",
+        sections: [
+          {
+            id: "ep8-s1",
+            badge: "Section 1 • The Articles of Confederation & Shays' Rebellion",
+            title: "Why a 'Firm League of Friendship' Couldn't Collect Taxes (1777–1787)",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>"In One Word, Bad; In Two Words, Not Good":</strong> The <strong>Articles of Confederation</strong> created a one-house Congress where each state got 1 vote, with <strong>no president, no judiciary, a 9/13 supermajority rule</strong>, and a 13/13 unanimity rule for amendments (so zero amendments ever passed!).</li>
+              <li><strong>The Fatal Flaw — No Taxes:</strong> Congress could declare war and make treaties, but could not collect taxes ("weak government is like non-alcoholic beer: it's useless").</li>
+              <li><strong>Northwest Ordinance of 1787:</strong> The Articles' biggest triumph—created a process for <strong>5 new states</strong> between the Ohio and Mississippi rivers and <strong>outlawed slavery in all five</strong>!</li>
+              <li><strong>Shays' Rebellion (1786–1787):</strong> Indebted Massachusetts farmers led by veteran <strong>Daniel Shays</strong> closed courts to stop farm foreclosures—convincing wealthy elites and bondholders that the Articles had to be replaced.</li>
+            </ul>`
+          },
+          {
+            id: "ep8-s2",
+            badge: "Section 2 • Thought Bubble: The 1787 Philadelphia Convention",
+            title: "55 Elite Framers Guarding Against Two Different Tyrannies",
+            content: `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Who Were the 55 Framers?</div><p class="text-slate-300">After only 6 states showed up at Annapolis (1786), 55 delegates met in Philadelphia (1787). Most were wealthy, 40% were war veterans, and <strong>over half had college degrees</strong> (when only 0.001% of Americans attended college!).</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Avoiding Two Tyrannies</div><p class="text-slate-300">Rejecting Hamilton's idea of a President-for-life, delegates designed a system to block both <strong>tyranny by the government</strong> and <strong>"tyranny by the people"</strong> (via state-chosen Senators and the 538-member Electoral College).</p></div>
+            </div>`
+          },
+          {
+            id: "ep8-s3",
+            badge: "Section 3 • Constitutional Compromises & Federalism",
+            title: "The Great Compromise, The 3/5ths Compromise & Checks and Balances",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>The Great Compromise (Roger Sherman):</strong> Blended big states' <strong>Virginia Plan</strong> (population-based) and small states' <strong>New Jersey Plan</strong> (equal state votes) into a two-house Congress: a <strong>House of Representatives</strong> (by population, 2-year terms) and a <strong>Senate</strong> (2 per state, 6-year terms, "created to never pass anything").</li>
+              <li><strong>Three-Fifths Compromise &amp; Fugitive Slave Clause:</strong> Counted <strong>3/5ths of enslaved people</strong> ("other persons") toward Southern representation and required escaped slaves to be returned even from free states.</li>
+              <li><strong>Separation of Powers &amp; Federalism:</strong> Split national authority across 3 branches (with checks &amp; balances) and shared power between the national government (enumerated powers) and state governments (health, safety, morals).</li>
+            </ul>`
+          },
+          {
+            id: "ep8-s4",
+            badge: "Section 4 • Ratification: Federalists vs. Anti-Federalists",
+            title: "The 85 Federalist Papers vs. Fear of a Centralized Empire",
+            content: `<div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs sm:text-sm text-slate-200 space-y-2">
+              <div class="font-bold text-amber-300">The Federalist Papers (1787–1788):</div>
+              <p>To win ratification in 9 of 13 state conventions, <strong>Alexander Hamilton, James Madison, and John Jay</strong> wrote <strong>85 essays</strong> arguing that a strong national government protected—rather than threatened—liberty.</p>
+              <div class="font-bold text-teal-300 pt-1">The Anti-Federalists (James Winthrop):</div>
+              <p>Backed by small inland farmers, Anti-Federalists warned that a giant republic would become an elitist empire (<em>"no extensive empire can be governed upon republican principles"</em>) and trusted local state governments instead.</p>
+            </div>`
+          }
+        ],
+        quiz: [
+          { id: "e8q1", question: "What was the single biggest reason the Articles of Confederation failed as a national government?", options: ["The President had too much power.", "It could not collect taxes (having to ask the states politely for money) and required 9 of 13 states to pass laws and 13 of 13 to amend.", "It outlawed all state legislatures.", "It forced everyone to move to Ohio."], correctIndex: 1, explanation: "With no power to tax, no president, no judiciary, and impossible supermajority rules, the Articles government couldn't pay war debts or regulate trade." },
+          { id: "e8q2", question: "What was the greatest accomplishment of the Articles of Confederation government?", options: ["The Northwest Ordinance of 1787 (setting up a process to create 5 new states between the Ohio and Mississippi rivers and outlawing slavery in all 5)", "The Louisiana Purchase", "The Stamp Act", "Creating the Electoral College"], correctIndex: 0, explanation: "The Northwest Ordinance of 1787 created five new states and banned slavery throughout the Northwest Territory." },
+          { id: "e8q3", question: "What was Shays' Rebellion (1786–1787), and why did it push elites to write a new Constitution?", options: ["A slave revolt in Virginia", "An uprising of debt-ridden Massachusetts farmers led by Daniel Shays who closed courts to stop farm foreclosures—convincing elites that the weak Articles couldn't protect private property", "A mutiny by Alexander Hamilton", "A protest against the Tea Act"], correctIndex: 1, explanation: "While Jefferson said 'a little rebellion now and then is a good thing,' wealthy bondholders feared unchecked local democracy threatened property." },
+          { id: "e8q4", question: "How did Connecticut's Roger Sherman resolve the fight between the Virginia Plan (big states) and New Jersey Plan (small states) in the Great Compromise?", options: ["He created a one-house Congress where New Jersey got 10 votes.", "He created a two-house Congress: a House of Representatives based on state population and a Senate with 2 members from each state.", "He let the Supreme Court write all laws.", "He gave the President a life term."], correctIndex: 1, explanation: "The Great Compromise gave large states proportional representation in the House and small states equal representation (2 senators) in the Senate." },
+          { id: "e8q5", question: "How did the 'Three-Fifths Compromise' work in the 1787 Constitution?", options: ["Three-fifths of all tax money went to the North.", "For apportioning House seats, a state's population was calculated as all white persons plus three-fifths of 'all other persons' (enslaved people, who couldn't vote).", "Enslaved people were allowed to vote in 3 out of 5 elections.", "Three-fifths of states had to outlaw slavery."], correctIndex: 1, explanation: "Slaveholding states boosted their seats in Congress and the Electoral College by counting 3/5ths of enslaved people without granting them any rights." },
+          { id: "e8q6", question: "What are the two core constitutional principles designed to prevent government tyranny?", options: ["Monarchy and Mercantilism", "Separation of Powers (3 branches checking and balancing each other) and Federalism (dividing authority between national and state governments)", "Nullification and Impressment", "The Headright System and Encomienda"], correctIndex: 1, explanation: "Separation of powers (checks and balances) and federalism divide power so no single branch or level of government becomes tyrannical." },
+          { id: "e8q7", question: "Who wrote the 85 essays known as 'The Federalist Papers' to persuade states to ratify the Constitution?", options: ["Thomas Jefferson, Samuel Adams, and Patrick Henry", "Alexander Hamilton, James Madison, and John Jay", "George Washington, Benjamin Franklin, and Thomas Paine", "Daniel Shays, Roger Sherman, and James Winthrop"], correctIndex: 1, explanation: "Hamilton, Madison, and Jay penned the 85 Federalist Papers to convince state conventions (especially New York) to ratify the Constitution." },
+          { id: "e8q8", question: "Why did Anti-Federalists (like James Winthrop and many small farmers) oppose ratifying the Constitution?", options: ["They wanted King George III back.", "They feared a strong national government would act like an empire dominated by wealthy elites, arguing that smaller state governments were more responsive to the people.", "They thought the Articles of Confederation collected too many taxes.", "They wanted Alexander Hamilton to be President for life."], correctIndex: 1, explanation: "Anti-Federalists argued that 'no extensive empire can be governed upon republican principles' and trusted local state governments." }
+        ],
+        shortAnswers: [
+          { id: "e8sa1", prompt: "1. What two features did the framers build into the original 1787 Constitution specifically to hedge against 'too much democracy' by ordinary voters?", sample: "(1) U.S. Senators were chosen by state legislatures rather than elected directly by voters, and (2) the President was elected by the Electoral College (prominent educated men of property) rather than by the national popular vote." },
+          { id: "e8sa2", prompt: "2. What was the Fugitive Slave Clause in the 1787 Constitution, and why did it create a problem for states' rights?", sample: "It required any escaped enslaved person to be returned to their master even if they fled to a northern state that had outlawed slavery—meaning free states couldn't even enforce their own anti-slavery laws within their borders." }
+        ],
+        flashcards: [
+          { id: "e8fc1", category: "First Government", date: "1777–1788", term: "Articles of Confederation", what: "America's first national charter—a one-house Congress with no president, no courts, and no power to tax.", why: "Proved too weak to pay war debts or manage trade, leading to the 1787 Constitutional Convention.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e8fc2", category: "Western Policy", date: "1787", term: "Northwest Ordinance of 1787", what: "Articles Congress law setting up a process to admit 5 new states between the Ohio and Mississippi rivers.", why: "Greatest achievement of the Articles; outlawed slavery across all five new Northwest states.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e8fc3", category: "Post-War Crisis", date: "1786–1787", term: "Shays' Rebellion (Daniel Shays)", what: "Uprising of indebted Massachusetts farmers who shut down courts to stop farm foreclosures.", why: "Alarmed wealthy elites into replacing the weak Articles of Confederation with the Constitution.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e8fc4", category: "Constitutional Design", date: "1787", term: "The Great Compromise (Roger Sherman)", what: "Combined the Virginia Plan (population-based) and New Jersey Plan (equal votes) into a 2-house Congress.", why: "Created the House of Representatives (by population) and the Senate (2 senators per state).", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e8fc5", category: "Slavery & Constitution", date: "1787", term: "Three-Fifths Compromise & Fugitive Slave Clause", what: "Counted 3/5ths of enslaved people for House representation and required runaway slaves to be returned.", why: "Embedded pro-slavery protections and extra Southern political power into the Constitution.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e8fc6", category: "Constitutional Principles", date: "1787", term: "Separation of Powers & Federalism", what: "Divided power among 3 branches (with checks & balances) and between national and state governments.", why: "Core structural safeguards preventing tyranny by the government.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e8fc7", category: "Ratification Debate", date: "1787–1788", term: "The Federalist Papers", what: "85 essays written by Alexander Hamilton, James Madison, and John Jay defending the Constitution.", why: "Helped persuade state ratifying conventions that a strong national government was safe and necessary.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e8fc8", category: "Ratification Debate", date: "1787–1788", term: "Anti-Federalists (James Winthrop)", what: "Critics of the Constitution (mostly small farmers) who feared a centralized government run by the rich.", why: "Championed local state governments and pushed for the addition of the Bill of Rights.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" }
+        ],
+        timeline: [
+          { id: "e8t1", order: 1, yearLabel: "1777–1781", title: "Articles of Confederation Adopted as a 'Firm League of Friendship'", detail: "Creates a one-house Congress with no president, no judiciary, and no power to collect taxes." },
+          { id: "e8t2", order: 2, yearLabel: "1784–1785", title: "Treaties of Fort Stanwix & Fort McIntosh Force Native Land Cessions", detail: "Articles government compels Indigenous tribes to surrender land north of the Ohio River." },
+          { id: "e8t3", order: 3, yearLabel: "Sept 1786", title: "Annapolis Convention Meets to Discuss Trade Problems", detail: "Only 6 states send delegates, calling for a broader convention in Philadelphia the next year." },
+          { id: "e8t4", order: 4, yearLabel: "1786–1787", title: "Daniel Shays Leads Shays' Rebellion in Massachusetts", detail: "Indebted farmers close courts to stop foreclosures, terrifying wealthy bondholders." },
+          { id: "e8t5", order: 5, yearLabel: "May–Sept 1787", title: "55 Delegates Draft the U.S. Constitution in Philadelphia", detail: "Framers broker the Great Compromise and Three-Fifths Compromise." },
+          { id: "e8t6", order: 6, yearLabel: "July 1787", title: "Articles Congress Passes the Northwest Ordinance of 1787", detail: "Sets up 5 new states between the Ohio and Mississippi rivers and bans slavery there." },
+          { id: "e8t7", order: 7, yearLabel: "1787–1788", title: "Hamilton, Madison & Jay Publish the 85 Federalist Papers; Constitution Ratified", detail: "Nine states ratify the new Constitution over Anti-Federalist objections." }
+        ],
+        mysteryDocs: [
+          {
+            id: "e8m1",
+            badge: "Episode 8 Official Mystery Document",
+            quote: `"If circumstances should at any time oblige the government to form an army of any magnitude that army can never be formidable to the liberties of the people while there is a large body of citizens, little, if at all, inferior to them in discipline and the use of arms, who stand ready to defend their own rights and those of their fellow-citizens."`,
+            clues: [
+              "Clue 1: This essay from the ratification debate argues that an armed citizenry is the best security against a standing army.",
+              "Clue 2: John Green immediately yelled 'Federalist Papers, Alexander Hamilton! Yes! Too easy, Stan!' before ranting about Predator drones."
+            ],
+            options: [
+              "Alexander Hamilton — Federalist No. 29 (1788)",
+              "James Winthrop — Anti-Federalist 'Agrippa' Essays (1787)",
+              "Daniel Shays — Petition to the Massachusetts Court (1786)",
+              "Roger Sherman — The Connecticut Compromise (1787)"
+            ],
+            correctIndex: 0,
+            takeaway: "Alexander Hamilton wrote Federalist No. 29 defending the Constitution's militia provisions—long before weapons advanced beyond single-shot muskets!"
+          },
+          {
+            id: "e8m2",
+            badge: "Episode 8 Famous Letter from Paris",
+            quote: `"A little rebellion now and then is a good thing... The tree of liberty must be refreshed from time to time with the blood of patriots and tyrants."`,
+            clues: [
+              "Clue 1: Written in 1787 in reaction to Shays' Rebellion in Massachusetts.",
+              "Clue 2: Unlike the panicked wealthy delegates in Philadelphia, this future 3rd President was watching calmly from France!"
+            ],
+            options: [
+              "Thomas Jefferson — Letter on Shays' Rebellion (1787)",
+              "George Washington — Letter to Henry Knox (1786)",
+              "Alexander Hamilton — Annapolis Address (1786)",
+              "John Jay — Federalist No. 2 (1787)"
+            ],
+            correctIndex: 0,
+            takeaway: "While Shays' Rebellion panicked most American elites into demanding a strong central government, Thomas Jefferson was remarkably unfazed!"
+          }
+        ]
+      },
+
+      9: {
+        id: 9,
+        number: "09",
+        era: "1789–1800",
+        title: "Where US Politics Came From",
+        duration: "13:57",
+        youtubeUrl: "http://www.youtube.com/watch?v=r161cLYzuDI",
+        docUrl: "https://docs.google.com/document/d/1JGRWFmI-aCyxZ-6ZdauzDWV6aLB07LlYLxExlgkPEc0/edit?usp=drivesdk",
+        desc: "Hamilton's Federalists vs. Jefferson's Republicans, Hamilton's 5-Point Plan, the 1790 Compromise moving the capital to D.C., the Whiskey Rebellion, Jay's Treaty, Judith Sargent Murray, the XYZ Affair, and the Alien & Sedition Acts.",
+        sections: [
+          {
+            id: "ep9-s1",
+            badge: "Section 1 • Two Competing Visions: Hamilton vs. Jefferson",
+            title: "Commercial Manufacturing Empire vs. Agrarian Republic",
+            content: `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Alexander Hamilton (Federalists)</div><p class="text-slate-300">Wanted a strong national government, global trade, manufacturing, rule by <em>"the rich, the able, and the well-born,"</em> and close ties to <strong>Great Britain</strong>.</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Thomas Jefferson (Republicans)</div><p class="text-slate-300">Wanted a small-scale agrarian republic of independent farmers, <strong>strict construction</strong> of the Constitution, more free speech, and ties to <strong>France</strong>.</p></div>
+            </div>`
+          },
+          {
+            id: "ep9-s2",
+            badge: "Section 2 • Hamilton's 5-Point Plan & The Whiskey Rebellion",
+            title: "Assuming Debt, The Bank of the U.S., Moving D.C. & Taxing Booze (1790–1794)",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>Hamilton's 5-Point Plan:</strong> (1) Establish creditworthiness by <strong>assuming state war debts</strong>, (2) Create a <strong>national debt</strong> via interest-bearing bonds so rich investors back the government, (3) Create a private <strong>Bank of the United States</strong>, (4) Pass an excise <strong>Whiskey Tax</strong>, and (5) Impose a protective tariff for manufacturing.</li>
+              <li><strong>The Compromise of 1790:</strong> Southern Republicans approved Points 1–4 in exchange for placing the permanent U.S. capital on the <strong>Potomac River</strong>!</li>
+              <li><strong>The Whiskey Rebellion (1794):</strong> When western Pennsylvania farmers rebelled against the whiskey tax, President <strong>George Washington</strong> led <strong>13,000 troops</strong> to crush it—the only sitting president ever to lead troops in the field!</li>
+            </ul>`
+          },
+          {
+            id: "ep9-s3",
+            badge: "Section 3 • Mermaid Tattoos, Jay's Treaty & Judith Sargent Murray",
+            title: "Impressment, Washington's Farewell Warning & Women's Equality (1790–1796)",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>Citizen Genêt &amp; British Impressment:</strong> After French envoy Citizen Genêt hired U.S. ships to attack the British, Britain began <strong>impressing</strong> (kidnapping, not showing off mermaid tattoos!) American sailors into the Royal Navy.</li>
+              <li><strong>Jay's Treaty (1794) &amp; Farewell Address (1796):</strong> John Jay's treaty boosted British trade while ignoring impressment. Leaving office, Washington warned against the <em>"baneful effects of the spirit of party."</em></li>
+              <li><strong>Judith Sargent Murray (1790):</strong> In <em>"On the Equality of the Sexes,"</em> Murray argued women's souls and minds were equal to men's—showing revolutionary equality spreading beyond where male politicians wanted it to go.</li>
+            </ul>`
+          },
+          {
+            id: "ep9-s4",
+            badge: "Section 4 • John Adams, The XYZ Affair & Alien and Sedition Acts",
+            title: "Quasi-War With France, Jailing Congressman Lyon & State Nullification (1796–1800)",
+            content: `<div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs sm:text-sm text-slate-200 space-y-2">
+              <div class="font-bold text-amber-300">1796 Election Glitch &amp; The XYZ Affair:</div>
+              <p>Because 2nd place became VP, Federalist <strong>John Adams</strong> got Republican <strong>Thomas Jefferson</strong> as his VP! When 3 French agents (<strong>X, Y, and Z</strong>) demanded a bribe from U.S. diplomats, an undeclared <strong>Quasi-War</strong> erupted with France.</p>
+              <div class="font-bold text-teal-300 pt-1">Alien &amp; Sedition Acts (1798) vs. Virginia &amp; Kentucky Resolutions:</div>
+              <p>Adams pushed through the <strong>Alien Act</strong> (harder citizenship) and <strong>Sedition Act</strong> (jailing critics like Vermont Rep. <strong>Matthew Lyon</strong>, who won re-election from jail!). In response, Virginia and Kentucky passed resolutions claiming states could <strong>nullify</strong> unconstitutional federal laws.</p>
+            </div>`
+          }
+        ],
+        quiz: [
+          { id: "e9q1", question: "Which of the following was NOT part of Alexander Hamilton's 5-Point Plan during Washington's presidency?", options: ["Federal assumption of state debts and creation of interest-bearing national bonds", "Creating a Bank of the United States", "An excise tax on whiskey and a protective tariff for manufacturing", "Abolishing all banks and banning trade with Great Britain"], correctIndex: 3, explanation: "Hamilton wanted a commercial/manufacturing economy tied to Britain, backed by debt assumption, bonds, a National Bank, a whiskey tax, and tariffs." },
+          { id: "e9q2", question: "What did Thomas Jefferson and Southern Republicans get in the 1790 bargain in exchange for approving Points 1–4 of Hamilton's economic plan?", options: ["Free whiskey for Virginia farmers", "The permanent U.S. capital was moved to the South along the Potomac River (Washington, D.C.)", "Alexander Hamilton resigned from the Cabinet", "France was given New York City"], correctIndex: 1, explanation: "Republicans agreed to Points 1–4 of Hamilton's plan in exchange for locating the permanent national capital on the Potomac River." },
+          { id: "e9q3", question: "What happened during the 1794 Whiskey Rebellion in western Pennsylvania?", options: ["Farmers overthrew the U.S. government.", "President George Washington personally led a force of 13,000 troops into the field to put down the armed tax protest.", "Congress repealed the Constitution.", "Thomas Jefferson led the rebel army."], correctIndex: 1, explanation: "Unlike under Shays' Rebellion, the new federal government proved its muscle when Washington led 13,000 troops to end the Whiskey Rebellion." },
+          { id: "e9q4", question: "What does 'impressment' mean in the context of 1790s U.S.-British relations?", options: ["British sailors impressing Americans with their awesome mermaid tattoos", "The British Navy kidnapping American sailors at sea and forcing them to serve in the British Navy", "Printing paper money at the Bank of the United States", "Taxing imported French wine"], correctIndex: 1, explanation: "Britain kidnapped ('impressed') American sailors and forced them into British naval service—an issue Jay's Treaty completely ignored." },
+          { id: "e9q5", question: "Who wrote the 1790 Mystery Document ('On the Equality of the Sexes') arguing that women's souls and minds are equal to men's?", options: ["Judith Sargent Murray", "Elizabeth Cady Stanton", "Sarah Grimké", "Abigail Adams"], correctIndex: 0, explanation: "Judith Sargent Murray wrote 'On the Equality of the Sexes' in 1790, zapping John Green with the Shock Pen!" },
+          { id: "e9q6", question: "Why did Federalist President John Adams end up with Republican Thomas Jefferson as his Vice President after the 1796 election?", options: ["They were best friends who ran on the same ticket.", "Under the original Constitution, whoever received the second-highest number of electoral votes became Vice President.", "The Supreme Court ordered them to share power.", "George Washington picked both of them."], correctIndex: 1, explanation: "Before the 12th Amendment, second place in the Electoral College became Vice President—putting two political rivals in office together." },
+          { id: "e9q7", question: "What was the 'XYZ Affair' during John Adams's presidency?", options: ["A spy ring in Boston", "A diplomatic scandal in which three French emissaries ('X, Y, and Z') tried to extort a bribe from U.S. negotiators, sparking anti-French hysteria and an undeclared Quasi-War", "A duel in New Jersey", "A secret treaty with Spain"], correctIndex: 1, explanation: "When French agents demanded a bribe just to negotiate, American public opinion turned sharply against France." },
+          { id: "e9q8", question: "How did the Virginia and Kentucky legislatures respond to John Adams's unpopular Alien and Sedition Acts of 1798?", options: ["They applauded John Adams and arrested Thomas Jefferson.", "They passed resolutions claiming the laws violated the Constitution and asserting that state legislatures had the power to 'nullify' (overturn) unconstitutional federal laws.", "They declared war on France.", "They moved their state capitals to Canada."], correctIndex: 1, explanation: "Secretly drafted by Jefferson and Madison, the Virginia and Kentucky Resolutions introduced the explosive doctrine of state nullification." }
+        ],
+        shortAnswers: [
+          { id: "e9sa1", prompt: "1. What is 'strict construction' of the Constitution, and why did Jefferson's Republicans use it against Hamilton's Bank of the United States?", sample: "Strict construction is the view that the federal government is strictly limited to the powers explicitly written in the text of the Constitution. Because the Constitution never mentions chartering a national bank, Republicans argued Hamilton's Bank of the United States was unconstitutional." },
+          { id: "e9sa2", prompt: "2. What happened to Vermont Congressman Matthew Lyon under the Sedition Act of 1798, and what did his re-election prove?", sample: "Matthew Lyon was jailed under the Sedition Act merely for criticizing President John Adams—and while sitting in jail, he won re-election to Congress! That proved how deeply unpopular the Federalists' attack on free speech was with American voters." }
+        ],
+        flashcards: [
+          { id: "e9fc1", category: "Economic Policy", date: "1790–1791", term: "Hamilton's 5-Point Plan", what: "Debt assumption, national bonds, Bank of the U.S., whiskey tax, and manufacturing tariff.", why: "Established U.S. financial credit and sparked the birth of the two-party system.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e9fc2", category: "Constitutional Theory", date: "1790s", term: "Strict Construction", what: "Jeffersonian principle that the federal government may only exercise powers explicitly listed in the Constitution.", why: "Core argument used by Republicans against Hamilton's Bank of the United States.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e9fc3", category: "Political Bargain", date: "1790", term: "Compromise of 1790 (Potomac Capital)", what: "Deal where Southern Republicans backed Points 1–4 of Hamilton's plan in exchange for a Southern capital.", why: "Moved the permanent U.S. capital to the Potomac River (Washington, D.C.).", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e9fc4", category: "Domestic Uprising", date: "1794", term: "The Whiskey Rebellion", what: "Armed protest by western Pennsylvania farmers against Hamilton's excise tax on whiskey.", why: "Washington led 13,000 troops to crush it, proving the new federal government could enforce its laws.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e9fc5", category: "Foreign Policy", date: "1794", term: "Impressment & Jay's Treaty", what: "British kidnapping of U.S. sailors; John Jay's treaty expanded British trade but ignored impressment.", why: "Outraged Jeffersonian Republicans and deepened partisan division over Britain vs. France.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e9fc6", category: "Women's Rights", date: "1790", term: "Judith Sargent Murray", what: "Author of 'On the Equality of the Sexes' arguing women's minds and souls are equal to men's.", why: "Early feminist milestone applying Revolutionary natural-rights philosophy to gender equality.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e9fc7", category: "Foreign Crisis", date: "1797–1798", term: "Quasi-War & The XYZ Affair", what: "French bribe demand ('X, Y, and Z') that sparked an undeclared naval war between the U.S. and France.", why: "Created the war hysteria that John Adams used to pass the Alien and Sedition Acts.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e9fc8", category: "Civil Liberties & States' Rights", date: "1798–1799", term: "Alien & Sedition Acts / VA & KY Resolutions", what: "Federalist laws criminalizing criticism of the government; VA and KY claimed states could 'nullify' them.", why: "Tested First Amendment free speech and introduced the doctrine of state nullification.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" }
+        ],
+        timeline: [
+          { id: "e9t1", order: 1, yearLabel: "1789", title: "George Washington Unanimously Elected First President", detail: "Sets key precedents including wearing civilian dress and serving only two terms." },
+          { id: "e9t2", order: 2, yearLabel: "1790", title: "Compromise of 1790 Approves Hamilton's Plan & Potomac Capital", detail: "Jeffersonians back debt assumption and the National Bank in exchange for a Southern capital." },
+          { id: "e9t3", order: 3, yearLabel: "1793", title: "Citizen Genêt Affair & British Impressment of U.S. Sailors", detail: "War between Britain and France drags American shipping into crisis." },
+          { id: "e9t4", order: 4, yearLabel: "1794", title: "Washington Leads 13,000 Troops to End the Whiskey Rebellion; Jay's Treaty Signed", detail: "Federal authority is enforced in Pennsylvania while Jay's Treaty angers pro-French Republicans." },
+          { id: "e9t5", order: 5, yearLabel: "1796", title: "Washington's Farewell Address Warns Against Political Parties; Adams Elected", detail: "Electoral College flaw makes Republican Thomas Jefferson Vice President to Federalist John Adams." },
+          { id: "e9t6", order: 6, yearLabel: "1797–1798", title: "The XYZ Affair Sparks the Undeclared Quasi-War With France", detail: "French emissaries demand a bribe, triggering anti-French war fever in the U.S." },
+          { id: "e9t7", order: 7, yearLabel: "1798–1799", title: "Alien and Sedition Acts Passed; Virginia & Kentucky Resolutions Assert Nullification", detail: "Congressman Matthew Lyon wins re-election from jail while Jefferson and Madison draft nullification resolutions." }
+        ],
+        mysteryDocs: [
+          {
+            id: "e9m1",
+            badge: "Episode 9 Official Mystery Document",
+            quote: `"Yes, ye lordly, ye haughty sex, our souls are by nature equal to yours; the same breath of God animates, enlivens, and invigorates us... we should be induced to imagine that she had invested the female mind with superior strength as an equivalent for the bodily powers of man. But waiving this however palpable advantage, for equality only, we wish to contend."`,
+            clues: [
+              "Clue 1: Written in 1790, this witty essay uses Enlightenment logic to demand intellectual equality for women.",
+              "Clue 2: John Green guessed Sarah Grimké, got zapped, and said: 'As part of the patriarchy, I probably deserve this.'"
+            ],
+            options: [
+              "Judith Sargent Murray — 'On the Equality of the Sexes' (1790)",
+              "Elizabeth Cady Stanton — 'Declaration of Sentiments' (1848)",
+              "Sarah Grimké — 'Letters on the Equality of the Sexes' (1837)",
+              "Mary Cooper — Diary of a Colonial Wife (1769)"
+            ],
+            correctIndex: 0,
+            takeaway: "Judith Sargent Murray proved in 1790 that once ideas of natural equality are unleashed, they spread far beyond the boundaries male politicians intended!"
+          },
+          {
+            id: "e9m2",
+            badge: "Episode 9 Presidential Warning Quote",
+            quote: `"It agitates the community with ill-founded jealousies and false alarms, kindles the animosity of one part against another, foments occasionally riot and insurrection. It opens the door to foreign influence and corruption."`,
+            clues: [
+              "Clue 1: Spoken in 1796, warning Americans against 'the baneful effects of the spirit of party.'",
+              "Clue 2: The speaker was stepping down after two terms as the nation's first president."
+            ],
+            options: [
+              "George Washington — Farewell Address (1796)",
+              "John Adams — Inaugural Address (1797)",
+              "Alexander Hamilton — Report on Manufactures (1791)",
+              "Matthew Lyon — Letter from Vermont Jail (1798)"
+            ],
+            correctIndex: 0,
+            takeaway: "George Washington's 1796 Farewell Address famously warned that political parties would tear the country apart—a warning Americans ignored immediately."
+          }
+        ]
+      },
+
+      10: {
+        id: 10,
+        number: "10",
+        era: "1800–1809",
+        title: "Thomas Jefferson & His Democracy",
+        duration: "13:19",
+        youtubeUrl: "http://www.youtube.com/watch?v=_3Ox6vGteek",
+        docUrl: "https://docs.google.com/document/d/1A8miFLVxjDSpllt94G7DOSSU6AO0lQ5FrGu2RvVJBGY/edit?usp=drivesdk",
+        desc: "The 1800 election tie with Aaron Burr, Jefferson and slavery, Gabriel's Rebellion, the Barbary Pirates, John Marshall & Marbury v. Madison (judicial review), the Louisiana Purchase, and the disastrous Embargo Act of 1807.",
+        sections: [
+          {
+            id: "ep10-s1",
+            badge: "Section 1 • The Election of 1800, Slavery & Gabriel's Rebellion",
+            title: "36 Ballots, The 12th Amendment & The Paradox of 'Jefferson and Liberty'",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>The 1800 Tie &amp; 12th Amendment:</strong> Republican <strong>Thomas Jefferson</strong> beat John Adams, but tied in the Electoral College with his own running mate, <strong>Aaron Burr</strong>! After <strong>36 House ballots</strong> (and Alexander Hamilton's intervention—leading to Burr killing Hamilton in an 1804 New Jersey duel), Jefferson won, Adams transferred power peacefully, and the <strong>12th Amendment</strong> fixed the ballot rules.</li>
+              <li><strong>Jefferson &amp; Slavery:</strong> Unlike Washington (whose slaves Martha freed), Jefferson kept his enslaved workers in bondage, wrote that Black people were inferior, fathered children with Sally Hemings, and sold slaves to fund his lifestyle.</li>
+              <li><strong>Gabriel's Rebellion (1800):</strong> Enslaved Richmond blacksmith <strong>Gabriel</strong> plotted to seize Virginia's capital and demand abolition. The plot was discovered; Gabriel and 25 others were hanged, and Virginia passed harsher laws banning unsupervised Sunday gatherings and restricting emancipation.</li>
+            </ul>`
+          },
+          {
+            id: "ep10-s2",
+            badge: "Section 2 • Barbary Pirates & Marbury v. Madison (1803)",
+            title: "Shores of Tripoli & How the Supreme Court Gave Itself Judicial Review",
+            content: `<div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs sm:text-sm">
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1">Cutting Taxes vs. Barbary Pirates</div><p class="text-slate-300">Jefferson repealed the whiskey tax, paid down debt, and shrank the military—until the <strong>Barbary Pirates of Tripoli</strong> captured U.S. ships in the Mediterranean, forcing Jefferson to send in the Navy and Marines!</p></div>
+              <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800"><div class="font-bold text-amber-300 mb-1"><em>Marbury v. Madison</em> (1803)</div><p class="text-slate-300">Federalist Chief Justice <strong>John Marshall</strong> authored the landmark 1803 decision establishing <strong>judicial review</strong>—giving the Supreme Court the power to declare federal laws unconstitutional (a power not written in the Constitution!).</p></div>
+            </div>`
+          },
+          {
+            id: "ep10-s3",
+            badge: "Section 3 • Thought Bubble: The Louisiana Purchase (1803)",
+            title: "How a Strict Constructionist Doubled the Size of the U.S. for $15 Million",
+            content: `<ul class="space-y-2 text-xs sm:text-sm text-slate-300 list-disc pl-5">
+              <li><strong>Napoleon's $15 Million Bargain:</strong> Soured on New World colonies by the <strong>Haitian Revolution</strong>, Napoleon sold the entire <strong>Louisiana Territory</strong> (not just New Orleans) to Jefferson in 1803 for <strong>$15 million</strong> (~$250M today).</li>
+              <li><strong>Goodbye, Strict Construction:</strong> The Constitution nowhere authorizes a president to buy foreign territory to double the country's size! Jefferson ignored his own strict-construction philosophy, bought the land, and sent <strong>Lewis and Clark</strong> to the Pacific.</li>
+              <li><strong>Why He Did It:</strong> Jefferson wanted enough western farmland so every white male citizen could be a self-sufficient farmer.</li>
+            </ul>`
+          },
+          {
+            id: "ep10-s4",
+            badge: "Section 4 • The Embargo Act of 1807 — Jefferson's Colossal Backfire",
+            title: "Crashing Exports by 80% & Accidentally Jumpstarting U.S. Manufacturing",
+            content: `<div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs sm:text-sm text-slate-200 space-y-2">
+              <div class="font-bold text-amber-300">Why Jefferson Passed the Embargo (1807):</div>
+              <p>To punish British impressment and blockades without fighting a war, Jefferson got Congress to forbid <strong>all American ships from sailing to any foreign port</strong>.</p>
+              <div class="font-bold text-teal-300 pt-1">Why It Failed &amp; Backfired Completely:</div>
+              <p>Britain and France barely noticed, U.S. exports dropped <strong>80%</strong>, it used massive federal power (<em>"limited federal power about as much as crystal meth limits cavities"</em>), and because Americans couldn't import British goods, they built their own <strong>factories</strong>—spurring the exact industrialization Jefferson hated!</p>
+            </div>`
+          }
+        ],
+        quiz: [
+          { id: "e10q1", question: "What caused the constitutional crisis in the Presidential Election of 1800?", options: ["John Adams refused to leave office.", "Republican electors forgot to cast one fewer vote for VP candidate Aaron Burr, creating an Electoral College tie between Jefferson and Burr that took 36 House ballots (and Hamilton's backing) to resolve.", "George Washington ran for a third term.", "Voting machines broke in Florida."], correctIndex: 1, explanation: "Jefferson and Burr tied in the Electoral College; after 36 ballots and Alexander Hamilton's intervention, Jefferson won and the 12th Amendment was passed." },
+          { id: "e10q2", question: "What was Gabriel's Rebellion in 1800, and how did Virginia respond?", options: ["A tax protest by whiskey farmers", "A large-scale slave uprising organized by Richmond blacksmith Gabriel demanding abolition; after the plot was discovered, Gabriel and 25 others were hanged and Virginia made slave laws much harsher.", "A mutiny by the U.S. Marines in Tripoli", "A duel between Burr and Hamilton"], correctIndex: 1, explanation: "Gabriel's 1800 plot proved enslaved people actively sought Revolutionary liberty; Virginia responded by hanging 26 people and restricting Black gatherings and emancipation." },
+          { id: "e10q3", question: "Why did Jefferson's policy of shrinking the U.S. Navy run into trouble almost immediately?", options: ["Spain invaded Georgia.", "The Barbary Pirates of Tripoli kept capturing American merchant ships in the Mediterranean and enslaving their crews.", "Alexander Hamilton stole a warship.", "Lewis and Clark got lost at sea."], correctIndex: 1, explanation: "Foreign affairs collided with domestic cuts when Jefferson had to send the Navy and Marines to fight the Barbary Pirates in Tripoli." },
+          { id: "e10q4", question: "Why is the 1803 Supreme Court decision in 'Marbury v. Madison' (written by Chief Justice John Marshall) so monumental?", options: ["It approved the Louisiana Purchase.", "In that ruling, the Supreme Court gave itself the power of 'judicial review'—the authority to uphold or invalidate federal laws as unconstitutional.", "It freed Thomas Jefferson's slaves.", "It repealed the Alien and Sedition Acts."], correctIndex: 1, explanation: "Judicial review is not mentioned anywhere in the Constitution; John Marshall and the Supreme Court established it in Marbury v. Madison (1803)." },
+          { id: "e10q5", question: "Why was Napoleon so willing to sell the entire Louisiana Territory to the United States for $15 million in 1803?", options: ["He was best friends with John Adams.", "The Haitian Revolution had soured him on New World colonies, and he needed money to fight Britain.", "He thought Louisiana was covered in ice.", "Lewis and Clark defeated the French army."], correctIndex: 1, explanation: "Defeated by formerly enslaved revolutionaries in Haiti and needing war cash, Napoleon sold all of Louisiana for just $15 million." },
+          { id: "e10q6", question: "Why was the Louisiana Purchase (1803) philosophically awkward for Thomas Jefferson?", options: ["Jefferson hated farming.", "As a strict constructionist, Jefferson believed the federal government could only do what the Constitution explicitly allowed—and the Constitution says nothing about a president buying foreign land to double the country's size!", "He wanted Alexander Hamilton to get the credit.", "He only wanted to buy Canada."], correctIndex: 1, explanation: "Buying Louisiana was a massive expansion of presidential power nowhere explicitly authorized in the Constitution." },
+          { id: "e10q7", question: "What was the goal of Jefferson's Embargo Act of 1807, and what did it actually do to the U.S. economy?", options: ["It aimed to punish Britain and France by banning all U.S. ships from sailing to foreign ports, but it devastated the U.S. economy (exports fell 80%) while Britain and France barely noticed.", "It doubled U.S. trade with Britain.", "It lowered taxes on imported teapots.", "It ended British impressment in two weeks."], correctIndex: 0, explanation: "The Embargo Act of 1807 crashed American exports by 80% without stopping British impressment." },
+          { id: "e10q8", question: "How did the Embargo Act of 1807 ironically undermine both Jefferson's agrarian dream and his small-government philosophy?", options: ["It forced farmers to join the British Navy.", "Shutting down all foreign trade was a colossal exercise of federal power, and cutting off European imports spurred Americans to build their own manufacturing factories!", "It made Aaron Burr president.", "It abolished the Supreme Court."], correctIndex: 1, explanation: "Unable to import British manufactured goods, Americans started making their own in factories—accelerating industrialization!" }
+        ],
+        shortAnswers: [
+          { id: "e10sa1", prompt: "1. What two big philosophical questions does John Green say Thomas Jefferson's ownership of enslaved people raises for historians?", sample: "(1) If the primary author of the Declaration of Independence viewed Black people as inferior and kept them in bondage, what does 'all men are created equal' actually mean? (2) Does having terrible character flaws diminish a historical figure's great accomplishments?" },
+          { id: "e10sa2", prompt: "2. Why did Thomas Jefferson want to double the size of the United States with the Louisiana Purchase, and how did it connect to his view of republican virtue?", sample: "Jefferson believed that only independent small farmers—who didn't depend on bosses or the market for food and shelter—could be truly free and virtuous citizens. Doubling the country's land area aimed to guarantee enough farmland for generations of white male yeomen farmers." }
+        ],
+        flashcards: [
+          { id: "e10fc1", category: "Presidential Politics", date: "1800 & 1804", term: "Election of 1800 & The 12th Amendment", what: "Electoral tie between Jefferson and Aaron Burr resolved on the 36th House ballot; fixed by the 12th Amendment.", why: "First peaceful transfer of power between rival political parties in U.S. history.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e10fc2", category: "Slave Resistance", date: "1800", term: "Gabriel's Rebellion (Richmond, VA)", what: "Large-scale uprising plotted by enslaved Virginia blacksmith Gabriel to seize Richmond and demand abolition.", why: "Proved enslaved people claimed Revolutionary liberty; Virginia hanged 26 and passed harsher slave codes.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e10fc3", category: "Primary Source Author", date: "1801", term: "George Tucker", what: "Virginia legislator who wrote that 'the love of freedom... is not extinguished in the bosom of the slave.'", why: "Admitted after Gabriel's Rebellion that enslaved people naturally craved freedom and would revolt when educated.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e10fc4", category: "Foreign Conflict", date: "1801–1805", term: "Barbary Pirates of Tripoli", what: "North African privateers who captured U.S. merchant ships and enslaved crews in the Mediterranean.", why: "Forced small-government Jefferson to deploy the U.S. Navy and Marines overseas.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e10fc5", category: "Supreme Court", date: "1803", term: "John Marshall & Marbury v. Madison", what: "Landmark Supreme Court ruling written by Federalist Chief Justice John Marshall.", why: "Established 'judicial review'—the Supreme Court's power to declare federal laws unconstitutional.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e10fc6", category: "Westward Expansion", date: "1803", term: "The Louisiana Purchase", what: "Jefferson's $15 million purchase of France's Louisiana Territory from Napoleon, doubling U.S. size.", why: "Secured western farmland for Jefferson's agrarian ideal, but violated his strict-construction principles.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e10fc7", category: "Exploration", date: "1804–1806", term: "Lewis and Clark Expedition", what: "Expedition commissioned by Jefferson to map the Louisiana Territory all the way to the Pacific Ocean.", why: "Expanded U.S. geographical knowledge and territorial claims across the continent.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" },
+          { id: "e10fc8", category: "Economic Policy", date: "1807", term: "The Embargo Act of 1807", what: "Law banning all American ships from sailing to foreign ports to punish British impressment.", why: "Crashed U.S. exports by 80%, expanded federal power, and accidentally spurred U.S. manufacturing.", url: "https://en.wikipedia.org/wiki/History_of_the_United_States" }
+        ],
+        timeline: [
+          { id: "e10t1", order: 1, yearLabel: "Summer 1800", title: "Gabriel's Rebellion Plotted in Richmond, Virginia", detail: "Enslaved blacksmith Gabriel organizes an uprising for abolition; Virginia hangs 26 and tightens slave codes." },
+          { id: "e10t2", order: 2, yearLabel: "Dec 1800–Feb 1801", title: "Thomas Jefferson & Aaron Burr Tie; Jefferson Wins on 36th Ballot", detail: "John Adams peacefully transfers power to Jefferson after Hamilton backs Jefferson in the House." },
+          { id: "e10t3", order: 3, yearLabel: "1801–1802", title: "Jefferson Repeals the Whiskey Tax & Fights the Barbary Pirates", detail: "Domestic taxes are cut, but Mediterranean pirates force Jefferson to use the Navy in Tripoli." },
+          { id: "e10t4", order: 4, yearLabel: "Feb 1803", title: "Chief Justice John Marshall Issues Marbury v. Madison Ruling", detail: "Supreme Court establishes the power of judicial review over federal laws." },
+          { id: "e10t5", order: 5, yearLabel: "April 1803", title: "Jefferson Buys the Louisiana Territory from Napoleon for $15 Million", detail: "Doubles the size of the United States after tossing aside strict construction." },
+          { id: "e10t6", order: 6, yearLabel: "1804", title: "12th Amendment Ratified; Burr Kills Hamilton; Lewis & Clark Depart", detail: "Electoral College ballot is fixed, Burr shoots Hamilton in New Jersey, and Lewis & Clark head west." },
+          { id: "e10t7", order: 7, yearLabel: "Dec 1807", title: "Jefferson Signs the Disastrous Embargo Act of 1807", detail: "Bans all foreign shipping, crashing U.S. exports by 80% and spurring domestic factories." }
+        ],
+        mysteryDocs: [
+          {
+            id: "e10m1",
+            badge: "Episode 10 Official Mystery Document",
+            quote: `"The love of freedom, sir, is an inborn sentiment, which the God of nature has planted deep in the heart... This celestial spark, which fires the breast of the savage, which glows in that of the philosopher, is not extinguished in the bosom of the slave. It may be buried in the embers, but it still lives; and the breath of knowledge kindles it into flame."`,
+            clues: [
+              "Clue 1: Written in 1801 in response to Gabriel's Rebellion in Virginia, warning that educated enslaved people will always seize the chance to revolt.",
+              "Clue 2: John Green guessed John Jay, got zapped, and shouted: 'Who the John C. Calhoun is George Tucker?!'"
+            ],
+            options: [
+              "George Tucker — 'Letter to a Member of the General Assembly of Virginia' (1801)",
+              "Thomas Jefferson — 'Notes on the State of Virginia' (1785)",
+              "John Jay — New York Manumission Society Address (1785)",
+              "Gabriel — Richmond Court Testimony (1800)"
+            ],
+            correctIndex: 0,
+            takeaway: "Virginia legislator George Tucker acknowledged that enslaved people shared the exact same natural yearning for liberty as anyone else—and that literacy ('the breath of knowledge') fueled resistance."
+          },
+          {
+            id: "e10m2",
+            badge: "Episode 10 Federalist Complaint Quote",
+            quote: `"We are to give money of which we have too little for land of which we already have too much."`,
+            clues: [
+              "Clue 1: This snarky complaint mocked Jefferson's $15 million purchase of 828,000 square miles from Napoleon in 1803.",
+              "Clue 2: Spoken by Jefferson's political opponents who opposed westward expansion."
+            ],
+            options: [
+              "Federalist Critics of the Louisiana Purchase (1803)",
+              "Chief Justice John Marshall in Marbury v. Madison (1803)",
+              "Aaron Burr at the Weehawken Duel (1804)",
+              "Napoleon Bonaparte in Paris (1803)"
+            ],
+            correctIndex: 0,
+            takeaway: "Federalists complained that the U.S. was spending scarce money on vast western land—not realizing the Louisiana Purchase was one of history's greatest real-estate bargains!"
+          }
+        ]
       }
+
     };
 
     const UPCOMING_UNIT2 = [
-      { number: "06", title: "Taxes & Smuggling — Prelude to Revolution", duration: "12:19", youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s", desc: "The Stamp Act, Townshend Acts, Boston Massacre, Boston Tea Party, and why colonists were so mad about taxes." },
-      { number: "07", title: "Who Won the American Revolution?", duration: "12:41", youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s", desc: "Saratoga, Yorktown, Revolutionary War strategy, and how the Revolution affected women, enslaved people, and Native Americans." },
-      { number: "08", title: "The Constitution, the Articles, and Federalism", duration: "13:04", youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s", desc: "The Articles of Confederation, Shays' Rebellion, the 1787 Constitutional Convention, the Great Compromise, and the Federalist Papers." }
+      { number: "11", title: "The War of 1812", duration: "12:43", youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s", desc: "Tecumseh, the War Hawks, burning the White House, Andrew Jackson at New Orleans, and America's first declared war." },
+      { number: "12", title: "The Market Revolution", duration: "14:11", youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s", desc: "Canals, steamboats, railroads, telegraph, factory girls at Lowell, and how capitalism transformed early 19th-century America." },
+      { number: "13", title: "Slavery", duration: "14:25", youtubeUrl: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMwmepBjTSG593eG7ObzO7s", desc: "King Cotton, the brutal reality of Southern plantation slavery, family resilience, and forms of resistance." }
     ];
 
     // ==================== STATE MANAGEMENT ====================
@@ -1223,7 +1838,7 @@ index.html
           state = Object.assign({}, state, parsed);
         }
       } catch (e) {}
-      [1, 2, 3, 4, 5].forEach(ensureEpStructures);
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach(ensureEpStructures);
     }
 
     function saveState() {
@@ -1340,7 +1955,7 @@ index.html
 
     function updateGlobalStats() {
       let totalPts = 0;
-      [1, 2, 3, 4, 5].forEach(id => {
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach(id => {
         const st = getEpMasteryStats(id);
         totalPts += (st.readCount * 15) + (st.correctQuizCount * 25) + (st.masteredFcCount * 10) + (st.tlSolved ? 50 : 0) + (st.mysterySolvedCount * 30);
       });
@@ -1365,7 +1980,7 @@ index.html
     function renderSidebarEpisodes() {
       const container = document.getElementById("episodeListContainer");
       container.innerHTML = "";
-      [1, 2, 3, 4, 5].forEach(id => {
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].forEach(id => {
         const ep = EPISODES_DATA[id];
         const st = getEpMasteryStats(id);
         const isCurrent = state.activeEp === id;
