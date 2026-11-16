@@ -3,61 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>U.S. History Timeline Hub</title>
+<title>U.S. History Graphic Novel Hub</title>
 <style>
   :root {
-    --border-color: #1a1a1a;
-    --bg-color: #f4f1ea;
+    --border-color: #111111;
+    --bg-color: #f7f4ed;
     --panel-bg: #ffffff;
-    --accent: #d32f2f;
-    --highlight: #ffca28;
+    --accent: #cc2929;
+    --accent-blue: #1a5fb4;
+    --highlight: #f6d142;
+    --comic-shadow: 6px 6px 0px #111111;
   }
+  
   body {
-    font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif;
     background-color: var(--bg-color);
-    color: #333;
+    color: #1a1a1a;
     margin: 0;
     padding: 20px;
+    background-image: radial-gradient(#d3cfc4 1px, transparent 1px);
+    background-size: 20px 20px;
   }
-  h1 {
+
+  header {
     text-align: center;
-    text-transform: uppercase;
-    font-size: 2.5rem;
-    border-bottom: 5px solid var(--border-color);
-    padding-bottom: 10px;
     margin-bottom: 40px;
-    letter-spacing: 2px;
+    border: 4px solid var(--border-color);
+    background-color: var(--highlight);
+    padding: 20px;
+    box-shadow: var(--comic-shadow);
+    transform: rotate(-0.5deg);
   }
+
+  h1 {
+    text-transform: uppercase;
+    font-size: 2.8rem;
+    margin: 0;
+    letter-spacing: 2px;
+    text-shadow: 3px 3px 0px #ffffff;
+  }
+
+  p.subtitle {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 10px;
+    text-transform: uppercase;
+  }
+
   .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 25px;
-    max-width: 1200px;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
     margin: 0 auto;
   }
+
   .panel {
     background-color: var(--panel-bg);
     border: 4px solid var(--border-color);
-    border-radius: 4px;
-    box-shadow: 8px 8px 0px var(--border-color);
-    padding: 15px;
-    transition: transform 0.2s ease-in-out;
+    border-radius: 6px;
+    box-shadow: var(--comic-shadow);
+    padding: 20px;
+    position: relative;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
+
   .panel:hover {
-    transform: translateY(-4px) translateX(-4px);
-    box-shadow: 12px 12px 0px var(--border-color);
+    transform: translateY(-4px) translateX(-2px);
+    box-shadow: 10px 10px 0px var(--border-color);
   }
+
   .panel h2 {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     background-color: var(--accent);
     color: white;
-    padding: 6px 12px;
+    padding: 8px 14px;
     display: inline-block;
     border: 3px solid var(--border-color);
-    margin-top: -30px;
+    margin-top: -36px;
+    margin-bottom: 15px;
     text-transform: uppercase;
-    transform: rotate(-2deg);
+    transform: rotate(-1.5deg);
+    box-shadow: 3px 3px 0px var(--border-color);
   }
+
+  .panel:nth-child(even) h2 {
+    background-color: var(--accent-blue);
+  }
+
   .video-wrapper {
     position: relative;
     padding-bottom: 56.25%;
@@ -65,7 +98,9 @@
     border: 3px solid var(--border-color);
     margin-bottom: 15px;
     background-color: #000;
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.3);
   }
+
   .video-wrapper iframe {
     position: absolute;
     top: 0;
@@ -73,22 +108,29 @@
     width: 100%;
     height: 100%;
   }
+
   .notes {
-    font-size: 1rem;
-    line-height: 1.5;
+    font-size: 0.95rem;
+    line-height: 1.4;
     border-left: 5px solid var(--highlight);
-    padding-left: 12px;
-    margin-top: 10px;
+    background-color: #fdfbf7;
+    padding: 10px 12px;
+    border-top: 2px solid var(--border-color);
+    border-right: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
     font-weight: bold;
   }
 </style>
 </head>
 <body>
 
-<h1>U.S. History Timeline Hub</h1>
+<header>
+  <h1>U.S. History Timeline Hub</h1>
+  <p class="subtitle">Crash Course Graphic Novel Edition — Episodes 1 to 20</p>
+</header>
 
 <div class="grid-container">
-  <!-- Episodes 1-5 -->
+  <!-- Episode 1 -->
   <div class="panel">
     <h2>Ep 1: The Black Legend</h2>
     <div class="video-wrapper">
@@ -97,6 +139,7 @@
     <div class="notes">Native Americans and Spaniards before 1492.</div>
   </div>
 
+  <!-- Episode 2 -->
   <div class="panel">
     <h2>Ep 2: Colonizing America</h2>
     <div class="video-wrapper">
@@ -105,6 +148,7 @@
     <div class="notes">Jamestown, Roanoke, and the early English colonies.</div>
   </div>
 
+  <!-- Episode 3 -->
   <div class="panel">
     <h2>Ep 3: Natives & The English</h2>
     <div class="video-wrapper">
@@ -113,6 +157,7 @@
     <div class="notes">Interactions, conflicts, and the Powhatan Confederacy.</div>
   </div>
 
+  <!-- Episode 4 -->
   <div class="panel">
     <h2>Ep 4: Quakers & The Dutch</h2>
     <div class="video-wrapper">
@@ -121,6 +166,7 @@
     <div class="notes">New Amsterdam, Pennsylvania, and colonial society.</div>
   </div>
 
+  <!-- Episode 5 -->
   <div class="panel">
     <h2>Ep 5: Seven Years War</h2>
     <div class="video-wrapper">
@@ -129,7 +175,7 @@
     <div class="notes">The French and Indian War and the Great Awakening.</div>
   </div>
 
-  <!-- Episodes 6-10 -->
+  <!-- Episode 6 -->
   <div class="panel">
     <h2>Ep 6: Taxes & Smuggling</h2>
     <div class="video-wrapper">
@@ -138,6 +184,7 @@
     <div class="notes">Prelude to Revolution, the Stamp Act, and colonial anger.</div>
   </div>
 
+  <!-- Episode 7 -->
   <div class="panel">
     <h2>Ep 7: The Revolution</h2>
     <div class="video-wrapper">
@@ -146,48 +193,8 @@
     <div class="notes">The Revolutionary War and its immediate socio-political aftermath.</div>
   </div>
 
+  <!-- Episode 8 -->
   <div class="panel">
     <h2>Ep 8: The Constitution</h2>
     <div class="video-wrapper">
-      <iframe src="https://www.youtube.com/embed/bO7FQsCcbD8" allowfullscreen></iframe>
-    </div>
-    <div class="notes">The Articles of Confederation and the establishment of federalism.</div>
-  </div>
-
-  <div class="panel">
-    <h2>Ep 9: Rise of Politics</h2>
-    <div class="video-wrapper">
-      <iframe src="https://www.youtube.com/embed/r161cLYzuDI" allowfullscreen></iframe>
-    </div>
-    <div class="notes">Hamilton vs. Jefferson and the formation of the first political parties.</div>
-  </div>
-
-  <div class="panel">
-    <h2>Ep 10: Thomas Jefferson</h2>
-    <div class="video-wrapper">
-      <iframe src="https://www.youtube.com/embed/_3Ox6vGteek" allowfullscreen></iframe>
-    </div>
-    <div class="notes">Jefferson's presidency and the structural complexities of his democracy.</div>
-  </div>
-
-  <!-- Episodes 11-15 -->
-  <div class="panel">
-    <h2>Ep 11: The War of 1812</h2>
-    <div class="video-wrapper">
-      <iframe src="https://www.youtube.com/embed/qMXqg2PKJZU" allowfullscreen></iframe>
-    </div>
-    <div class="notes">Nationalism, maritime rights, and the war that confirmed American independence.</div>
-  </div>
-
-  <div class="panel">
-    <h2>Ep 12: Market Revolution</h2>
-    <div class="video-wrapper">
-      <iframe src="https://www.youtube.com/embed/RNftCCwAol0" allowfullscreen></iframe>
-    </div>
-    <div class="notes">Industrialization, transportation networks, and the shift to factory labor.</div>
-  </div>
-
-  <div class="panel">
-    <h2>Ep 13: Slavery</h2>
-    <div class="video-wrapper">
-      <iframe src="https://www.youtube.com/embed/A5GNJ20kE4w" allowfullscreen>
+      <iframe src="https://www.youtube.com/embed/bO7FQsCcbD8" allowfullscreen>
